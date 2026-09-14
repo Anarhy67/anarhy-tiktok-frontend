@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ANARHY OS — Creator & Partners</title>
+<style>
+:root{
+ --bg:#070707;--panel:#101010;--panel2:#151515;--line:#292929;--text:#f5f5f5;
+ --muted:#8e8e8e;--red:#ff3030;--red2:#a30d16;--green:#49d17d;--yellow:#f2c14e;
+}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 75% 0,#35080d 0,transparent 35%),var(--bg);color:var(--text);font:14px Inter,Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer}
+.splash{position:fixed;inset:0;background:#050505;z-index:20;display:grid;place-items:center;transition:opacity .7s}
+.splash.hide{opacity:0;pointer-events:none}.splash-inner{text-align:center}.mark{font-size:clamp(50px,12vw,130px);font-weight:1000;letter-spacing:.18em}.mark span{color:var(--red)}.splash small{color:#777;letter-spacing:.35em;text-transform:uppercase}
+.app{display:flex;min-height:100vh}.side{width:250px;border-right:1px solid var(--line);padding:28px 18px;background:rgba(7,7,7,.88);position:sticky;top:0;height:100vh}
+.brand{font-size:25px;font-weight:1000;letter-spacing:.18em;margin:0 0 5px}.brand span{color:var(--red)}.sub{color:#666;font-size:10px;letter-spacing:.25em}
+.nav{margin-top:55px;display:grid;gap:8px}.nav button{background:none;border:1px solid transparent;color:#999;text-align:left;padding:14px;border-radius:12px}.nav button.active,.nav button:hover{background:#1a1011;color:white;border-color:#482024}.nav b{color:#666;font-size:10px;letter-spacing:.18em;margin:18px 12px 3px}
+.profile{position:absolute;bottom:24px;left:18px;right:18px;border:1px solid var(--line);background:#111;padding:13px;border-radius:15px;display:flex;gap:10px;align-items:center}.avatar{width:35px;height:35px;border-radius:50%;background:linear-gradient(135deg,#ff3030,#4b080c);display:grid;place-items:center;font-weight:900}
+.main{flex:1;min-width:0;padding:30px;max-width:1500px;margin:auto}.top{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:35px}.crumb{color:#777;font-size:12px}.top-actions{display:flex;gap:10px}.btn{border:1px solid var(--line);background:#171717;color:#fff;padding:11px 15px;border-radius:10px}.btn.primary{background:var(--red);border-color:var(--red);font-weight:800}.btn:hover{filter:brightness(1.15)}
+.page{display:none}.page.active{display:block}h1{font-size:clamp(30px,4vw,52px);margin:0 0 10px;letter-spacing:-.05em}h2{margin:0 0 8px;font-size:21px}p{color:var(--muted);line-height:1.6}.eyebrow{color:#ff6565;font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:linear-gradient(145deg,#151515,#0d0d0d);border:1px solid var(--line);border-radius:18px;padding:20px;min-width:0}.metric{font-size:31px;font-weight:900;margin:15px 0 5px}.delta{font-size:12px;color:var(--green)}.muted{color:#777}.layout{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-top:16px}.bar{height:8px;background:#272727;border-radius:20px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,#8d1017,#ff3030);border-radius:20px}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.list{display:grid;gap:10px;margin-top:18px}.list-item{border:1px solid #252525;background:#111;padding:14px;border-radius:12px}.tag{display:inline-block;padding:5px 8px;border-radius:6px;background:#291014;color:#ff7777;font-size:10px;font-weight:800}.tag.green{background:#102b1c;color:#65e59a}.tag.yellow{background:#2d2410;color:#f6ce64}
+.chart{height:190px;display:flex;align-items:end;gap:9px;padding-top:20px}.chart i{flex:1;background:linear-gradient(#ff3030,#4b0b10);border-radius:5px 5px 0 0;min-height:12px}.table{width:100%;border-collapse:collapse;margin-top:15px}.table th,.table td{text-align:left;padding:15px 8px;border-bottom:1px solid #242424;color:#bbb}.table th{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.08em}.table td strong{color:#fff}.hero{border:1px solid #4b181d;background:radial-gradient(circle at 90% 0,#551017,transparent 45%),linear-gradient(135deg,#1b0b0d,#111);border-radius:22px;padding:30px;margin-bottom:16px}.hero .big{font-size:clamp(30px,5vw,65px);font-weight:1000;letter-spacing:-.06em;max-width:700px}.hero .big span{color:var(--red)}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.module-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}.module{min-height:180px}.module.red{background:linear-gradient(145deg,#2a0d11,#111);border-color:#572026}.module .icon{font-size:28px;margin-bottom:20px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:28px 0 12px}.field{display:grid;gap:7px;margin-top:15px}.field input{width:100%;background:#0c0c0c;color:#fff;border:1px solid #333;border-radius:9px;padding:12px}.notice{padding:14px;border-left:3px solid var(--red);background:#1b0d0f;color:#bbb;border-radius:8px;margin-top:15px}
+@media(max-width:900px){.side{width:76px;padding:20px 10px}.brand{font-size:15px;text-align:center}.sub,.nav b,.nav button span,.profile .profile-text{display:none}.nav button{text-align:center}.profile{left:10px;right:10px;justify-content:center}.main{padding:20px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout,.module-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.top{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr 1fr}.metric{font-size:25px}.main{padding:14px}.card{padding:15px}.table{font-size:12px}.hero{padding:22px}}
+</style>
+</head>
+<body>
+<div class="splash" id="splash"><div class="splash-inner"><div class="mark">ANAR<span>H</span>Y</div><small>creator operating system</small></div></div>
+<div class="app">
+<aside class="side">
+  <div class="brand">ANAR<span>H</span>Y</div><div class="sub">CREATOR OS / V11</div>
+  <nav class="nav">
+    <b>WORKSPACE</b>
+    <button class="active" data-page="home">◈ <span>Главная</span></button>
+    <button data-page="tasks">▣ <span>TikTok-задания</span></button>
+    <button data-page="reports">↗ <span>Мои отчёты</span></button>
+    <button data-page="progress">◒ <span>Прогресс</span></button>
+    <button data-page="rating">♛ <span>Рейтинг</span></button>
+    <b>OPPORTUNITIES</b>
+    <button data-page="partners">↗ <span>ANARHY Partners</span></button>
+    <button data-page="payouts">₽ <span>Выплаты</span></button>
+    <b>SYSTEM</b>
+    <button data-page="profile">⚙ <span>Профиль</span></button>
+  </nav>
+  <div class="profile"><div class="avatar">D</div><div class="profile-text"><strong>Denis</strong><div class="muted">Founder / Admin</div></div></div>
+</aside>
+<main class="main">
+<header class="top"><div><div class="crumb">ANARHY OS / <span id="crumb">Главная</span></div></div><div class="top-actions"><button class="btn">◔ Уведомления</button><button class="btn primary">+ Создать отчёт</button></div></header>
+
+<section class="page active" id="home">
+<div class="hero"><div class="eyebrow">ANARHY CREATOR OS</div><div class="big">Не просто нарезки.<br><span>Медиа-империя.</span></div><p>Твоя рабочая система: задания, отчёты, прогресс, рейтинг и отдельная возможность заработать через ANARHY Partners.</p><div class="hero-actions"><button class="btn primary" data-page="tasks">Открыть задания →</button><button class="btn" data-page="partners">ANARHY Partners ↗</button></div></div>
+<div class="grid">
+<div class="card"><div class="muted">Заданий сегодня</div><div class="metric">3</div><div class="delta">● Дедлайн 22:00</div></div>
+<div class="card"><div class="muted">Выполнено</div><div class="metric">2 / 3</div><div class="delta">+1 до полного дня</div></div>
+<div class="card"><div class="muted">Твой XP</div><div class="metric">840</div><div class="delta">+120 за неделю</div></div>
+<div class="card"><div class="muted">Уровень</div><div class="metric">Rookie</div><div class="muted">До следующего: 160 XP</div></div>
+</div>
+<div class="layout">
+<div class="card"><div class="row"><h2>Активность за неделю</h2><span class="tag">LIVE DEMO</span></div><p>Публикации и подтверждённые отчёты.</p><div class="chart"><i style="height:35%"></i><i style="height:55%"></i><i style="height:48%"></i><i style="height:80%"></i><i style="height:62%"></i><i style="height:95%"></i><i style="height:72%"></i></div><div class="row muted"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div></div>
+<div class="card"><h2>Сегодня</h2><div class="list"><div class="list-item"><div class="row"><strong>Нарезка #01</strong><span class="tag green">DONE</span></div><p>Ссылка на опубликованный ролик.</p></div><div class="list-item"><div class="row"><strong>Нарезка #02</strong><span class="tag green">DONE</span></div><p>Отчёт принят системой.</p></div><div class="list-item"><div class="row"><strong>Нарезка #03</strong><span class="tag yellow">IN PROGRESS</span></div><p>Осталось отправить ссылку и подтверждение.</p></div></div></div>
+</div>
+<div class="module-grid"><div class="card module"><div class="icon">▣</div><h2>TikTok OS</h2><p>Три задания в день, отчёты до 22:00, страйки, XP и рейтинг. Всё, что относится к контенту — здесь.</p><button class="btn" data-page="tasks">Перейти к заданиям →</button></div><div class="card module red"><div class="icon">↗</div><h2>ANARHY Partners</h2><p>Отдельный модуль для заработка на продаже цифрового продукта. Не влияет на TikTok-задания.</p><button class="btn primary" data-page="partners">Открыть партнёрку →</button></div></div>
+</section>
+
+<section class="page" id="tasks"><div class="eyebrow">CREATOR WORKSPACE</div><h1>TikTok-задания</h1><p>Три публикации каждый день. Дедлайн — 22:00. Отчёт содержит ссылку и подтверждение.</p><div class="notice">3 страйка → сброс текущего цикла. Все проверки проходят через админскую систему.</div><div class="list"><div class="card"><div class="row"><div><span class="tag green">DONE</span><h2>Задание #01 — Hook / динамика</h2></div><strong>+120 XP</strong></div><p>Опубликовать ролик с сильным первым кадром.</p><div class="bar"><span style="width:100%"></span></div></div><div class="card"><div class="row"><div><span class="tag green">DONE</span><h2>Задание #02 — Story cut</h2></div><strong>+120 XP</strong></div><p>Собрать короткую историю с удержанием внимания.</p><div class="bar"><span style="width:100%"></span></div></div><div class="card"><div class="row"><div><span class="tag yellow">IN PROGRESS</span><h2>Задание #03 — Trend adaptation</h2></div><strong>+120 XP</strong></div><p>Адаптировать тренд под стиль ANARHY.</p><div class="bar"><span style="width:66%"></span></div><button class="btn primary" style="margin-top:15px" data-page="reports">Отправить отчёт →</button></div></div></section>
+
+<section class="page" id="reports"><div class="eyebrow">SUBMISSIONS</div><h1>Мои отчёты</h1><p>История отправленных ссылок и подтверждений.</p><div class="card"><table class="table"><tr><th>Задание</th><th>Дата</th><th>Статус</th><th>XP</th></tr><tr><td><strong>Hook / динамика</strong></td><td>Сегодня</td><td><span class="tag green">Принят</span></td><td>+120</td></tr><tr><td><strong>Story cut</strong></td><td>Сегодня</td><td><span class="tag green">Принят</span></td><td>+120</td></tr><tr><td><strong>Trend adaptation</strong></td><td>Сегодня</td><td><span class="tag yellow">На проверке</span></td><td>—</td></tr></table></div></section>
+
+<section class="page" id="progress"><div class="eyebrow">LEVEL SYSTEM</div><h1>Прогресс</h1><div class="grid"><div class="card"><div class="muted">Текущий уровень</div><div class="metric">Rookie</div><div class="bar"><span style="width:84%"></span></div><p>840 / 1 000 XP</p></div><div class="card"><div class="muted">Серия дней</div><div class="metric">6</div><p>Не прерывай серию.</p></div><div class="card"><div class="muted">Страйки</div><div class="metric">0 / 3</div><p>Чистая история.</p></div><div class="card"><div class="muted">Видео</div><div class="metric">42</div><p>Всего принято системой.</p></div></div></section>
+
+<section class="page" id="rating"><div class="eyebrow">LEADERBOARD</div><h1>Рейтинг участников</h1><p>Рейтинг строится по подтверждённым результатам, XP и дисциплине.</p><div class="card"><table class="table"><tr><th>#</th><th>Участник</th><th>Уровень</th><th>XP</th></tr><tr><td>01</td><td><strong>ANARHY_01</strong></td><td>Elite</td><td>4 820</td></tr><tr><td>02</td><td><strong>ANARHY_07</strong></td><td>Pro</td><td>3 940</td></tr><tr><td>03</td><td><strong>Denis</strong></td><td>Rookie</td><td>840</td></tr></table></div></section>
+
+<section class="page" id="partners"><div class="eyebrow">ANARHY PARTNERS</div><h1>Зарабатывай на продажах</h1><p>Партнёрка существует отдельно от TikTok-заданий. Здесь отображаются только реальные продажи цифрового продукта.</p><div class="hero"><div class="row"><div><div class="eyebrow">YOUR COMMISSION</div><div class="metric">30%</div><p>с подтверждённой продажи</p></div><div class="tag green">ACTIVE PROGRAM</div></div><div class="notice">Пример: цифровой продукт 7 000 ₽ → комиссия партнёра 2 100 ₽. Начисление после подтверждения оплаты и проверки возвратов.</div></div><div class="grid"><div class="card"><div class="muted">Переходы</div><div class="metric">1 284</div><div class="delta">+18.4%</div></div><div class="card"><div class="muted">Продажи</div><div class="metric">12</div><div class="delta">+3 за неделю</div></div><div class="card"><div class="muted">Ожидает подтверждения</div><div class="metric">6 300 ₽</div><div class="muted">3 заказа</div></div><div class="card"><div class="muted">Доступно к выплате</div><div class="metric">18 900 ₽</div><div class="delta">Можно запросить</div></div></div><div class="layout"><div class="card"><h2>Твоя партнёрская ссылка</h2><p>Создаётся персонально для каждого участника.</p><div class="field"><input value="https://anarhy.ru/p/denis" readonly></div><button class="btn primary" style="margin-top:12px" onclick="alert('В рабочей версии здесь будет копирование ссылки')">Скопировать ссылку</button></div><div class="card"><h2>Статус партнёра</h2><div class="list"><div class="list-item row"><span>Профиль</span><span class="tag green">Одобрен</span></div><div class="list-item row"><span>Продажи</span><strong>12</strong></div><div class="list-item row"><span>Комиссия</span><strong>30%</strong></div></div></div></div></section>
+
+<section class="page" id="payouts"><div class="eyebrow">FINANCE</div><h1>Выплаты</h1><p>Комиссии начисляются только за подтверждённые продажи цифрового продукта.</p><div class="card"><h2>История выплат</h2><table class="table"><tr><th>Дата</th><th>Сумма</th><th>Статус</th></tr><tr><td>12.09.2026</td><td><strong>12 600 ₽</strong></td><td><span class="tag green">Выплачено</span></td></tr><tr><td>08.09.2026</td><td><strong>6 300 ₽</strong></td><td><span class="tag green">Выплачено</span></td></tr><tr><td>Сегодня</td><td><strong>18 900 ₽</strong></td><td><span class="tag yellow">Доступно</span></td></tr></table><button class="btn primary" style="margin-top:15px" onclick="alert('В рабочей версии здесь будет заявка на выплату')">Запросить выплату</button></div></section>
+
+<section class="page" id="profile"><div class="eyebrow">ACCOUNT</div><h1>Профиль</h1><div class="card"><h2>Denis</h2><p>Founder / Admin</p><div class="field"><label>Имя</label><input value="Denis"></div><div class="field"><label>Email</label><input value="admin@anarhy.ru"></div><button class="btn primary" style="margin-top:15px">Сохранить изменения</button></div></section>
+</main></div>
+<script>
+setTimeout(()=>document.getElementById('splash').classList.add('hide'),1500);
+const buttons=[...document.querySelectorAll('[data-page]')];
+const pages=[...document.querySelectorAll('.page')];
+function go(id){pages.forEach(p=>p.classList.toggle('active',p.id===id));buttons.forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('crumb').textContent=buttons.find(b=>b.dataset.page===id)?.innerText.trim()||id;window.scrollTo(0,0)}
+buttons.forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+</script>
+</body></html>
