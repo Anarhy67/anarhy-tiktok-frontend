@@ -23,6 +23,17 @@ button,input{font:inherit}button{cursor:pointer}
 .chart{height:190px;display:flex;align-items:end;gap:9px;padding-top:20px}.chart i{flex:1;background:linear-gradient(#ff3030,#4b0b10);border-radius:5px 5px 0 0;min-height:12px}.table{width:100%;border-collapse:collapse;margin-top:15px}.table th,.table td{text-align:left;padding:15px 8px;border-bottom:1px solid #242424;color:#bbb}.table th{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.08em}.table td strong{color:#fff}.hero{border:1px solid #4b181d;background:radial-gradient(circle at 90% 0,#551017,transparent 45%),linear-gradient(135deg,#1b0b0d,#111);border-radius:22px;padding:30px;margin-bottom:16px}.hero .big{font-size:clamp(30px,5vw,65px);font-weight:1000;letter-spacing:-.06em;max-width:700px}.hero .big span{color:var(--red)}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.module-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}.module{min-height:180px}.module.red{background:linear-gradient(145deg,#2a0d11,#111);border-color:#572026}.module .icon{font-size:28px;margin-bottom:20px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:28px 0 12px}.field{display:grid;gap:7px;margin-top:15px}.field input{width:100%;background:#0c0c0c;color:#fff;border:1px solid #333;border-radius:9px;padding:12px}.notice{padding:14px;border-left:3px solid var(--red);background:#1b0d0f;color:#bbb;border-radius:8px;margin-top:15px}
 @media(max-width:900px){.side{width:76px;padding:20px 10px}.brand{font-size:15px;text-align:center}.sub,.nav b,.nav button span,.profile .profile-text{display:none}.nav button{text-align:center}.profile{left:10px;right:10px;justify-content:center}.main{padding:20px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout,.module-grid{grid-template-columns:1fr}}
 @media(max-width:520px){.top{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr 1fr}.metric{font-size:25px}.main{padding:14px}.card{padding:15px}.table{font-size:12px}.hero{padding:22px}}
+
+.auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(12px);z-index:50;display:grid;place-items:center;padding:20px}
+.auth-overlay.hidden{display:none}
+.auth-box{width:min(440px,100%);background:linear-gradient(145deg,#1a0b0d,#101010);border:1px solid #5a2027;border-radius:22px;padding:28px;box-shadow:0 20px 80px #000}
+.auth-tabs{display:flex;gap:8px;margin:20px 0}
+.auth-tabs button{flex:1}
+.auth-error{color:#ff7777;background:#2b1014;border:1px solid #5a2027;padding:10px;border-radius:9px;margin-top:12px;display:none}
+.auth-status{color:#49d17d;font-size:12px;margin-top:12px}
+.logout{margin-top:10px;width:100%}
+@media(max-width:520px){.auth-box{padding:22px}}
+
 </style>
 </head>
 <body>
@@ -77,11 +88,167 @@ button,input{font:inherit}button{cursor:pointer}
 
 <section class="page" id="profile"><div class="eyebrow">ACCOUNT</div><h1>Профиль</h1><div class="card"><h2>Denis</h2><p>Founder / Admin</p><div class="field"><label>Имя</label><input value="Denis"></div><div class="field"><label>Email</label><input value="admin@anarhy.ru"></div><button class="btn primary" style="margin-top:15px">Сохранить изменения</button></div></section>
 </main></div>
+
+<div class="auth-overlay hidden" id="authOverlay">
+  <div class="auth-box">
+    <div class="eyebrow">ANARHY ACCESS</div>
+    <h2 id="authTitle">Вход в ANARHY OS</h2>
+    <p id="authSubtitle">Войди в аккаунт, чтобы видеть свои задания и прогресс.</p>
+    <div class="auth-tabs">
+      <button class="btn primary" id="loginTab">Вход</button>
+      <button class="btn" id="registerTab">Регистрация</button>
+    </div>
+    <form id="authForm">
+      <div class="field" id="nameField" style="display:none">
+        <label>Имя</label>
+        <input id="authName" autocomplete="name" placeholder="Твоё имя">
+      </div>
+      <div class="field">
+        <label>Логин</label>
+        <input id="authUsername" required autocomplete="username" placeholder="username">
+      </div>
+      <div class="field">
+        <label>Пароль</label>
+        <input id="authPassword" required type="password" autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button class="btn primary" id="authSubmit" type="submit" style="width:100%;margin-top:18px">Войти</button>
+      <div class="auth-error" id="authError"></div>
+    </form>
+  </div>
+</div>
+
 <script>
-setTimeout(()=>document.getElementById('splash').classList.add('hide'),1500);
+const API_BASE='https://anarhy-backend-final.onrender.com';
 const buttons=[...document.querySelectorAll('[data-page]')];
 const pages=[...document.querySelectorAll('.page')];
-function go(id){pages.forEach(p=>p.classList.toggle('active',p.id===id));buttons.forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('crumb').textContent=buttons.find(b=>b.dataset.page===id)?.innerText.trim()||id;window.scrollTo(0,0)}
+let authMode='login';
+let currentUser=null;
+let token=localStorage.getItem('anarhy_token')||'';
+
+setTimeout(()=>document.getElementById('splash').classList.add('hide'),1500);
+
+function go(id){
+  pages.forEach(p=>p.classList.toggle('active',p.id===id));
+  buttons.forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  document.getElementById('crumb').textContent=buttons.find(b=>b.dataset.page===id)?.innerText.trim()||id;
+  window.scrollTo(0,0);
+}
 buttons.forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+
+const overlay=document.getElementById('authOverlay');
+const authForm=document.getElementById('authForm');
+const authTitle=document.getElementById('authTitle');
+const authSubtitle=document.getElementById('authSubtitle');
+const authSubmit=document.getElementById('authSubmit');
+const authError=document.getElementById('authError');
+const nameField=document.getElementById('nameField');
+const loginTab=document.getElementById('loginTab');
+const registerTab=document.getElementById('registerTab');
+
+function setAuthMode(mode){
+  authMode=mode;
+  const register=mode==='register';
+  authTitle.textContent=register?'Регистрация в ANARHY OS':'Вход в ANARHY OS';
+  authSubtitle.textContent=register?'Создай аккаунт участника.':'Войди в аккаунт, чтобы видеть свои задания и прогресс.';
+  nameField.style.display=register?'grid':'none';
+  document.getElementById('authName').required=register;
+  authSubmit.textContent=register?'Создать аккаунт':'Войти';
+  loginTab.classList.toggle('primary',!register);
+  registerTab.classList.toggle('primary',register);
+  authError.style.display='none';
+}
+loginTab.addEventListener('click',()=>setAuthMode('login'));
+registerTab.addEventListener('click',()=>setAuthMode('register'));
+
+function showAuth(){overlay.classList.remove('hidden');}
+function hideAuth(){overlay.classList.add('hidden');}
+function showError(message){authError.textContent=message;authError.style.display='block';}
+
+async function api(path,options={}){
+  const headers={'Content-Type':'application/json',...(options.headers||{})};
+  if(token) headers.Authorization='Bearer '+token;
+  const response=await fetch(API_BASE+path,{...options,headers});
+  let data={};
+  try{data=await response.json()}catch(_){}
+  if(!response.ok) throw new Error(data.error||data.message||'Ошибка запроса');
+  return data;
+}
+
+function setUserUI(user){
+  currentUser=user;
+  const name=user?.name||user?.username||'Участник';
+  document.querySelector('.profile strong').textContent=name;
+  document.querySelector('.profile .muted').textContent=user?.role==='admin'?'Founder / Admin':'Creator';
+  document.querySelector('.avatar').textContent=name.slice(0,1).toUpperCase();
+  const profileTitle=document.querySelector('#profile h2');
+  if(profileTitle) profileTitle.textContent=name;
+  const profileInputs=document.querySelectorAll('#profile input');
+  if(profileInputs[0]) profileInputs[0].value=name;
+  if(profileInputs[1]&&user?.email) profileInputs[1].value=user.email;
+}
+
+async function loadUser(){
+  if(!token){showAuth();return false}
+  try{
+    const data=await api('/api/me');
+    setUserUI(data.user||data);
+    return true;
+  }catch(error){
+    token='';
+    localStorage.removeItem('anarhy_token');
+    showAuth();
+    return false;
+  }
+}
+
+authForm.addEventListener('submit',async event=>{
+  event.preventDefault();
+  authSubmit.disabled=true;
+  authError.style.display='none';
+  const payload={
+    username:document.getElementById('authUsername').value.trim(),
+    password:document.getElementById('authPassword').value
+  };
+  if(authMode==='register') payload.name=document.getElementById('authName').value.trim();
+  try{
+    const data=await api(authMode==='register'?'/api/register':'/api/login',{
+      method:'POST',body:JSON.stringify(payload)
+    });
+    token=data.token||data.accessToken||'';
+    if(!token) throw new Error('Сервер не вернул токен авторизации');
+    localStorage.setItem('anarhy_token',token);
+    setUserUI(data.user||data);
+    hideAuth();
+    await refreshDashboard();
+  }catch(error){showError(error.message)}
+  finally{authSubmit.disabled=false}
+});
+
+async function refreshDashboard(){
+  try{
+    const data=await api('/api/tasks');
+    const tasks=data.tasks||data||[];
+    if(!Array.isArray(tasks)||!tasks.length)return;
+    const taskCards=document.querySelectorAll('#tasks .list>.card');
+    tasks.slice(0,taskCards.length).forEach((task,index)=>{
+      const card=taskCards[index];
+      const title=card.querySelector('h2');
+      const description=card.querySelector('p');
+      const xp=card.querySelector('.row strong');
+      if(title)title.textContent='Задание #'+(index+1)+' — '+(task.title||task.name||'Задание');
+      if(description)description.textContent=task.description||'Выполни задание и отправь отчёт.';
+      if(xp&&task.xp!=null)xp.textContent='+'+task.xp+' XP';
+    });
+  }catch(error){console.warn('Не удалось загрузить задания:',error.message)}
+}
+
+document.querySelector('.top-actions .btn.primary')?.addEventListener('click',()=>{
+  go('reports');
+});
+document.querySelector('#profile .btn.primary')?.addEventListener('click',async()=>{
+  alert('Профиль будет сохраняться после подключения отдельного endpoint обновления пользователя.');
+});
+
+loadUser().then(ok=>{if(ok)refreshDashboard()});
 </script>
 </body></html>
