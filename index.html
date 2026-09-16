@@ -1,254 +1,624 @@
-<!doctype html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ANARHY OS — Creator & Partners</title>
-<style>
-:root{
- --bg:#070707;--panel:#101010;--panel2:#151515;--line:#292929;--text:#f5f5f5;
- --muted:#8e8e8e;--red:#ff3030;--red2:#a30d16;--green:#49d17d;--yellow:#f2c14e;
-}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 75% 0,#35080d 0,transparent 35%),var(--bg);color:var(--text);font:14px Inter,Arial,sans-serif}
-button,input{font:inherit}button{cursor:pointer}
-.splash{position:fixed;inset:0;background:#050505;z-index:20;display:grid;place-items:center;transition:opacity .7s}
-.splash.hide{opacity:0;pointer-events:none}.splash-inner{text-align:center}.mark{font-size:clamp(50px,12vw,130px);font-weight:1000;letter-spacing:.18em}.mark span{color:var(--red)}.splash small{color:#777;letter-spacing:.35em;text-transform:uppercase}
-.app{display:flex;min-height:100vh}.side{width:250px;border-right:1px solid var(--line);padding:28px 18px;background:rgba(7,7,7,.88);position:sticky;top:0;height:100vh}
-.brand{font-size:25px;font-weight:1000;letter-spacing:.18em;margin:0 0 5px}.brand span{color:var(--red)}.sub{color:#666;font-size:10px;letter-spacing:.25em}
-.nav{margin-top:55px;display:grid;gap:8px}.nav button{background:none;border:1px solid transparent;color:#999;text-align:left;padding:14px;border-radius:12px}.nav button.active,.nav button:hover{background:#1a1011;color:white;border-color:#482024}.nav b{color:#666;font-size:10px;letter-spacing:.18em;margin:18px 12px 3px}
-.profile{position:absolute;bottom:24px;left:18px;right:18px;border:1px solid var(--line);background:#111;padding:13px;border-radius:15px;display:flex;gap:10px;align-items:center}.avatar{width:35px;height:35px;border-radius:50%;background:linear-gradient(135deg,#ff3030,#4b080c);display:grid;place-items:center;font-weight:900}
-.main{flex:1;min-width:0;padding:30px;max-width:1500px;margin:auto}.top{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:35px}.crumb{color:#777;font-size:12px}.top-actions{display:flex;gap:10px}.btn{border:1px solid var(--line);background:#171717;color:#fff;padding:11px 15px;border-radius:10px}.btn.primary{background:var(--red);border-color:var(--red);font-weight:800}.btn:hover{filter:brightness(1.15)}
-.page{display:none}.page.active{display:block}h1{font-size:clamp(30px,4vw,52px);margin:0 0 10px;letter-spacing:-.05em}h2{margin:0 0 8px;font-size:21px}p{color:var(--muted);line-height:1.6}.eyebrow{color:#ff6565;font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:800}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:linear-gradient(145deg,#151515,#0d0d0d);border:1px solid var(--line);border-radius:18px;padding:20px;min-width:0}.metric{font-size:31px;font-weight:900;margin:15px 0 5px}.delta{font-size:12px;color:var(--green)}.muted{color:#777}.layout{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-top:16px}.bar{height:8px;background:#272727;border-radius:20px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,#8d1017,#ff3030);border-radius:20px}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.list{display:grid;gap:10px;margin-top:18px}.list-item{border:1px solid #252525;background:#111;padding:14px;border-radius:12px}.tag{display:inline-block;padding:5px 8px;border-radius:6px;background:#291014;color:#ff7777;font-size:10px;font-weight:800}.tag.green{background:#102b1c;color:#65e59a}.tag.yellow{background:#2d2410;color:#f6ce64}
-.chart{height:190px;display:flex;align-items:end;gap:9px;padding-top:20px}.chart i{flex:1;background:linear-gradient(#ff3030,#4b0b10);border-radius:5px 5px 0 0;min-height:12px}.table{width:100%;border-collapse:collapse;margin-top:15px}.table th,.table td{text-align:left;padding:15px 8px;border-bottom:1px solid #242424;color:#bbb}.table th{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.08em}.table td strong{color:#fff}.hero{border:1px solid #4b181d;background:radial-gradient(circle at 90% 0,#551017,transparent 45%),linear-gradient(135deg,#1b0b0d,#111);border-radius:22px;padding:30px;margin-bottom:16px}.hero .big{font-size:clamp(30px,5vw,65px);font-weight:1000;letter-spacing:-.06em;max-width:700px}.hero .big span{color:var(--red)}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.module-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}.module{min-height:180px}.module.red{background:linear-gradient(145deg,#2a0d11,#111);border-color:#572026}.module .icon{font-size:28px;margin-bottom:20px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:28px 0 12px}.field{display:grid;gap:7px;margin-top:15px}.field input{width:100%;background:#0c0c0c;color:#fff;border:1px solid #333;border-radius:9px;padding:12px}.notice{padding:14px;border-left:3px solid var(--red);background:#1b0d0f;color:#bbb;border-radius:8px;margin-top:15px}
-@media(max-width:900px){.side{width:76px;padding:20px 10px}.brand{font-size:15px;text-align:center}.sub,.nav b,.nav button span,.profile .profile-text{display:none}.nav button{text-align:center}.profile{left:10px;right:10px;justify-content:center}.main{padding:20px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout,.module-grid{grid-template-columns:1fr}}
-@media(max-width:520px){.top{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr 1fr}.metric{font-size:25px}.main{padding:14px}.card{padding:15px}.table{font-size:12px}.hero{padding:22px}}
+const express = require("express");
+const cors = require("cors");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-.auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(12px);z-index:50;display:grid;place-items:center;padding:20px}
-.auth-overlay.hidden{display:none}
-.auth-box{width:min(440px,100%);background:linear-gradient(145deg,#1a0b0d,#101010);border:1px solid #5a2027;border-radius:22px;padding:28px;box-shadow:0 20px 80px #000}
-.auth-tabs{display:flex;gap:8px;margin:20px 0}
-.auth-tabs button{flex:1}
-.auth-error{color:#ff7777;background:#2b1014;border:1px solid #5a2027;padding:10px;border-radius:9px;margin-top:12px;display:none}
-.auth-status{color:#49d17d;font-size:12px;margin-top:12px}
-.logout{margin-top:10px;width:100%}
-@media(max-width:520px){.auth-box{padding:22px}}
+const app = express();
 
-</style>
-</head>
-<body>
-<div class="splash" id="splash"><div class="splash-inner"><div class="mark">ANAR<span>H</span>Y</div><small>creator operating system</small></div></div>
-<div class="app">
-<aside class="side">
-  <div class="brand">ANAR<span>H</span>Y</div><div class="sub">CREATOR OS / V11</div>
-  <nav class="nav">
-    <b>WORKSPACE</b>
-    <button class="active" data-page="home">◈ <span>Главная</span></button>
-    <button data-page="tasks">▣ <span>TikTok-задания</span></button>
-    <button data-page="reports">↗ <span>Мои отчёты</span></button>
-    <button data-page="progress">◒ <span>Прогресс</span></button>
-    <button data-page="rating">♛ <span>Рейтинг</span></button>
-    <b>OPPORTUNITIES</b>
-    <button data-page="partners">↗ <span>ANARHY Partners</span></button>
-    <button data-page="payouts">₽ <span>Выплаты</span></button>
-    <b>SYSTEM</b>
-    <button data-page="profile">⚙ <span>Профиль</span></button>
-  </nav>
-  <div class="profile"><div class="avatar">D</div><div class="profile-text"><strong>Denis</strong><div class="muted">Founder / Admin</div></div></div>
-</aside>
-<main class="main">
-<header class="top"><div><div class="crumb">ANARHY OS / <span id="crumb">Главная</span></div></div><div class="top-actions"><button class="btn">◔ Уведомления</button><button class="btn primary">+ Создать отчёт</button></div></header>
+const PORT = process.env.PORT || 10000;
+const JWT_SECRET = process.env.JWT_SECRET || "anarhy-secret-change-this";
 
-<section class="page active" id="home">
-<div class="hero"><div class="eyebrow">ANARHY CREATOR OS</div><div class="big">Не просто нарезки.<br><span>Медиа-империя.</span></div><p>Твоя рабочая система: задания, отчёты, прогресс, рейтинг и отдельная возможность заработать через ANARHY Partners.</p><div class="hero-actions"><button class="btn primary" data-page="tasks">Открыть задания →</button><button class="btn" data-page="partners">ANARHY Partners ↗</button></div></div>
-<div class="grid">
-<div class="card"><div class="muted">Заданий сегодня</div><div class="metric">3</div><div class="delta">● Дедлайн 22:00</div></div>
-<div class="card"><div class="muted">Выполнено</div><div class="metric">2 / 3</div><div class="delta">+1 до полного дня</div></div>
-<div class="card"><div class="muted">Твой XP</div><div class="metric">840</div><div class="delta">+120 за неделю</div></div>
-<div class="card"><div class="muted">Уровень</div><div class="metric">Rookie</div><div class="muted">До следующего: 160 XP</div></div>
-</div>
-<div class="layout">
-<div class="card"><div class="row"><h2>Активность за неделю</h2><span class="tag">LIVE DEMO</span></div><p>Публикации и подтверждённые отчёты.</p><div class="chart"><i style="height:35%"></i><i style="height:55%"></i><i style="height:48%"></i><i style="height:80%"></i><i style="height:62%"></i><i style="height:95%"></i><i style="height:72%"></i></div><div class="row muted"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div></div>
-<div class="card"><h2>Сегодня</h2><div class="list"><div class="list-item"><div class="row"><strong>Нарезка #01</strong><span class="tag green">DONE</span></div><p>Ссылка на опубликованный ролик.</p></div><div class="list-item"><div class="row"><strong>Нарезка #02</strong><span class="tag green">DONE</span></div><p>Отчёт принят системой.</p></div><div class="list-item"><div class="row"><strong>Нарезка #03</strong><span class="tag yellow">IN PROGRESS</span></div><p>Осталось отправить ссылку и подтверждение.</p></div></div></div>
-</div>
-<div class="module-grid"><div class="card module"><div class="icon">▣</div><h2>TikTok OS</h2><p>Три задания в день, отчёты до 22:00, страйки, XP и рейтинг. Всё, что относится к контенту — здесь.</p><button class="btn" data-page="tasks">Перейти к заданиям →</button></div><div class="card module red"><div class="icon">↗</div><h2>ANARHY Partners</h2><p>Отдельный модуль для заработка на продаже цифрового продукта. Не влияет на TikTok-задания.</p><button class="btn primary" data-page="partners">Открыть партнёрку →</button></div></div>
-</section>
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
-<section class="page" id="tasks"><div class="eyebrow">CREATOR WORKSPACE</div><h1>TikTok-задания</h1><p>Три публикации каждый день. Дедлайн — 22:00. Отчёт содержит ссылку и подтверждение.</p><div class="notice">3 страйка → сброс текущего цикла. Все проверки проходят через админскую систему.</div><div class="list"><div class="card"><div class="row"><div><span class="tag green">DONE</span><h2>Задание #01 — Hook / динамика</h2></div><strong>+120 XP</strong></div><p>Опубликовать ролик с сильным первым кадром.</p><div class="bar"><span style="width:100%"></span></div></div><div class="card"><div class="row"><div><span class="tag green">DONE</span><h2>Задание #02 — Story cut</h2></div><strong>+120 XP</strong></div><p>Собрать короткую историю с удержанием внимания.</p><div class="bar"><span style="width:100%"></span></div></div><div class="card"><div class="row"><div><span class="tag yellow">IN PROGRESS</span><h2>Задание #03 — Trend adaptation</h2></div><strong>+120 XP</strong></div><p>Адаптировать тренд под стиль ANARHY.</p><div class="bar"><span style="width:66%"></span></div><button class="btn primary" style="margin-top:15px" data-page="reports">Отправить отчёт →</button></div></div></section>
+app.use(express.json());
 
-<section class="page" id="reports"><div class="eyebrow">SUBMISSIONS</div><h1>Мои отчёты</h1><p>История отправленных ссылок и подтверждений.</p><div class="card"><table class="table"><tr><th>Задание</th><th>Дата</th><th>Статус</th><th>XP</th></tr><tr><td><strong>Hook / динамика</strong></td><td>Сегодня</td><td><span class="tag green">Принят</span></td><td>+120</td></tr><tr><td><strong>Story cut</strong></td><td>Сегодня</td><td><span class="tag green">Принят</span></td><td>+120</td></tr><tr><td><strong>Trend adaptation</strong></td><td>Сегодня</td><td><span class="tag yellow">На проверке</span></td><td>—</td></tr></table></div></section>
+/* =========================
+   DEMO DATABASE
+========================= */
 
-<section class="page" id="progress"><div class="eyebrow">LEVEL SYSTEM</div><h1>Прогресс</h1><div class="grid"><div class="card"><div class="muted">Текущий уровень</div><div class="metric">Rookie</div><div class="bar"><span style="width:84%"></span></div><p>840 / 1 000 XP</p></div><div class="card"><div class="muted">Серия дней</div><div class="metric">6</div><p>Не прерывай серию.</p></div><div class="card"><div class="muted">Страйки</div><div class="metric">0 / 3</div><p>Чистая история.</p></div><div class="card"><div class="muted">Видео</div><div class="metric">42</div><p>Всего принято системой.</p></div></div></section>
+const users = [];
+const reports = [];
 
-<section class="page" id="rating"><div class="eyebrow">LEADERBOARD</div><h1>Рейтинг участников</h1><p>Рейтинг строится по подтверждённым результатам, XP и дисциплине.</p><div class="card"><table class="table"><tr><th>#</th><th>Участник</th><th>Уровень</th><th>XP</th></tr><tr><td>01</td><td><strong>ANARHY_01</strong></td><td>Elite</td><td>4 820</td></tr><tr><td>02</td><td><strong>ANARHY_07</strong></td><td>Pro</td><td>3 940</td></tr><tr><td>03</td><td><strong>Denis</strong></td><td>Rookie</td><td>840</td></tr></table></div></section>
+let nextUserId = 1;
+let nextReportId = 1;
 
-<section class="page" id="partners"><div class="eyebrow">ANARHY PARTNERS</div><h1>Зарабатывай на продажах</h1><p>Партнёрка существует отдельно от TikTok-заданий. Здесь отображаются только реальные продажи цифрового продукта.</p><div class="hero"><div class="row"><div><div class="eyebrow">YOUR COMMISSION</div><div class="metric">30%</div><p>с подтверждённой продажи</p></div><div class="tag green">ACTIVE PROGRAM</div></div><div class="notice">Пример: цифровой продукт 7 000 ₽ → комиссия партнёра 2 100 ₽. Начисление после подтверждения оплаты и проверки возвратов.</div></div><div class="grid"><div class="card"><div class="muted">Переходы</div><div class="metric">1 284</div><div class="delta">+18.4%</div></div><div class="card"><div class="muted">Продажи</div><div class="metric">12</div><div class="delta">+3 за неделю</div></div><div class="card"><div class="muted">Ожидает подтверждения</div><div class="metric">6 300 ₽</div><div class="muted">3 заказа</div></div><div class="card"><div class="muted">Доступно к выплате</div><div class="metric">18 900 ₽</div><div class="delta">Можно запросить</div></div></div><div class="layout"><div class="card"><h2>Твоя партнёрская ссылка</h2><p>Создаётся персонально для каждого участника.</p><div class="field"><input value="https://anarhy.ru/p/denis" readonly></div><button class="btn primary" style="margin-top:12px" onclick="alert('В рабочей версии здесь будет копирование ссылки')">Скопировать ссылку</button></div><div class="card"><h2>Статус партнёра</h2><div class="list"><div class="list-item row"><span>Профиль</span><span class="tag green">Одобрен</span></div><div class="list-item row"><span>Продажи</span><strong>12</strong></div><div class="list-item row"><span>Комиссия</span><strong>30%</strong></div></div></div></div></section>
+/* =========================
+   TASKS
+========================= */
 
-<section class="page" id="payouts"><div class="eyebrow">FINANCE</div><h1>Выплаты</h1><p>Комиссии начисляются только за подтверждённые продажи цифрового продукта.</p><div class="card"><h2>История выплат</h2><table class="table"><tr><th>Дата</th><th>Сумма</th><th>Статус</th></tr><tr><td>12.09.2026</td><td><strong>12 600 ₽</strong></td><td><span class="tag green">Выплачено</span></td></tr><tr><td>08.09.2026</td><td><strong>6 300 ₽</strong></td><td><span class="tag green">Выплачено</span></td></tr><tr><td>Сегодня</td><td><strong>18 900 ₽</strong></td><td><span class="tag yellow">Доступно</span></td></tr></table><button class="btn primary" style="margin-top:15px" onclick="alert('В рабочей версии здесь будет заявка на выплату')">Запросить выплату</button></div></section>
+const tasks = [
+  {
+    id: 1,
+    title: "Hook / динамика",
+    description: "Опубликовать ролик с сильным первым кадром.",
+    xp: 120,
+    day: 1,
+    status: "active"
+  },
+  {
+    id: 2,
+    title: "Story cut",
+    description: "Собрать короткую историю с удержанием внимания.",
+    xp: 120,
+    day: 2,
+    status: "active"
+  },
+  {
+    id: 3,
+    title: "Trend adaptation",
+    description: "Адаптировать тренд под стиль ANARHY.",
+    xp: 120,
+    day: 3,
+    status: "active"
+  }
+];
 
-<section class="page" id="profile"><div class="eyebrow">ACCOUNT</div><h1>Профиль</h1><div class="card"><h2>Denis</h2><p>Founder / Admin</p><div class="field"><label>Имя</label><input value="Denis"></div><div class="field"><label>Email</label><input value="admin@anarhy.ru"></div><button class="btn primary" style="margin-top:15px">Сохранить изменения</button></div></section>
-</main></div>
+/* =========================
+   HELPERS
+========================= */
 
-<div class="auth-overlay hidden" id="authOverlay">
-  <div class="auth-box">
-    <div class="eyebrow">ANARHY ACCESS</div>
-    <h2 id="authTitle">Вход в ANARHY OS</h2>
-    <p id="authSubtitle">Войди в аккаунт, чтобы видеть свои задания и прогресс.</p>
-    <div class="auth-tabs">
-      <button class="btn primary" id="loginTab">Вход</button>
-      <button class="btn" id="registerTab">Регистрация</button>
-    </div>
-    <form id="authForm">
-      <div class="field" id="nameField" style="display:none">
-        <label>Имя</label>
-        <input id="authName" autocomplete="name" placeholder="Твоё имя">
-      </div>
-      <div class="field">
-        <label>Логин</label>
-        <input id="authUsername" required autocomplete="username" placeholder="username">
-      </div>
-      <div class="field">
-        <label>Пароль</label>
-        <input id="authPassword" required type="password" autocomplete="current-password" placeholder="••••••••">
-      </div>
-      <button class="btn primary" id="authSubmit" type="submit" style="width:100%;margin-top:18px">Войти</button>
-      <div class="auth-error" id="authError"></div>
-    </form>
-  </div>
-</div>
-
-<script>
-const API_BASE='https://anarhy-backend-final.onrender.com';
-const buttons=[...document.querySelectorAll('[data-page]')];
-const pages=[...document.querySelectorAll('.page')];
-let authMode='login';
-let currentUser=null;
-let token=localStorage.getItem('anarhy_token')||'';
-
-setTimeout(()=>document.getElementById('splash').classList.add('hide'),1500);
-
-function go(id){
-  pages.forEach(p=>p.classList.toggle('active',p.id===id));
-  buttons.forEach(b=>b.classList.toggle('active',b.dataset.page===id));
-  document.getElementById('crumb').textContent=buttons.find(b=>b.dataset.page===id)?.innerText.trim()||id;
-  window.scrollTo(0,0);
-}
-buttons.forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
-
-const overlay=document.getElementById('authOverlay');
-const authForm=document.getElementById('authForm');
-const authTitle=document.getElementById('authTitle');
-const authSubtitle=document.getElementById('authSubtitle');
-const authSubmit=document.getElementById('authSubmit');
-const authError=document.getElementById('authError');
-const nameField=document.getElementById('nameField');
-const loginTab=document.getElementById('loginTab');
-const registerTab=document.getElementById('registerTab');
-
-function setAuthMode(mode){
-  authMode=mode;
-  const register=mode==='register';
-  authTitle.textContent=register?'Регистрация в ANARHY OS':'Вход в ANARHY OS';
-  authSubtitle.textContent=register?'Создай аккаунт участника.':'Войди в аккаунт, чтобы видеть свои задания и прогресс.';
-  nameField.style.display=register?'grid':'none';
-  document.getElementById('authName').required=register;
-  authSubmit.textContent=register?'Создать аккаунт':'Войти';
-  loginTab.classList.toggle('primary',!register);
-  registerTab.classList.toggle('primary',register);
-  authError.style.display='none';
-}
-loginTab.addEventListener('click',()=>setAuthMode('login'));
-registerTab.addEventListener('click',()=>setAuthMode('register'));
-
-function showAuth(){overlay.classList.remove('hidden');}
-function hideAuth(){overlay.classList.add('hidden');}
-function showError(message){authError.textContent=message;authError.style.display='block';}
-
-async function api(path,options={}){
-  const headers={'Content-Type':'application/json',...(options.headers||{})};
-  if(token) headers.Authorization='Bearer '+token;
-  const response=await fetch(API_BASE+path,{...options,headers});
-  let data={};
-  try{data=await response.json()}catch(_){}
-  if(!response.ok) throw new Error(data.error||data.message||'Ошибка запроса');
-  return data;
+function createToken(user) {
+  return jwt.sign(
+    {
+      id: user.id,
+      username: user.username,
+      role: user.role
+    },
+    JWT_SECRET,
+    {
+      expiresIn: "30d"
+    }
+  );
 }
 
-function setUserUI(user){
-  currentUser=user;
-  const name=user?.name||user?.username||'Участник';
-  document.querySelector('.profile strong').textContent=name;
-  document.querySelector('.profile .muted').textContent=user?.role==='admin'?'Founder / Admin':'Creator';
-  document.querySelector('.avatar').textContent=name.slice(0,1).toUpperCase();
-  const profileTitle=document.querySelector('#profile h2');
-  if(profileTitle) profileTitle.textContent=name;
-  const profileInputs=document.querySelectorAll('#profile input');
-  if(profileInputs[0]) profileInputs[0].value=name;
-  if(profileInputs[1]&&user?.email) profileInputs[1].value=user.email;
-}
+function authRequired(req, res, next) {
+  const header = req.headers.authorization || "";
 
-async function loadUser(){
-  if(!token){showAuth();return false}
-  try{
-    const data=await api('/api/me');
-    setUserUI(data.user||data);
-    return true;
-  }catch(error){
-    token='';
-    localStorage.removeItem('anarhy_token');
-    showAuth();
-    return false;
+  if (!header.startsWith("Bearer ")) {
+    return res.status(401).json({
+      ok: false,
+      error: "Требуется авторизация"
+    });
+  }
+
+  const token = header.slice(7);
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = users.find((item) => item.id === decoded.id);
+
+    if (!user) {
+      return res.status(401).json({
+        ok: false,
+        error: "Пользователь не найден"
+      });
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      ok: false,
+      error: "Недействительный токен"
+    });
   }
 }
 
-authForm.addEventListener('submit',async event=>{
-  event.preventDefault();
-  authSubmit.disabled=true;
-  authError.style.display='none';
-  const payload={
-    username:document.getElementById('authUsername').value.trim(),
-    password:document.getElementById('authPassword').value
+function publicUser(user) {
+  return {
+    id: user.id,
+    username: user.username,
+    name: user.name,
+    email: user.email,
+    bio: user.bio,
+    avatar: user.avatar,
+    role: user.role,
+    xp: user.xp,
+    level: user.level,
+    strikes: user.strikes,
+    createdAt: user.createdAt
   };
-  if(authMode==='register') payload.name=document.getElementById('authName').value.trim();
-  try{
-    const data=await api(authMode==='register'?'/api/register':'/api/login',{
-      method:'POST',body:JSON.stringify(payload)
-    });
-    token=data.token||data.accessToken||'';
-    if(!token) throw new Error('Сервер не вернул токен авторизации');
-    localStorage.setItem('anarhy_token',token);
-    setUserUI(data.user||data);
-    hideAuth();
-    await refreshDashboard();
-  }catch(error){showError(error.message)}
-  finally{authSubmit.disabled=false}
-});
-
-async function refreshDashboard(){
-  try{
-    const data=await api('/api/tasks');
-    const tasks=data.tasks||data||[];
-    if(!Array.isArray(tasks)||!tasks.length)return;
-    const taskCards=document.querySelectorAll('#tasks .list>.card');
-    tasks.slice(0,taskCards.length).forEach((task,index)=>{
-      const card=taskCards[index];
-      const title=card.querySelector('h2');
-      const description=card.querySelector('p');
-      const xp=card.querySelector('.row strong');
-      if(title)title.textContent='Задание #'+(index+1)+' — '+(task.title||task.name||'Задание');
-      if(description)description.textContent=task.description||'Выполни задание и отправь отчёт.';
-      if(xp&&task.xp!=null)xp.textContent='+'+task.xp+' XP';
-    });
-  }catch(error){console.warn('Не удалось загрузить задания:',error.message)}
 }
 
-document.querySelector('.top-actions .btn.primary')?.addEventListener('click',()=>{
-  go('reports');
-});
-document.querySelector('#profile .btn.primary')?.addEventListener('click',async()=>{
-  alert('Профиль будет сохраняться после подключения отдельного endpoint обновления пользователя.');
+/* =========================
+   BASIC ROUTES
+========================= */
+
+app.get("/", (req, res) => {
+  res.json({
+    ok: true,
+    service: "ANARHY TikTok OS",
+    status: "online"
+  });
 });
 
-loadUser().then(ok=>{if(ok)refreshDashboard()});
-</script>
-</body></html>
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    service: "ANARHY TikTok OS",
+    status: "online",
+    time: new Date().toISOString()
+  });
+});
+
+/* =========================
+   AUTH ROUTES
+========================= */
+
+app.post("/api/register", async (req, res) => {
+  try {
+    const {
+      username,
+      password,
+      name,
+      email = "",
+      bio = "",
+      avatar = ""
+    } = req.body || {};
+
+    if (!username || !password) {
+      return res.status(400).json({
+        ok: false,
+        error: "Укажи логин и пароль"
+      });
+    }
+
+    if (username.length < 3) {
+      return res.status(400).json({
+        ok: false,
+        error: "Логин должен содержать минимум 3 символа"
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        ok: false,
+        error: "Пароль должен содержать минимум 6 символов"
+      });
+    }
+
+    const normalizedUsername = String(username)
+      .trim()
+      .toLowerCase();
+
+    const exists = users.find(
+      (user) => user.username === normalizedUsername
+    );
+
+    if (exists) {
+      return res.status(409).json({
+        ok: false,
+        error: "Такой логин уже существует"
+      });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const user = {
+      id: nextUserId++,
+      username: normalizedUsername,
+      passwordHash,
+      name: name || normalizedUsername,
+      email,
+      bio,
+      avatar,
+      role: users.length === 0 ? "admin" : "creator",
+      xp: 0,
+      level: "Rookie",
+      strikes: 0,
+      createdAt: new Date().toISOString()
+    };
+
+    users.push(user);
+
+    const token = createToken(user);
+
+    return res.status(201).json({
+      ok: true,
+      message: "Аккаунт создан",
+      token,
+      user: publicUser(user)
+    });
+  } catch (error) {
+    console.error("REGISTER ERROR:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Ошибка регистрации"
+    });
+  }
+});
+
+app.post("/api/login", async (req, res) => {
+  try {
+    const {
+      username,
+      password
+    } = req.body || {};
+
+    if (!username || !password) {
+      return res.status(400).json({
+        ok: false,
+        error: "Укажи логин и пароль"
+      });
+    }
+
+    const normalizedUsername = String(username)
+      .trim()
+      .toLowerCase();
+
+    const user = users.find(
+      (item) => item.username === normalizedUsername
+    );
+
+    if (!user) {
+      return res.status(401).json({
+        ok: false,
+        error: "Неверный логин или пароль"
+      });
+    }
+
+    const validPassword = await bcrypt.compare(
+      password,
+      user.passwordHash
+    );
+
+    if (!validPassword) {
+      return res.status(401).json({
+        ok: false,
+        error: "Неверный логин или пароль"
+      });
+    }
+
+    const token = createToken(user);
+
+    return res.json({
+      ok: true,
+      message: "Вход выполнен",
+      token,
+      user: publicUser(user)
+    });
+  } catch (error) {
+    console.error("LOGIN ERROR:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Ошибка входа"
+    });
+  }
+});
+
+/* =========================
+   CURRENT USER
+========================= */
+
+app.get("/api/me", authRequired, (req, res) => {
+  res.json({
+    ok: true,
+    user: publicUser(req.user)
+  });
+});
+
+/* =========================
+   PROFILE
+========================= */
+
+app.get("/api/profile", authRequired, (req, res) => {
+  res.json({
+    ok: true,
+    profile: publicUser(req.user)
+  });
+});
+
+app.post("/api/profile", authRequired, (req, res) => {
+  const {
+    name,
+    email,
+    bio,
+    avatar
+  } = req.body || {};
+
+  if (typeof name === "string" && name.trim()) {
+    req.user.name = name.trim();
+  }
+
+  if (typeof email === "string") {
+    req.user.email = email.trim();
+  }
+
+  if (typeof bio === "string") {
+    req.user.bio = bio;
+  }
+
+  if (typeof avatar === "string") {
+    req.user.avatar = avatar;
+  }
+
+  res.json({
+    ok: true,
+    message: "Профиль сохранён",
+    user: publicUser(req.user)
+  });
+});
+
+app.put("/api/profile", authRequired, (req, res) => {
+  const {
+    name,
+    email,
+    bio,
+    avatar
+  } = req.body || {};
+
+  if (typeof name === "string" && name.trim()) {
+    req.user.name = name.trim();
+  }
+
+  if (typeof email === "string") {
+    req.user.email = email.trim();
+  }
+
+  if (typeof bio === "string") {
+    req.user.bio = bio;
+  }
+
+  if (typeof avatar === "string") {
+    req.user.avatar = avatar;
+  }
+
+  res.json({
+    ok: true,
+    message: "Профиль обновлён",
+    user: publicUser(req.user)
+  });
+});
+
+/* =========================
+   TASKS
+========================= */
+
+app.get("/api/tasks", authRequired, (req, res) => {
+  res.json({
+    ok: true,
+    tasks
+  });
+});
+
+app.get("/api/tasks/:id", authRequired, (req, res) => {
+  const task = tasks.find(
+    (item) => item.id === Number(req.params.id)
+  );
+
+  if (!task) {
+    return res.status(404).json({
+      ok: false,
+      error: "Задание не найдено"
+    });
+  }
+
+  res.json({
+    ok: true,
+    task
+  });
+});
+
+/* =========================
+   REPORTS
+========================= */
+
+app.get("/api/reports", authRequired, (req, res) => {
+  const userReports = reports.filter(
+    (report) => report.userId === req.user.id
+  );
+
+  res.json({
+    ok: true,
+    reports: userReports
+  });
+});
+
+app.post("/api/reports", authRequired, (req, res) => {
+  const {
+    taskId,
+    taskTitle,
+    videoUrl,
+    proofUrl,
+    comment = ""
+  } = req.body || {};
+
+  if (!videoUrl && !proofUrl) {
+    return res.status(400).json({
+      ok: false,
+      error: "Добавь ссылку на опубликованный ролик"
+    });
+  }
+
+  const report = {
+    id: nextReportId++,
+    userId: req.user.id,
+    taskId: taskId || null,
+    taskTitle: taskTitle || "TikTok-задание",
+    videoUrl: videoUrl || "",
+    proofUrl: proofUrl || "",
+    comment,
+    status: "pending",
+    xp: 0,
+    createdAt: new Date().toISOString()
+  };
+
+  reports.push(report);
+
+  res.status(201).json({
+    ok: true,
+    message: "Отчёт отправлен на проверку",
+    report
+  });
+});
+
+app.get("/api/reports/:id", authRequired, (req, res) => {
+  const report = reports.find(
+    (item) =>
+      item.id === Number(req.params.id) &&
+      item.userId === req.user.id
+  );
+
+  if (!report) {
+    return res.status(404).json({
+      ok: false,
+      error: "Отчёт не найден"
+    });
+  }
+
+  res.json({
+    ok: true,
+    report
+  });
+});
+
+/* =========================
+   PROGRESS
+========================= */
+
+app.get("/api/progress", authRequired, (req, res) => {
+  const userReports = reports.filter(
+    (report) =>
+      report.userId === req.user.id &&
+      report.status === "approved"
+  );
+
+  const approvedCount = userReports.length;
+  const xp = approvedCount * 120;
+
+  let level = "Rookie";
+
+  if (xp >= 5000) {
+    level = "Elite";
+  } else if (xp >= 2500) {
+    level = "Pro";
+  } else if (xp >= 1000) {
+    level = "Advanced";
+  }
+
+  req.user.xp = xp;
+  req.user.level = level;
+
+  res.json({
+    ok: true,
+    progress: {
+      xp,
+      level,
+      strikes: req.user.strikes,
+      approvedReports: approvedCount,
+      videos: approvedCount
+    }
+  });
+});
+
+/* =========================
+   RATING
+========================= */
+
+app.get("/api/rating", authRequired, (req, res) => {
+  const rating = users
+    .map((user) => publicUser(user))
+    .sort((a, b) => b.xp - a.xp)
+    .map((user, index) => ({
+      position: index + 1,
+      ...user
+    }));
+
+  res.json({
+    ok: true,
+    rating
+  });
+});
+
+/* =========================
+   ADMIN
+========================= */
+
+app.get("/api/admin/users", authRequired, (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({
+      ok: false,
+      error: "Доступ только для администратора"
+    });
+  }
+
+  res.json({
+    ok: true,
+    users: users.map(publicUser)
+  });
+});
+
+app.get("/api/admin/reports", authRequired, (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({
+      ok: false,
+      error: "Доступ только для администратора"
+    });
+  }
+
+  res.json({
+    ok: true,
+    reports
+  });
+});
+
+app.patch("/api/admin/reports/:id", authRequired, (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({
+      ok: false,
+      error: "Доступ только для администратора"
+    });
+  }
+
+  const report = reports.find(
+    (item) => item.id === Number(req.params.id)
+  );
+
+  if (!report) {
+    return res.status(404).json({
+      ok: false,
+      error: "Отчёт не найден"
+    });
+  }
+
+  const {
+    status,
+    xp
+  } = req.body || {};
+
+  if (["pending", "approved", "rejected"].includes(status)) {
+    report.status = status;
+  }
+
+  if (typeof xp === "number") {
+    report.xp = xp;
+  }
+
+  res.json({
+    ok: true,
+    message: "Отчёт обновлён",
+    report
+  });
+});
+
+/* =========================
+   ERROR HANDLER
+========================= */
+
+app.use((req, res) => {
+  res.status(404).json({
+    ok: false,
+    error: "Маршрут не найден",
+    path: req.path
+  });
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`ANARHY backend running on port ${PORT}`);
+});
