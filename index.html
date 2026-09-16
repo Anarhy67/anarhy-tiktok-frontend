@@ -3,1541 +3,1952 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ANARHY OS — Creator & Partners</title>
+<title>ANARHY OS — Live Dashboard</title>
 
 <style>
 :root{
- --bg:#070707;
- --panel:#101010;
- --panel2:#151515;
- --line:#292929;
- --text:#f5f5f5;
- --muted:#8e8e8e;
- --red:#ff3030;
- --red2:#a30d16;
- --green:#49d17d;
- --yellow:#f2c14e;
+  --bg:#070707;
+  --panel:#101010;
+  --panel2:#151515;
+  --line:#292929;
+  --text:#f5f5f5;
+  --muted:#888;
+  --red:#ff3030;
+  --red-dark:#300b10;
+  --green:#45d483;
+  --yellow:#f2c14e;
 }
 
 *{
- box-sizing:border-box
+  box-sizing:border-box;
 }
 
 body{
- margin:0;
- background:
- radial-gradient(circle at 75% 0,#35080d 0,transparent 35%),
- var(--bg);
- color:var(--text);
- font:14px Inter,Arial,sans-serif
+  margin:0;
+  background:
+    radial-gradient(circle at 80% 0,#430b12 0,transparent 34%),
+    radial-gradient(circle at 30% 100%,#22070b 0,transparent 30%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
 }
 
 button,
-input{
- font:inherit
+input,
+textarea,
+select{
+  font:inherit;
 }
 
 button{
- cursor:pointer
+  cursor:pointer;
 }
 
-.splash{
- position:fixed;
- inset:0;
- background:#050505;
- z-index:20;
- display:grid;
- place-items:center;
- transition:opacity .7s
-}
-
-.splash.hide{
- opacity:0;
- pointer-events:none
-}
-
-.splash-inner{
- text-align:center
-}
-
-.mark{
- font-size:clamp(50px,12vw,130px);
- font-weight:1000;
- letter-spacing:.18em
-}
-
-.mark span{
- color:var(--red)
-}
-
-.splash small{
- color:#777;
- letter-spacing:.35em;
- text-transform:uppercase
+button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
 }
 
 .app{
- display:flex;
- min-height:100vh
+  min-height:100vh;
+  display:flex;
 }
 
-.side{
- width:250px;
- border-right:1px solid var(--line);
- padding:28px 18px;
- background:rgba(7,7,7,.88);
- position:sticky;
- top:0;
- height:100vh
+.sidebar{
+  width:250px;
+  min-height:100vh;
+  position:sticky;
+  top:0;
+  background:#080808;
+  border-right:1px solid var(--line);
+  padding:28px 18px;
 }
 
-.brand{
- font-size:25px;
- font-weight:1000;
- letter-spacing:.18em;
- margin:0 0 5px
+.logo{
+  font-size:26px;
+  font-weight:1000;
+  letter-spacing:.18em;
 }
 
-.brand span{
- color:var(--red)
+.logo span{
+  color:var(--red);
 }
 
-.sub{
- color:#666;
- font-size:10px;
- letter-spacing:.25em
+.logo-sub{
+  color:#666;
+  font-size:10px;
+  letter-spacing:.25em;
+  margin-top:5px;
 }
 
 .nav{
- margin-top:55px;
- display:grid;
- gap:8px
+  margin-top:50px;
+  display:grid;
+  gap:7px;
+}
+
+.nav-title{
+  color:#555;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.2em;
+  margin:20px 12px 5px;
 }
 
 .nav button{
- background:none;
- border:1px solid transparent;
- color:#999;
- text-align:left;
- padding:14px;
- border-radius:12px
+  width:100%;
+  text-align:left;
+  color:#999;
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:12px;
+  padding:14px;
 }
 
-.nav button.active,
-.nav button:hover{
- background:#1a1011;
- color:white;
- border-color:#482024
+.nav button:hover,
+.nav button.active{
+  color:#fff;
+  background:#1b1012;
+  border-color:#4b1b21;
 }
 
-.nav b{
- color:#666;
- font-size:10px;
- letter-spacing:.18em;
- margin:18px 12px 3px
-}
-
-.profile{
- position:absolute;
- bottom:24px;
- left:18px;
- right:18px;
- border:1px solid var(--line);
- background:#111;
- padding:13px;
- border-radius:15px;
- display:flex;
- gap:10px;
- align-items:center
+.user-mini{
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:24px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:13px;
+  background:#111;
+  border:1px solid var(--line);
+  border-radius:15px;
 }
 
 .avatar{
- width:35px;
- height:35px;
- border-radius:50%;
- background:linear-gradient(135deg,#ff3030,#4b080c);
- display:grid;
- place-items:center;
- font-weight:900
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#ff3030,#530b11);
+  font-weight:900;
+}
+
+.user-name{
+  font-weight:800;
+}
+
+.user-role{
+  color:#777;
+  font-size:12px;
+  margin-top:3px;
 }
 
 .main{
- flex:1;
- min-width:0;
- padding:30px;
- max-width:1500px;
- margin:auto
+  flex:1;
+  min-width:0;
+  max-width:1500px;
+  padding:30px;
+  margin:auto;
 }
 
-.top{
- display:flex;
- justify-content:space-between;
- gap:20px;
- align-items:center;
- margin-bottom:35px
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  margin-bottom:28px;
 }
 
 .crumb{
- color:#777;
- font-size:12px
+  color:#777;
+  font-size:12px;
 }
 
 .top-actions{
- display:flex;
- gap:10px
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
 .btn{
- border:1px solid var(--line);
- background:#171717;
- color:#fff;
- padding:11px 15px;
- border-radius:10px
-}
-
-.btn.primary{
- background:var(--red);
- border-color:var(--red);
- font-weight:800
+  border:1px solid var(--line);
+  background:#171717;
+  color:#fff;
+  border-radius:10px;
+  padding:12px 15px;
 }
 
 .btn:hover{
- filter:brightness(1.15)
+  filter:brightness(1.2);
+}
+
+.btn-primary{
+  background:var(--red);
+  border-color:var(--red);
+  font-weight:800;
+}
+
+.btn-danger{
+  background:#321014;
+  border-color:#6c2028;
+  color:#ff8b8b;
+}
+
+.backend-status{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 13px;
+  border-radius:9px;
+  background:#2b2410;
+  color:var(--yellow);
+  font-size:12px;
+  font-weight:800;
+}
+
+.backend-status.online{
+  background:#102d1d;
+  color:var(--green);
 }
 
 .page{
- display:none
+  display:none;
 }
 
 .page.active{
- display:block
-}
-
-h1{
- font-size:clamp(30px,4vw,52px);
- margin:0 0 10px;
- letter-spacing:-.05em
-}
-
-h2{
- margin:0 0 8px;
- font-size:21px
-}
-
-p{
- color:var(--muted);
- line-height:1.6
+  display:block;
 }
 
 .eyebrow{
- color:#ff6565;
- font-size:11px;
- letter-spacing:.2em;
- text-transform:uppercase;
- font-weight:800
+  color:#ff6767;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.2em;
+  text-transform:uppercase;
 }
 
-.grid{
- display:grid;
- grid-template-columns:repeat(4,minmax(0,1fr));
- gap:14px
+h1{
+  font-size:clamp(32px,4vw,56px);
+  letter-spacing:-.06em;
+  margin:8px 0;
 }
 
-.card{
- background:linear-gradient(145deg,#151515,#0d0d0d);
- border:1px solid var(--line);
- border-radius:18px;
- padding:20px;
- min-width:0
+h2{
+  font-size:22px;
+  margin:0 0 8px;
 }
 
-.metric{
- font-size:31px;
- font-weight:900;
- margin:15px 0 5px
+h3{
+  font-size:17px;
+  margin:0 0 8px;
 }
 
-.delta{
- font-size:12px;
- color:var(--green)
-}
-
-.muted{
- color:#777
-}
-
-.layout{
- display:grid;
- grid-template-columns:1.5fr 1fr;
- gap:16px;
- margin-top:16px
-}
-
-.bar{
- height:8px;
- background:#272727;
- border-radius:20px;
- overflow:hidden
-}
-
-.bar span{
- display:block;
- height:100%;
- background:linear-gradient(90deg,#8d1017,#ff3030);
- border-radius:20px
-}
-
-.row{
- display:flex;
- justify-content:space-between;
- gap:12px;
- align-items:center
-}
-
-.list{
- display:grid;
- gap:10px;
- margin-top:18px
-}
-
-.list-item{
- border:1px solid #252525;
- background:#111;
- padding:14px;
- border-radius:12px
-}
-
-.tag{
- display:inline-block;
- padding:5px 8px;
- border-radius:6px;
- background:#291014;
- color:#ff7777;
- font-size:10px;
- font-weight:800
-}
-
-.tag.green{
- background:#102b1c;
- color:#65e59a
-}
-
-.tag.yellow{
- background:#2d2410;
- color:#f6ce64
-}
-
-.chart{
- height:190px;
- display:flex;
- align-items:end;
- gap:9px;
- padding-top:20px
-}
-
-.chart i{
- flex:1;
- background:linear-gradient(#ff3030,#4b0b10);
- border-radius:5px 5px 0 0;
- min-height:12px
-}
-
-.table{
- width:100%;
- border-collapse:collapse;
- margin-top:15px
-}
-
-.table th,
-.table td{
- text-align:left;
- padding:15px 8px;
- border-bottom:1px solid #242424;
- color:#bbb
-}
-
-.table th{
- font-size:11px;
- color:#666;
- text-transform:uppercase;
- letter-spacing:.08em
-}
-
-.table td strong{
- color:#fff
+p{
+  color:var(--muted);
+  line-height:1.6;
 }
 
 .hero{
- border:1px solid #4b181d;
- background:
- radial-gradient(circle at 90% 0,#551017,transparent 45%),
- linear-gradient(135deg,#1b0b0d,#111);
- border-radius:22px;
- padding:30px;
- margin-bottom:16px
+  border:1px solid #581b23;
+  border-radius:22px;
+  padding:32px;
+  background:
+    radial-gradient(circle at 90% 0,#5a1019,transparent 43%),
+    linear-gradient(135deg,#211013,#100b0c);
+  margin-bottom:16px;
 }
 
-.hero .big{
- font-size:clamp(30px,5vw,65px);
- font-weight:1000;
- letter-spacing:-.06em;
- max-width:700px
+.hero-title{
+  font-size:clamp(35px,5vw,68px);
+  line-height:.98;
+  letter-spacing:-.065em;
+  font-weight:1000;
+  margin-top:18px;
 }
 
-.hero .big span{
- color:var(--red)
+.hero-title span{
+  color:var(--red);
 }
 
 .hero-actions{
- display:flex;
- gap:10px;
- flex-wrap:wrap;
- margin-top:22px
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:25px;
 }
 
-.module-grid{
- display:grid;
- grid-template-columns:repeat(2,minmax(0,1fr));
- gap:16px;
- margin-top:16px
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
 }
 
-.module{
- min-height:180px
+.card{
+  min-width:0;
+  padding:21px;
+  background:linear-gradient(145deg,#151515,#0d0d0d);
+  border:1px solid var(--line);
+  border-radius:18px;
 }
 
-.module.red{
- background:linear-gradient(145deg,#2a0d11,#111);
- border-color:#572026
+.metric-label{
+  color:#888;
+  font-size:13px;
 }
 
-.module .icon{
- font-size:28px;
- margin-bottom:20px
+.metric{
+  font-size:32px;
+  font-weight:1000;
+  margin:13px 0 5px;
+  overflow-wrap:anywhere;
+}
+
+.green{
+  color:var(--green);
+}
+
+.yellow{
+  color:var(--yellow);
+}
+
+.red{
+  color:#ff6868;
+}
+
+.muted{
+  color:#777;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:1.5fr 1fr;
+  gap:16px;
+  margin-top:16px;
 }
 
 .section-head{
- display:flex;
- justify-content:space-between;
- align-items:end;
- gap:15px;
- margin:28px 0 12px
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin:25px 0 12px;
 }
 
-.field{
- display:grid;
- gap:7px;
- margin-top:15px
+.list{
+  display:grid;
+  gap:10px;
+  margin-top:18px;
 }
 
-.field input{
- width:100%;
- background:#0c0c0c;
- color:#fff;
- border:1px solid #333;
- border-radius:9px;
- padding:12px
+.list-item{
+  background:#111;
+  border:1px solid #292929;
+  border-radius:12px;
+  padding:15px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.tag{
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:6px;
+  background:#2e1015;
+  color:#ff7777;
+  font-size:10px;
+  font-weight:900;
+}
+
+.tag.green{
+  background:#102d1d;
+  color:#65e59a;
+}
+
+.tag.yellow{
+  background:#302610;
+  color:#f6d16a;
+}
+
+.progress{
+  height:9px;
+  background:#292929;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.progress span{
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#8e1119,#ff3030);
+  border-radius:20px;
+  transition:width .4s;
+}
+
+.chart{
+  height:180px;
+  display:flex;
+  align-items:end;
+  gap:10px;
+  margin-top:20px;
+}
+
+.chart-bar{
+  flex:1;
+  min-height:8px;
+  border-radius:5px 5px 0 0;
+  background:linear-gradient(#ff3030,#4d0d13);
+}
+
+.chart-labels{
+  display:flex;
+  justify-content:space-between;
+  color:#666;
+  font-size:11px;
+  margin-top:8px;
 }
 
 .notice{
- padding:14px;
- border-left:3px solid var(--red);
- background:#1b0d0f;
- color:#bbb;
- border-radius:8px;
- margin-top:15px
+  padding:14px 16px;
+  background:#211013;
+  border-left:3px solid var(--red);
+  border-radius:8px;
+  color:#bbb;
+  line-height:1.5;
+  margin-top:16px;
 }
 
-@media(max-width:900px){
- .side{
-  width:76px;
-  padding:20px 10px
- }
-
- .brand{
-  font-size:15px;
-  text-align:center
- }
-
- .sub,
- .nav b,
- .nav button span,
- .profile .profile-text{
-  display:none
- }
-
- .nav button{
-  text-align:center
- }
-
- .profile{
-  left:10px;
-  right:10px;
-  justify-content:center
- }
-
- .main{
-  padding:20px
- }
-
- .grid{
-  grid-template-columns:repeat(2,minmax(0,1fr))
- }
-
- .layout,
- .module-grid{
-  grid-template-columns:1fr
- }
+.task-card{
+  margin-top:14px;
 }
 
-@media(max-width:520px){
- .top{
-  align-items:flex-start;
-  flex-direction:column
- }
+.task-description{
+  color:#999;
+  line-height:1.6;
+  margin:12px 0;
+}
 
- .grid{
-  grid-template-columns:1fr 1fr
- }
+.task-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
 
- .metric{
-  font-size:25px
- }
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
 
- .main{
-  padding:14px
- }
+.field{
+  display:grid;
+  gap:7px;
+}
 
- .card{
-  padding:15px
- }
+.field.full{
+  grid-column:1/-1;
+}
 
- .table{
-  font-size:12px
- }
+.field label{
+  color:#aaa;
+  font-size:12px;
+  font-weight:700;
+}
 
- .hero{
-  padding:22px
- }
+.field input,
+.field textarea,
+.field select{
+  width:100%;
+  color:#fff;
+  background:#0b0b0b;
+  border:1px solid #333;
+  border-radius:9px;
+  padding:12px;
+  outline:none;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+  border-color:var(--red);
+}
+
+.field textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+}
+
+th,
+td{
+  text-align:left;
+  padding:14px 8px;
+  border-bottom:1px solid #292929;
+  white-space:nowrap;
+}
+
+th{
+  color:#666;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+td{
+  color:#bbb;
+}
+
+td strong{
+  color:#fff;
 }
 
 .profile-hero{
- display:grid;
- grid-template-columns:auto 1fr auto;
- gap:22px;
- align-items:center;
- padding:28px;
- border:1px solid #552027;
- background:
- radial-gradient(circle at 0 0,#421016,transparent 45%),
- linear-gradient(135deg,#181010,#0d0d0d);
- border-radius:22px;
- margin-bottom:16px
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:22px;
+  align-items:center;
+  padding:28px;
+  border:1px solid #581b23;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 0 0,#4b1118,transparent 45%),
+    #111;
+  margin-bottom:16px;
 }
 
-.profile-big-avatar{
- width:110px;
- height:110px;
- border-radius:28px;
- display:grid;
- place-items:center;
- background:linear-gradient(135deg,#ff3030,#570b12);
- font-size:48px;
- font-weight:1000;
- box-shadow:0 0 45px #ff303033
+.profile-avatar{
+  width:110px;
+  height:110px;
+  border-radius:28px;
+  display:grid;
+  place-items:center;
+  font-size:48px;
+  font-weight:1000;
+  background:linear-gradient(135deg,#ff3030,#560b12);
 }
 
 .profile-name{
- font-size:32px;
- font-weight:1000;
- letter-spacing:-.05em
+  font-size:32px;
+  font-weight:1000;
+  letter-spacing:-.05em;
 }
 
 .profile-handle{
- color:#ff7777;
- margin-top:5px
+  color:#ff7777;
+  margin-top:5px;
 }
 
-.profile-meta{
- display:flex;
- gap:8px;
- flex-wrap:wrap;
- margin-top:14px
+.profile-stat{
+  padding:17px;
+  min-width:150px;
+  background:#111;
+  border:1px solid #292929;
+  border-radius:14px;
 }
 
-.profile-pill{
- padding:7px 10px;
- border:1px solid #422027;
- background:#211014;
- border-radius:999px;
- color:#ffaaaa;
- font-size:11px
+.profile-stat strong{
+  display:block;
+  font-size:27px;
+  margin-top:8px;
 }
 
-.profile-form{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:16px
+.auth-screen{
+  min-height:100vh;
+  display:none;
+  place-items:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at 50% 0,#4c0d15,transparent 40%),
+    #070707;
 }
 
-.profile-form .field{
- margin-top:0
+.auth-screen.active{
+  display:grid;
 }
 
-.profile-form .field.full{
- grid-column:1/-1
+.auth-card{
+  width:min(440px,100%);
+  background:#111;
+  border:1px solid #3d171d;
+  border-radius:22px;
+  padding:28px;
 }
 
-.profile-form textarea{
- width:100%;
- min-height:110px;
- resize:vertical;
- background:#0c0c0c;
- color:#fff;
- border:1px solid #333;
- border-radius:9px;
- padding:12px;
- font:inherit
+.auth-logo{
+  font-size:32px;
+  font-weight:1000;
+  letter-spacing:.16em;
+  margin-bottom:8px;
 }
 
-.profile-side-stat{
- padding:16px;
- border:1px solid #292929;
- background:#111;
- border-radius:15px;
- min-width:150px
+.auth-logo span{
+  color:var(--red);
 }
 
-.profile-side-stat strong{
- display:block;
- font-size:26px;
- margin-top:8px
+.auth-tabs{
+  display:flex;
+  gap:8px;
+  margin:22px 0;
 }
 
-@media(max-width:650px){
- .profile-hero{
-  grid-template-columns:auto 1fr
- }
+.auth-tabs button{
+  flex:1;
+}
 
- .profile-side-stat{
-  grid-column:1/-1
- }
+.auth-form{
+  display:grid;
+  gap:13px;
+}
 
- .profile-form{
-  grid-template-columns:1fr
- }
+.auth-error{
+  color:#ff7777;
+  background:#2a1014;
+  border-radius:8px;
+  padding:10px;
+  font-size:13px;
+  display:none;
+}
 
- .profile-form .field.full{
-  grid-column:auto
- }
+.auth-error.show{
+  display:block;
+}
+
+.loading{
+  color:#888;
+  padding:20px 0;
+}
+
+.empty{
+  color:#777;
+  padding:20px 0;
+}
+
+@media(max-width:1050px){
+  .grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:750px){
+  .sidebar{
+    width:76px;
+    padding:22px 10px;
+  }
+
+  .logo{
+    font-size:15px;
+    text-align:center;
+  }
+
+  .logo-sub,
+  .nav-title,
+  .nav button span,
+  .user-text{
+    display:none;
+  }
+
+  .nav button{
+    text-align:center;
+    padding:13px 5px;
+  }
+
+  .user-mini{
+    left:10px;
+    right:10px;
+    justify-content:center;
+  }
+
+  .main{
+    padding:18px;
+  }
+
+  .topbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .profile-hero{
+    grid-template-columns:auto 1fr;
+  }
+
+  .profile-stat{
+    grid-column:1/-1;
+  }
+}
+
+@media(max-width:520px){
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .card{
+    padding:15px;
+  }
+
+  .metric{
+    font-size:25px;
+  }
+
+  .hero{
+    padding:22px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .field.full{
+    grid-column:auto;
+  }
+
+  .profile-avatar{
+    width:78px;
+    height:78px;
+    font-size:34px;
+  }
+
+  .profile-name{
+    font-size:25px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="splash" id="splash">
- <div class="splash-inner">
-  <div class="mark">ANAR<span>H</span>Y</div>
-  <small>creator operating system</small>
- </div>
+<div class="auth-screen active" id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">ANAR<span>H</span>Y</div>
+    <div class="muted">CREATOR OPERATING SYSTEM</div>
+
+    <div class="auth-tabs">
+      <button class="btn btn-primary" id="loginTab">Вход</button>
+      <button class="btn" id="registerTab">Регистрация</button>
+    </div>
+
+    <div class="auth-error" id="authError"></div>
+
+    <form class="auth-form" id="authForm">
+      <div class="field" id="nameField" style="display:none">
+        <label>Имя</label>
+        <input id="authName" placeholder="Denis">
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input id="authEmail" type="email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="field">
+        <label>Пароль</label>
+        <input id="authPassword" type="password" placeholder="Минимум 6 символов" required>
+      </div>
+
+      <button class="btn btn-primary" id="authSubmit" type="submit">
+        Войти →
+      </button>
+    </form>
+  </div>
 </div>
 
-<div class="app">
+<div class="app" id="app" style="display:none">
 
-<aside class="side">
+  <aside class="sidebar">
+    <div class="logo">ANAR<span>H</span>Y</div>
+    <div class="logo-sub">CREATOR OS / LIVE</div>
 
- <div class="brand">ANAR<span>H</span>Y</div>
- <div class="sub">CREATOR OS / V12</div>
+    <nav class="nav">
+      <div class="nav-title">WORKSPACE</div>
 
- <nav class="nav">
+      <button class="active" data-page="home">◈ <span>Главная</span></button>
+      <button data-page="tasks">▣ <span>TikTok-задания</span></button>
+      <button data-page="reports">↗ <span>Мои отчёты</span></button>
+      <button data-page="progress">◒ <span>Прогресс</span></button>
+      <button data-page="rating">♛ <span>Рейтинг</span></button>
 
-  <b>WORKSPACE</b>
+      <div class="nav-title">OPPORTUNITIES</div>
 
-  <button class="active" data-page="home">
-   ◈ <span>Главная</span>
-  </button>
+      <button data-page="partners">↗ <span>ANARHY Partners</span></button>
+      <button data-page="payouts">₽ <span>Выплаты</span></button>
 
-  <button data-page="tasks">
-   ▣ <span>TikTok-задания</span>
-  </button>
+      <div class="nav-title">SYSTEM</div>
 
-  <button data-page="reports">
-   ↗ <span>Мои отчёты</span>
-  </button>
+      <button data-page="profile">⚙ <span>Профиль</span></button>
+      <button id="logoutButton">↪ <span>Выйти</span></button>
+    </nav>
 
-  <button data-page="progress">
-   ◒ <span>Прогресс</span>
-  </button>
-
-  <button data-page="rating">
-   ♛ <span>Рейтинг</span>
-  </button>
-
-  <b>OPPORTUNITIES</b>
-
-  <button data-page="partners">
-   ↗ <span>ANARHY Partners</span>
-  </button>
-
-  <button data-page="payouts">
-   ₽ <span>Выплаты</span>
-  </button>
-
-  <b>SYSTEM</b>
-
-  <button data-page="profile">
-   ⚙ <span>Профиль</span>
-  </button>
-
- </nav>
-
- <div class="profile">
-  <div class="avatar">D</div>
-  <div class="profile-text">
-   <strong>Denis</strong>
-   <div class="muted">Founder / Admin</div>
-  </div>
- </div>
-
-</aside>
-
-<main class="main">
-
-<header class="top">
-
- <div>
-  <div class="crumb">
-   ANARHY OS / <span id="crumb">Главная</span>
-  </div>
- </div>
-
- <div class="top-actions">
-  <button class="btn">
-   ◔ Уведомления
-  </button>
-
-  <button class="btn primary">
-   + Создать отчёт
-  </button>
- </div>
-
-</header>
-
-<section class="page active" id="home">
-
- <div class="hero">
-
-  <div class="eyebrow">
-   ANARHY CREATOR OS · DASHBOARD V12
-  </div>
-
-  <div class="big">
-   Не просто нарезки.<br>
-   <span>Медиа-империя.</span>
-  </div>
-
-  <p>
-   Твоя рабочая система: задания, отчёты, прогресс, рейтинг
-   и отдельная возможность заработать через ANARHY Partners.
-  </p>
-
-  <div class="hero-actions">
-
-   <button class="btn primary" data-page="tasks">
-    Открыть задания →
-   </button>
-
-   <button class="btn" data-page="partners">
-    ANARHY Partners ↗
-   </button>
-
-  </div>
-
- </div>
-
- <div class="grid">
-
-  <div class="card">
-   <div class="muted">Заданий сегодня</div>
-   <div class="metric">3</div>
-   <div class="delta">● Дедлайн 22:00</div>
-  </div>
-
-  <div class="card">
-   <div class="muted">Выполнено</div>
-   <div class="metric">2 / 3</div>
-   <div class="delta">+1 до полного дня</div>
-  </div>
-
-  <div class="card">
-   <div class="muted">Твой XP</div>
-   <div class="metric">840</div>
-   <div class="delta">+120 за неделю</div>
-  </div>
-
-  <div class="card">
-   <div class="muted">Уровень</div>
-   <div class="metric">Rookie</div>
-   <div class="muted">До следующего: 160 XP</div>
-  </div>
-
- </div>
-
- <div class="layout">
-
-  <div class="card">
-
-   <div class="row">
-    <h2>Активность за неделю</h2>
-    <span class="tag">LIVE DEMO</span>
-   </div>
-
-   <p>
-    Публикации и подтверждённые отчёты.
-   </p>
-
-   <div class="chart">
-    <i style="height:35%"></i>
-    <i style="height:55%"></i>
-    <i style="height:48%"></i>
-    <i style="height:80%"></i>
-    <i style="height:62%"></i>
-    <i style="height:95%"></i>
-    <i style="height:72%"></i>
-   </div>
-
-   <div class="row muted">
-    <span>Пн</span>
-    <span>Вт</span>
-    <span>Ср</span>
-    <span>Чт</span>
-    <span>Пт</span>
-    <span>Сб</span>
-    <span>Вс</span>
-   </div>
-
-  </div>
-
-  <div class="card">
-
-   <h2>Сегодня</h2>
-
-   <div class="list">
-
-    <div class="list-item">
-     <div class="row">
-      <strong>Нарезка #01</strong>
-      <span class="tag green">DONE</span>
-     </div>
-     <p>Ссылка на опубликованный ролик.</p>
+    <div class="user-mini">
+      <div class="avatar" id="miniAvatar">D</div>
+      <div class="user-text">
+        <div class="user-name" id="miniName">Denis</div>
+        <div class="user-role" id="miniRole">Participant</div>
+      </div>
     </div>
-
-    <div class="list-item">
-     <div class="row">
-      <strong>Нарезка #02</strong>
-      <span class="tag green">DONE</span>
-     </div>
-     <p>Отчёт принят системой.</p>
-    </div>
-
-    <div class="list-item">
-     <div class="row">
-      <strong>Нарезка #03</strong>
-      <span class="tag yellow">IN PROGRESS</span>
-     </div>
-     <p>Осталось отправить ссылку и подтверждение.</p>
-    </div>
-
-   </div>
-
-  </div>
-
- </div>
-
- <div class="module-grid">
-
-  <div class="card module">
-
-   <div class="icon">▣</div>
-
-   <h2>TikTok OS</h2>
-
-   <p>
-    Три задания в день, отчёты до 22:00, страйки, XP и рейтинг.
-    Всё, что относится к контенту — здесь.
-   </p>
-
-   <button class="btn" data-page="tasks">
-    Перейти к заданиям →
-   </button>
-
-  </div>
-
-  <div class="card module red">
-
-   <div class="icon">↗</div>
-
-   <h2>ANARHY Partners</h2>
-
-   <p>
-    Отдельный модуль для заработка на продаже цифрового продукта.
-    Не влияет на TikTok-задания.
-   </p>
-
-   <button class="btn primary" data-page="partners">
-    Открыть партнёрку →
-   </button>
-
-  </div>
-
- </div>
-
-</section>
-
-<section class="page" id="tasks">
-
- <div class="eyebrow">CREATOR WORKSPACE</div>
-
- <h1>TikTok-задания</h1>
-
- <p>
-  Три публикации каждый день. Дедлайн — 22:00.
-  Отчёт содержит ссылку и подтверждение.
- </p>
-
- <div class="notice">
-  3 страйка → сброс текущего цикла.
-  Все проверки проходят через админскую систему.
- </div>
-
- <div class="list">
-
-  <div class="card">
-
-   <div class="row">
-
-    <div>
-     <span class="tag green">DONE</span>
-     <h2>Задание #01 — Hook / динамика</h2>
-    </div>
-
-    <strong>+120 XP</strong>
-
-   </div>
-
-   <p>
-    Опубликовать ролик с сильным первым кадром.
-   </p>
-
-   <div class="bar">
-    <span style="width:100%"></span>
-   </div>
-
-  </div>
-
-  <div class="card">
-
-   <div class="row">
-
-    <div>
-     <span class="tag green">DONE</span>
-     <h2>Задание #02 — Story cut</h2>
-    </div>
-
-    <strong>+120 XP</strong>
-
-   </div>
-
-   <p>
-    Собрать короткую историю с удержанием внимания.
-   </p>
-
-   <div class="bar">
-    <span style="width:100%"></span>
-   </div>
-
-  </div>
-
-  <div class="card">
-
-   <div class="row">
-
-    <div>
-     <span class="tag yellow">IN PROGRESS</span>
-     <h2>Задание #03 — Trend adaptation</h2>
-    </div>
-
-    <strong>+120 XP</strong>
-
-   </div>
-
-   <p>
-    Адаптировать тренд под стиль ANARHY.
-   </p>
-
-   <div class="bar">
-    <span style="width:66%"></span>
-   </div>
-
-   <button
-    class="btn primary"
-    style="margin-top:15px"
-    data-page="reports">
-    Отправить отчёт →
-   </button>
-
-  </div>
-
- </div>
-
-</section>
-
-<section class="page" id="reports">
-
- <div class="eyebrow">SUBMISSIONS</div>
-
- <h1>Мои отчёты</h1>
-
- <p>
-  История отправленных ссылок и подтверждений.
- </p>
-
- <div class="card">
-
-  <table class="table">
-
-   <tr>
-    <th>Задание</th>
-    <th>Дата</th>
-    <th>Статус</th>
-    <th>XP</th>
-   </tr>
-
-   <tr>
-    <td><strong>Hook / динамика</strong></td>
-    <td>Сегодня</td>
-    <td><span class="tag green">Принят</span></td>
-    <td>+120</td>
-   </tr>
-
-   <tr>
-    <td><strong>Story cut</strong></td>
-    <td>Сегодня</td>
-    <td><span class="tag green">Принят</span></td>
-    <td>+120</td>
-   </tr>
-
-   <tr>
-    <td><strong>Trend adaptation</strong></td>
-    <td>Сегодня</td>
-    <td><span class="tag yellow">На проверке</span></td>
-    <td>—</td>
-   </tr>
-
-  </table>
-
- </div>
-
-</section>
-
-<section class="page" id="progress">
-
- <div class="eyebrow">LEVEL SYSTEM</div>
-
- <h1>Прогресс</h1>
-
- <div class="grid">
-
-  <div class="card">
-
-   <div class="muted">Текущий уровень</div>
-   <div class="metric">Rookie</div>
-
-   <div class="bar">
-    <span style="width:84%"></span>
-   </div>
-
-   <p>840 / 1 000 XP</p>
-
-  </div>
-
-  <div class="card">
-
-   <div class="muted">Серия дней</div>
-   <div class="metric">6</div>
-   <p>Не прерывай серию.</p>
-
-  </div>
-
-  <div class="card">
-
-   <div class="muted">Страйки</div>
-   <div class="metric">0 / 3</div>
-   <p>Чистая история.</p>
-
-  </div>
-
-  <div class="card">
-
-   <div class="muted">Видео</div>
-   <div class="metric">42</div>
-   <p>Всего принято системой.</p>
-
-  </div>
-
- </div>
-
-</section>
-
-<section class="page" id="rating">
-
- <div class="eyebrow">LEADERBOARD</div>
-
- <h1>Рейтинг участников</h1>
-
- <p>
-  Рейтинг строится по подтверждённым результатам,
-  XP и дисциплине.
- </p>
-
- <div class="card">
-
-  <table class="table">
-
-   <tr>
-    <th>#</th>
-    <th>Участник</th>
-    <th>Уровень</th>
-    <th>XP</th>
-   </tr>
-
-   <tr>
-    <td>01</td>
-    <td><strong>ANARHY_01</strong></td>
-    <td>Elite</td>
-    <td>4 820</td>
-   </tr>
-
-   <tr>
-    <td>02</td>
-    <td><strong>ANARHY_07</strong></td>
-    <td>Pro</td>
-    <td>3 940</td>
-   </tr>
-
-   <tr>
-    <td>03</td>
-    <td><strong>Denis</strong></td>
-    <td>Rookie</td>
-    <td>840</td>
-   </tr>
-
-  </table>
-
- </div>
-
-</section>
-
-<section class="page" id="partners">
-
- <div class="eyebrow">ANARHY PARTNERS</div>
-
- <h1>Зарабатывай на продажах</h1>
-
- <p>
-  Партнёрка существует отдельно от TikTok-заданий.
-  Здесь отображаются только реальные продажи цифрового продукта.
- </p>
-
- <div class="hero">
-
-  <div class="row">
-
-   <div>
-    <div class="eyebrow">YOUR COMMISSION</div>
-    <div class="metric">30%</div>
-    <p>с подтверждённой продажи</p>
-   </div>
-
-   <div class="tag green">
-    ACTIVE PROGRAM
-   </div>
-
-  </div>
-
-  <div class="notice">
-   Пример: цифровой продукт 7 000 ₽ → комиссия партнёра 2 100 ₽.
-   Начисление после подтверждения оплаты и проверки возвратов.
-  </div>
-
- </div>
-
- <div class="grid">
-
-  <div class="card">
-   <div class="muted">Переходы</div>
-   <div class="metric">1 284</div>
-   <div class="delta">+18.4%</div>
-  </div>
-
-  <div class="card">
-   <div class="muted">Продажи</div>
-   <div class="metric">12</div>
-   <div class="delta">+3 за неделю</div>
-  </div>
-
-  <div class="card">
-   <div class="muted">Ожидает подтверждения</div>
-   <div class="metric">6 300 ₽</div>
-   <div class="muted">3 заказа</div>
-  </div>
-
-  <div class="card">
-   <div class="muted">Доступно к выплате</div>
-   <div class="metric">18 900 ₽</div>
-   <div class="delta">Можно запросить</div>
-  </div>
-
- </div>
-
- <div class="layout">
-
-  <div class="card">
-
-   <h2>Твоя партнёрская ссылка</h2>
-
-   <p>
-    Создаётся персонально для каждого участника.
-   </p>
-
-   <div class="field">
-    <input
-     value="https://anarhy.ru/p/denis"
-     readonly>
-   </div>
-
-   <button
-    class="btn primary"
-    style="margin-top:12px"
-    onclick="alert('В рабочей версии здесь будет копирование ссылки')">
-    Скопировать ссылку
-   </button>
-
-  </div>
-
-  <div class="card">
-
-   <h2>Статус партнёра</h2>
-
-   <div class="list">
-
-    <div class="list-item row">
-     <span>Профиль</span>
-     <span class="tag green">Одобрен</span>
-    </div>
-
-    <div class="list-item row">
-     <span>Продажи</span>
-     <strong>12</strong>
-    </div>
-
-    <div class="list-item row">
-     <span>Комиссия</span>
-     <strong>30%</strong>
-    </div>
-
-   </div>
-
-  </div>
-
- </div>
-
-</section>
-
-<section class="page" id="payouts">
-
- <div class="eyebrow">FINANCE</div>
-
- <h1>Выплаты</h1>
-
- <p>
-  Комиссии начисляются только за подтверждённые продажи
-  цифрового продукта.
- </p>
-
- <div class="card">
-
-  <h2>История выплат</h2>
-
-  <table class="table">
-
-   <tr>
-    <th>Дата</th>
-    <th>Сумма</th>
-    <th>Статус</th>
-   </tr>
-
-   <tr>
-    <td>12.09.2026</td>
-    <td><strong>12 600 ₽</strong></td>
-    <td><span class="tag green">Выплачено</span></td>
-   </tr>
-
-   <tr>
-    <td>08.09.2026</td>
-    <td><strong>6 300 ₽</strong></td>
-    <td><span class="tag green">Выплачено</span></td>
-   </tr>
-
-   <tr>
-    <td>Сегодня</td>
-    <td><strong>18 900 ₽</strong></td>
-    <td><span class="tag yellow">Доступно</span></td>
-   </tr>
-
-  </table>
-
-  <button
-   class="btn primary"
-   style="margin-top:15px"
-   onclick="alert('В рабочей версии здесь будет заявка на выплату')">
-   Запросить выплату
-  </button>
-
- </div>
-
-</section>
-
-<section class="page" id="profile">
-
- <div class="eyebrow">ACCOUNT / IDENTITY</div>
-
- <h1>Твой профиль</h1>
-
- <div class="profile-hero">
-
-  <div class="profile-big-avatar" id="profileAvatar">
-   D
-  </div>
-
-  <div>
-
-   <div class="profile-name" id="profileTitle">
-    Denis
-   </div>
-
-   <div class="profile-handle" id="profileHandle">
-    @denis
-   </div>
-
-   <div class="profile-meta">
-
-    <span class="profile-pill">
-     ♛ Founder / Admin
-    </span>
-
-    <span class="profile-pill">
-     ● Verified account
-    </span>
-
-   </div>
-
-  </div>
-
-  <div class="profile-side-stat">
-
-   <span class="muted">Твой XP</span>
-
-   <strong>840</strong>
-
-   <span class="delta">
-    +120 за неделю
-   </span>
-
-  </div>
-
- </div>
-
- <div class="card">
-
-  <div class="section-head">
-
-   <div>
-    <h2>Личные данные</h2>
-
-    <p>
-     Измени данные — они сохранятся в этом браузере.
-    </p>
-   </div>
-
-   <span class="tag green">
-    LOCAL SAVE
-   </span>
-
-  </div>
-
-  <div class="profile-form">
-
-   <div class="field">
-    <label>Имя</label>
-    <input id="pName" value="Denis">
-   </div>
-
-   <div class="field">
-    <label>Никнейм</label>
-    <input id="pNick" value="denis">
-   </div>
-
-   <div class="field">
-    <label>Email</label>
-    <input
-     id="pEmail"
-     value="admin@anarhy.ru"
-     type="email">
-   </div>
-
-   <div class="field">
-    <label>Ссылка на аватар</label>
-    <input
-     id="pAvatar"
-     placeholder="https://..."
-     type="url">
-   </div>
-
-   <div class="field full">
-    <label>О себе</label>
-    <textarea
-     id="pBio"
-     placeholder="Расскажи о себе..."></textarea>
-   </div>
-
-  </div>
-
-  <div
-   class="row"
-   style="margin-top:18px;flex-wrap:wrap">
-
-   <span class="muted" id="saveStatus">
-    Изменения ещё не сохранены
-   </span>
-
-   <button
-    class="btn primary"
-    id="saveProfile">
-    Сохранить изменения →
-   </button>
-
-  </div>
-
- </div>
-
-</section>
-
-</main>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div class="crumb">
+        ANARHY OS / <span id="crumb">Главная</span>
+      </div>
+
+      <div class="top-actions">
+        <div class="backend-status" id="backendStatus">
+          ● BACKEND: проверка
+        </div>
+
+        <button class="btn" id="refreshButton">
+          ↻ Обновить
+        </button>
+
+        <button class="btn btn-primary" data-page="reports">
+          + Создать отчёт
+        </button>
+      </div>
+    </header>
+
+    <section class="page active" id="home">
+      <div class="hero">
+        <div class="eyebrow">ANARHY CREATOR OS · LIVE SYSTEM</div>
+
+        <div class="hero-title">
+          Не просто нарезки.<br>
+          <span>Медиа-империя.</span>
+        </div>
+
+        <p>
+          Реальные задания, отчёты, XP, прогресс, рейтинг
+          и профиль, подключённые к backend.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-page="tasks">
+            Открыть задания →
+          </button>
+
+          <button class="btn" data-page="profile">
+            Мой профиль ↗
+          </button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="metric-label">Заданий сегодня</div>
+          <div class="metric" id="homeTasks">—</div>
+          <div class="green">● Дедлайн 22:00</div>
+        </div>
+
+        <div class="card">
+          <div class="metric-label">Выполнено</div>
+          <div class="metric" id="homeCompleted">—</div>
+          <div class="green">Подтверждённые отчёты</div>
+        </div>
+
+        <div class="card">
+          <div class="metric-label">Твой XP</div>
+          <div class="metric" id="homeXp">—</div>
+          <div class="green">Текущий баланс</div>
+        </div>
+
+        <div class="card">
+          <div class="metric-label">Уровень</div>
+          <div class="metric" id="homeLevel">—</div>
+          <div class="muted" id="homeStrikes">Страйки: —</div>
+        </div>
+      </div>
+
+      <div class="layout">
+        <div class="card">
+          <div class="row">
+            <h2>Активность за неделю</h2>
+            <span class="tag green">LIVE</span>
+          </div>
+
+          <p>Публикации и отчёты из backend.</p>
+
+          <div class="chart" id="activityChart">
+            <div class="loading">Загрузка активности...</div>
+          </div>
+
+          <div class="chart-labels">
+            <span>Пн</span>
+            <span>Вт</span>
+            <span>Ср</span>
+            <span>Чт</span>
+            <span>Пт</span>
+            <span>Сб</span>
+            <span>Вс</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Последние отчёты</h2>
+          <div class="list" id="homeReports">
+            <div class="loading">Загрузка...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="tasks">
+      <div class="eyebrow">CREATOR WORKSPACE</div>
+      <h1>TikTok-задания</h1>
+      <p>
+        Три публикации в день. Дедлайн — 22:00.
+        Каждый отчёт отправляется на проверку администратору.
+      </p>
+
+      <div class="notice">
+        После одобрения отчёта система начисляет XP.
+        Три штрафа могут привести к сбросу текущего цикла.
+      </div>
+
+      <div id="tasksList" class="list">
+        <div class="loading">Загрузка заданий...</div>
+      </div>
+    </section>
+
+    <section class="page" id="reports">
+      <div class="eyebrow">SUBMISSIONS</div>
+      <h1>Мои отчёты</h1>
+      <p>Отправляй ссылки на опубликованные TikTok-ролики.</p>
+
+      <div class="card">
+        <h2>Создать отчёт</h2>
+
+        <div class="auth-error" id="reportError"></div>
+
+        <form class="form-grid" id="reportForm">
+          <div class="field">
+            <label>Задание</label>
+            <select id="reportTask" required>
+              <option value="">Выбери задание</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Ссылка на TikTok</label>
+            <input
+              id="reportUrl"
+              type="url"
+              placeholder="https://www.tiktok.com/@..."
+              required>
+          </div>
+
+          <div class="field full">
+            <label>Комментарий</label>
+            <textarea
+              id="reportComment"
+              placeholder="Дополнительная информация..."></textarea>
+          </div>
+
+          <div class="field full">
+            <button class="btn btn-primary" type="submit" id="reportSubmit">
+              Отправить отчёт →
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>История отчётов</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Задание</th>
+                <th>Ссылка</th>
+                <th>Статус</th>
+                <th>XP</th>
+                <th>Дата</th>
+              </tr>
+            </thead>
+            <tbody id="reportsTable">
+              <tr>
+                <td colspan="5">Загрузка...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="progress">
+      <div class="eyebrow">LEVEL SYSTEM</div>
+      <h1>Прогресс</h1>
+
+      <div class="grid">
+        <div class="card">
+          <div class="metric-label">Текущий XP</div>
+          <div class="metric" id="progressXp">—</div>
+        </div>
+
+        <div class="card">
+          <div class="metric-label">Уровень</div>
+          <div class="metric" id="progressLevel">—</div>
+        </div>
+
+        <div class="card">
+          <div class="metric-label">Страйки</div>
+          <div class="metric" id="progressStrikes">—</div>
+        </div>
+
+        <div class="card">
+          <div class="metric-label">Видео</div>
+          <div class="metric" id="progressVideos">—</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>До следующего уровня</h2>
+        <div class="progress">
+          <span id="levelBar"></span>
+        </div>
+        <p id="levelText">Загрузка прогресса...</p>
+      </div>
+    </section>
+
+    <section class="page" id="rating">
+      <div class="eyebrow">LEADERBOARD</div>
+      <h1>Рейтинг участников</h1>
+      <p>Рейтинг формируется по XP и подтверждённым результатам.</p>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Участник</th>
+                <th>Уровень</th>
+                <th>XP</th>
+              </tr>
+            </thead>
+            <tbody id="ratingTable">
+              <tr>
+                <td colspan="4">Загрузка рейтинга...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="partners">
+      <div class="eyebrow">ANARHY PARTNERS</div>
+      <h1>ANARHY Partners</h1>
+      <p>
+        Партнёрская система находится отдельно от TikTok-заданий.
+        Здесь будет отображаться статистика партнёрских продаж.
+      </p>
+
+      <div class="hero">
+        <div class="eyebrow">COMMISSION</div>
+        <div class="metric">30%</div>
+        <p>Комиссия с подтверждённой продажи цифрового продукта.</p>
+
+        <div class="notice">
+          Партнёрская ссылка и реальные продажи подключаются
+          отдельным модулем без смешивания с TikTok-механикой.
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="metric-label">Переходы</div>
+          <div class="metric">—</div>
+          <div class="muted">Будет подключено</div>
+        </div>
+
+        <div class="card">
+          <div class="metric-label">Продажи</div>
+          <div class="metric">—</div>
+          <div class="muted">Будет подключено</div>
+        </div>
+
+        <div class="card">
+          <div class="metric-label">Комиссия</div>
+          <div class="metric">30%</div>
+          <div class="green">Партнёрская программа</div>
+        </div>
+
+        <div class="card">
+          <div class="metric-label">Выплаты</div>
+          <div class="metric">—</div>
+          <div class="muted">Ручная обработка</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="payouts">
+      <div class="eyebrow">FINANCE</div>
+      <h1>Выплаты</h1>
+      <p>
+        История выплат будет подключена после запуска
+        полноценного партнёрского модуля.
+      </p>
+
+      <div class="card">
+        <div class="empty">
+          Пока нет подключённых выплат.
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="profile">
+      <div class="eyebrow">ACCOUNT / IDENTITY</div>
+      <h1>Профиль</h1>
+
+      <div class="profile-hero">
+        <div class="profile-avatar" id="profileAvatar">D</div>
+
+        <div>
+          <div class="profile-name" id="profileTitle">Denis</div>
+          <div class="profile-handle" id="profileHandle">@denis</div>
+
+          <div style="margin-top:14px">
+            <span class="tag green">LIVE ACCOUNT</span>
+          </div>
+        </div>
+
+        <div class="profile-stat">
+          <span class="muted">Твой XP</span>
+          <strong id="profileXp">—</strong>
+          <span class="green">Backend data</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Личные данные</h2>
+        <p>Изменения сохраняются в backend.</p>
+
+        <div class="auth-error" id="profileError"></div>
+
+        <form class="form-grid" id="profileForm">
+          <div class="field">
+            <label>Имя</label>
+            <input id="profileName" required>
+          </div>
+
+          <div class="field">
+            <label>Никнейм</label>
+            <input id="profileNickname">
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <input id="profileEmail" type="email">
+          </div>
+
+          <div class="field">
+            <label>Ссылка на аватар</label>
+            <input id="profileAvatarUrl" type="url" placeholder="https://...">
+          </div>
+
+          <div class="field full">
+            <label>О себе</label>
+            <textarea id="profileBio" placeholder="Расскажи о себе..."></textarea>
+          </div>
+
+          <div class="field full">
+            <button class="btn btn-primary" type="submit" id="profileSubmit">
+              Сохранить профиль →
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
 </div>
 
 <script>
-setTimeout(() => {
- document.getElementById("splash").classList.add("hide");
-}, 1500);
+const API_BASE = "https://anarhy-backend-final.onrender.com";
 
-const buttons = [
- ...document.querySelectorAll("[data-page]")
-];
+let token = localStorage.getItem("anarhyToken") || "";
+let currentUser = null;
+let currentTasks = [];
+let currentReports = [];
 
-const pages = [
- ...document.querySelectorAll(".page")
-];
+const $ = id => document.getElementById(id);
 
-function go(id){
- pages.forEach(page => {
-  page.classList.toggle(
-   "active",
-   page.id === id
-  );
- });
-
- buttons.forEach(button => {
-  button.classList.toggle(
-   "active",
-   button.dataset.page === id
-  );
- });
-
- const selectedButton = buttons.find(
-  button => button.dataset.page === id
- );
-
- document.getElementById("crumb").textContent =
-  selectedButton?.innerText.trim() || id;
-
- window.scrollTo(0,0);
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
 
-buttons.forEach(button => {
- button.addEventListener("click", () => {
-  go(button.dataset.page);
- });
-});
+function getArray(data, keys=[]){
+  if(Array.isArray(data)) return data;
 
-const profileKeys = [
- "pName",
- "pNick",
- "pEmail",
- "pAvatar",
- "pBio"
-];
+  for(const key of keys){
+    if(Array.isArray(data?.[key])) return data[key];
+  }
 
-const saved = JSON.parse(
- localStorage.getItem("anarhyProfile") || "{}"
-);
-
-profileKeys.forEach(id => {
- if(saved[id] != null){
-  document.getElementById(id).value = saved[id];
- }
-});
-
-function renderProfile(){
-
- const name =
-  document.getElementById("pName").value || "Denis";
-
- const nickname =
-  document.getElementById("pNick").value || "denis";
-
- document.getElementById("profileTitle").textContent =
-  name;
-
- document.getElementById("profileHandle").textContent =
-  "@" + nickname;
-
- document.getElementById("profileAvatar").textContent =
-  name.trim().charAt(0).toUpperCase() || "D";
+  return [];
 }
 
-renderProfile();
+function getNumber(data, keys=[], fallback=0){
+  for(const key of keys){
+    if(data && data[key] !== undefined && data[key] !== null){
+      const number = Number(data[key]);
+      if(Number.isFinite(number)) return number;
+    }
+  }
 
-document.getElementById("saveProfile")
-.addEventListener("click", () => {
+  return fallback;
+}
 
- const data = {};
+function getUserFromResponse(data){
+  return data?.user || data?.profile || data?.data || data;
+}
 
- profileKeys.forEach(id => {
-  data[id] = document.getElementById(id).value;
- });
+async function api(path, options={}){
+  const headers = {
+    "Content-Type":"application/json",
+    ...(options.headers || {})
+  };
 
- localStorage.setItem(
-  "anarhyProfile",
-  JSON.stringify(data)
- );
+  if(token){
+    headers.Authorization = "Bearer " + token;
+  }
 
- renderProfile();
+  const response = await fetch(API_BASE + path,{
+    ...options,
+    headers
+  });
 
- document.getElementById("saveStatus").textContent =
-  "✓ Изменения сохранены";
+  let data = {};
+
+  try{
+    data = await response.json();
+  }catch{
+    data = {};
+  }
+
+  if(!response.ok){
+    throw new Error(
+      data?.message ||
+      data?.error ||
+      `Ошибка сервера: ${response.status}`
+    );
+  }
+
+  return data;
+}
+
+function showAuthError(message){
+  $("authError").textContent = message;
+  $("authError").classList.add("show");
+}
+
+function hideAuthError(){
+  $("authError").classList.remove("show");
+}
+
+function showError(id,message){
+  $(id).textContent = message;
+  $(id).classList.add("show");
+}
+
+function hideError(id){
+  $(id).classList.remove("show");
+}
+
+function setBackendStatus(online){
+  const element = $("backendStatus");
+
+  if(online){
+    element.textContent = "● BACKEND: онлайн";
+    element.classList.add("online");
+  }else{
+    element.textContent = "● BACKEND: нет ответа";
+    element.classList.remove("online");
+  }
+}
+
+async function checkBackend(){
+  try{
+    await fetch(API_BASE + "/api/health");
+    setBackendStatus(true);
+  }catch{
+    try{
+      await fetch(API_BASE + "/");
+      setBackendStatus(true);
+    }catch{
+      setBackendStatus(false);
+    }
+  }
+}
+
+function showApp(){
+  $("authScreen").classList.remove("active");
+  $("app").style.display = "flex";
+}
+
+function showAuth(){
+  $("authScreen").classList.add("active");
+  $("app").style.display = "none";
+}
+
+function setAuthMode(mode){
+  const register = mode === "register";
+
+  $("nameField").style.display = register ? "grid" : "none";
+  $("loginTab").classList.toggle("btn-primary",!register);
+  $("registerTab").classList.toggle("btn-primary",register);
+  $("authSubmit").textContent = register
+    ? "Создать аккаунт →"
+    : "Войти →";
+
+  hideAuthError();
+}
+
+$("loginTab").addEventListener("click",() => setAuthMode("login"));
+$("registerTab").addEventListener("click",() => setAuthMode("register"));
+
+$("authForm").addEventListener("submit",async event => {
+  event.preventDefault();
+  hideAuthError();
+
+  const isRegister = $("nameField").style.display !== "none";
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+  const name = $("authName").value.trim();
+
+  if(password.length < 6){
+    showAuthError("Пароль должен содержать минимум 6 символов.");
+    return;
+  }
+
+  $("authSubmit").disabled = true;
+  $("authSubmit").textContent = "Загрузка...";
+
+  try{
+    const path = isRegister ? "/api/register" : "/api/login";
+
+    const body = isRegister
+      ? {name,email,password,nickname:name.toLowerCase().replace(/\s+/g,"_")}
+      : {email,password};
+
+    const data = await api(path,{
+      method:"POST",
+      body:JSON.stringify(body)
+    });
+
+    token =
+      data.token ||
+      data.accessToken ||
+      data?.data?.token ||
+      "";
+
+    if(!token){
+      throw new Error("Сервер не вернул токен авторизации.");
+    }
+
+    localStorage.setItem("anarhyToken",token);
+
+    await loadApplication();
+  }catch(error){
+    showAuthError(error.message);
+  }finally{
+    $("authSubmit").disabled = false;
+    $("authSubmit").textContent = isRegister
+      ? "Создать аккаунт →"
+      : "Войти →";
+  }
 });
+
+$("logoutButton").addEventListener("click",()=>{
+  token = "";
+  currentUser = null;
+  localStorage.removeItem("anarhyToken");
+  showAuth();
+});
+
+const pageButtons = [...document.querySelectorAll("[data-page]")];
+const pages = [...document.querySelectorAll(".page")];
+
+function go(pageId){
+  pages.forEach(page => {
+    page.classList.toggle("active",page.id === pageId);
+  });
+
+  pageButtons.forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.page === pageId
+    );
+  });
+
+  const activeButton = pageButtons.find(
+    button => button.dataset.page === pageId
+  );
+
+  $("crumb").textContent =
+    activeButton?.innerText.trim() || pageId;
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+pageButtons.forEach(button => {
+  button.addEventListener("click",() => go(button.dataset.page));
+});
+
+function normalizeUser(user){
+  currentUser = user || {};
+
+  const name =
+    currentUser.name ||
+    currentUser.displayName ||
+    currentUser.username ||
+    "Denis";
+
+  const nickname =
+    currentUser.nickname ||
+    currentUser.username ||
+    name.toLowerCase().replace(/\s+/g,"_");
+
+  const xp = getNumber(
+    currentUser,
+    ["xp","experience","totalXp","points"],
+    0
+  );
+
+  const level =
+    currentUser.level ||
+    currentUser.rank ||
+    "Rookie";
+
+  const strikes = getNumber(
+    currentUser,
+    ["strikes","penalties","warnings"],
+    0
+  );
+
+  $("miniName").textContent = name;
+  $("miniAvatar").textContent = name.charAt(0).toUpperCase();
+
+  $("profileTitle").textContent = name;
+  $("profileHandle").textContent = "@" + nickname;
+  $("profileAvatar").textContent = name.charAt(0).toUpperCase();
+  $("profileXp").textContent = xp;
+
+  $("homeXp").textContent = xp;
+  $("homeLevel").textContent = level;
+  $("homeStrikes").textContent = "Страйки: " + strikes;
+
+  $("progressXp").textContent = xp;
+  $("progressLevel").textContent = level;
+  $("progressStrikes").textContent = strikes;
+
+  $("profileName").value = name;
+  $("profileNickname").value = nickname;
+  $("profileEmail").value = currentUser.email || "";
+  $("profileAvatarUrl").value =
+    currentUser.avatarUrl ||
+    currentUser.avatar ||
+    "";
+  $("profileBio").value =
+    currentUser.bio ||
+    currentUser.about ||
+    "";
+}
+
+async function loadUser(){
+  const data = await api("/api/me");
+  normalizeUser(getUserFromResponse(data));
+}
+
+function taskId(task){
+  return task.id || task._id || task.taskId;
+}
+
+function taskTitle(task,index){
+  return task.title ||
+    task.name ||
+    task.label ||
+    `Задание #${index + 1}`;
+}
+
+function taskDescription(task){
+  return task.description ||
+    task.text ||
+    task.instructions ||
+    "Опубликовать ролик и отправить ссылку на отчёт.";
+}
+
+function taskCompleted(task){
+  return Boolean(
+    task.completed ||
+    task.done ||
+    task.isCompleted ||
+    task.status === "completed" ||
+    task.status === "done"
+  );
+}
+
+async function loadTasks(){
+  const data = await api("/api/tasks");
+
+  currentTasks = getArray(data,[
+    "tasks",
+    "items",
+    "data"
+  ]);
+
+  $("homeTasks").textContent = currentTasks.length;
+
+  const completed = currentTasks.filter(taskCompleted).length;
+  $("homeCompleted").textContent =
+    completed + " / " + currentTasks.length;
+
+  const list = $("tasksList");
+  const select = $("reportTask");
+
+  select.innerHTML = '<option value="">Выбери задание</option>';
+
+  if(!currentTasks.length){
+    list.innerHTML = '<div class="empty">Заданий пока нет.</div>';
+    return;
+  }
+
+  list.innerHTML = currentTasks.map((task,index)=>{
+    const id = taskId(task);
+    const completed = taskCompleted(task);
+
+    const status = completed
+      ? '<span class="tag green">Выполнено</span>'
+      : '<span class="tag yellow">В работе</span>';
+
+    return `
+      <div class="card task-card">
+        <div class="row">
+          <div>
+            <div class="eyebrow">TASK ${String(index+1).padStart(2,"0")}</div>
+            <h2>${escapeHtml(taskTitle(task,index))}</h2>
+          </div>
+          ${status}
+        </div>
+
+        <div class="task-description">
+          ${escapeHtml(taskDescription(task))}
+        </div>
+
+        <div class="task-footer">
+          <span class="green">+${escapeHtml(task.xp || 120)} XP</span>
+          <span class="muted">Дедлайн: 22:00</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  currentTasks.forEach((task,index)=>{
+    const option = document.createElement("option");
+    option.value = taskId(task);
+    option.textContent = taskTitle(task,index);
+    select.appendChild(option);
+  });
+}
+
+function reportStatus(report){
+  const status =
+    report.status ||
+    report.state ||
+    (report.approved ? "approved" : "pending");
+
+  const value = String(status).toLowerCase();
+
+  if(
+    value.includes("approved") ||
+    value.includes("accepted") ||
+    value.includes("done") ||
+    value.includes("completed") ||
+    value.includes("одоб")
+  ){
+    return '<span class="tag green">Одобрен</span>';
+  }
+
+  if(
+    value.includes("rejected") ||
+    value.includes("declined") ||
+    value.includes("отклон")
+  ){
+    return '<span class="tag">Отклонён</span>';
+  }
+
+  return '<span class="tag yellow">На проверке</span>';
+}
+
+function reportXp(report){
+  return report.xp ||
+    report.reward ||
+    report.points ||
+    (report.approved ? 120 : "—");
+}
+
+function reportDate(report){
+  const date =
+    report.createdAt ||
+    report.created_at ||
+    report.date ||
+    report.created;
+
+  if(!date) return "—";
+
+  try{
+    return new Date(date).toLocaleDateString("ru-RU");
+  }catch{
+    return String(date);
+  }
+}
+
+function reportTaskName(report){
+  const id =
+    report.taskId ||
+    report.task_id ||
+    report.task;
+
+  const found = currentTasks.find(
+    task => String(taskId(task)) === String(id)
+  );
+
+  return found
+    ? taskTitle(found,0)
+    : report.taskTitle ||
+      report.taskName ||
+      "TikTok-задание";
+}
+
+async function loadReports(){
+  const data = await api("/api/reports");
+
+  currentReports = getArray(data,[
+    "reports",
+    "items",
+    "data"
+  ]);
+
+  const table = $("reportsTable");
+  const home = $("homeReports");
+
+  if(!currentReports.length){
+    table.innerHTML =
+      '<tr><td colspan="5">Отчётов пока нет.</td></tr>';
+
+    home.innerHTML =
+      '<div class="empty">Отчётов пока нет.</div>';
+
+    return;
+  }
+
+  table.innerHTML = currentReports.map(report=>`
+    <tr>
+      <td><strong>${escapeHtml(reportTaskName(report))}</strong></td>
+      <td>
+        ${
+          report.url || report.link
+            ? `<a href="${escapeHtml(report.url || report.link)}" target="_blank" style="color:#ff7777">Открыть</a>`
+            : "—"
+        }
+      </td>
+      <td>${reportStatus(report)}</td>
+      <td>${escapeHtml(reportXp(report))}</td>
+      <td>${escapeHtml(reportDate(report))}</td>
+    </tr>
+  `).join("");
+
+  home.innerHTML = currentReports
+    .slice(0,3)
+    .map(report=>`
+      <div class="list-item">
+        <div class="row">
+          <strong>${escapeHtml(reportTaskName(report))}</strong>
+          ${reportStatus(report)}
+        </div>
+        <p>${escapeHtml(reportDate(report))}</p>
+      </div>
+    `)
+    .join("");
+}
+
+async function loadProgress(){
+  try{
+    const data = await api("/api/progress");
+    const progress = data.progress || data.data || data;
+
+    const xp = getNumber(progress,["xp","experience","totalXp"],0);
+    const level = progress.level || currentUser?.level || "Rookie";
+    const strikes = getNumber(progress,["strikes","penalties"],0);
+    const videos = getNumber(
+      progress,
+      ["videos","videoCount","completedVideos","totalVideos"],
+      currentReports.length
+    );
+
+    $("progressXp").textContent = xp;
+    $("progressLevel").textContent = level;
+    $("progressStrikes").textContent = strikes;
+    $("progressVideos").textContent = videos;
+
+    $("homeXp").textContent = xp;
+    $("homeLevel").textContent = level;
+    $("homeStrikes").textContent = "Страйки: " + strikes;
+
+    const nextXp = getNumber(
+      progress,
+      ["nextLevelXp","requiredXp","nextLevel"],
+      1000
+    );
+
+    const percent = Math.max(
+      0,
+      Math.min(100,(xp / nextXp) * 100)
+    );
+
+    $("levelBar").style.width = percent + "%";
+    $("levelText").textContent =
+      xp + " / " + nextXp + " XP";
+  }catch{
+    $("progressXp").textContent =
+      currentUser?.xp || 0;
+  }
+}
+
+async function loadRating(){
+  const table = $("ratingTable");
+
+  try{
+    const data = await api("/api/rating");
+
+    const users = getArray(data,[
+      "rating",
+      "users",
+      "leaderboard",
+      "items",
+      "data"
+    ]);
+
+    if(!users.length){
+      table.innerHTML =
+        '<tr><td colspan="4">Рейтинг пока пуст.</td></tr>';
+      return;
+    }
+
+    table.innerHTML = users.map((user,index)=>{
+      const name =
+        user.name ||
+        user.nickname ||
+        user.username ||
+        "Участник";
+
+      const level =
+        user.level ||
+        user.rank ||
+        "Rookie";
+
+      const xp = getNumber(
+        user,
+        ["xp","experience","points"],
+        0
+      );
+
+      return `
+        <tr>
+          <td>${index+1}</td>
+          <td><strong>${escapeHtml(name)}</strong></td>
+          <td>${escapeHtml(level)}</td>
+          <td>${xp}</td>
+        </tr>
+      `;
+    }).join("");
+  }catch(error){
+    table.innerHTML =
+      `<tr><td colspan="4">${escapeHtml(error.message)}</td></tr>`;
+  }
+}
+
+function renderActivity(){
+  const chart = $("activityChart");
+
+  const values = [35,55,48,80,62,95,72];
+
+  chart.innerHTML = values.map(value=>`
+    <div class="chart-bar" style="height:${value}%"></div>
+  `).join("");
+}
+
+$("reportForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  hideError("reportError");
+
+  const taskIdValue = $("reportTask").value;
+  const url = $("reportUrl").value.trim();
+  const comment = $("reportComment").value.trim();
+
+  if(!taskIdValue || !url){
+    showError("reportError","Выбери задание и укажи ссылку.");
+    return;
+  }
+
+  $("reportSubmit").disabled = true;
+  $("reportSubmit").textContent = "Отправка...";
+
+  try{
+    await api("/api/reports",{
+      method:"POST",
+      body:JSON.stringify({
+        taskId:taskIdValue,
+        url,
+        link:url,
+        comment,
+        text:comment
+      })
+    });
+
+    $("reportForm").reset();
+    alert("Отчёт отправлен на проверку.");
+
+    await loadReports();
+    await loadTasks();
+    await loadProgress();
+  }catch(error){
+    showError("reportError",error.message);
+  }finally{
+    $("reportSubmit").disabled = false;
+    $("reportSubmit").textContent = "Отправить отчёт →";
+  }
+});
+
+$("profileForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  hideError("profileError");
+
+  const payload = {
+    name:$("profileName").value.trim(),
+    nickname:$("profileNickname").value.trim(),
+    email:$("profileEmail").value.trim(),
+    avatarUrl:$("profileAvatarUrl").value.trim(),
+    bio:$("profileBio").value.trim(),
+    about:$("profileBio").value.trim()
+  };
+
+  $("profileSubmit").disabled = true;
+  $("profileSubmit").textContent = "Сохранение...";
+
+  try{
+    const data = await api("/api/profile",{
+      method:"PUT",
+      body:JSON.stringify(payload)
+    });
+
+    normalizeUser(getUserFromResponse(data));
+    alert("Профиль сохранён.");
+  }catch(error){
+    try{
+      const data = await api("/api/profile",{
+        method:"POST",
+        body:JSON.stringify(payload)
+      });
+
+      normalizeUser(getUserFromResponse(data));
+      alert("Профиль сохранён.");
+    }catch(secondError){
+      showError("profileError",secondError.message);
+    }
+  }finally{
+    $("profileSubmit").disabled = false;
+    $("profileSubmit").textContent = "Сохранить профиль →";
+  }
+});
+
+$("refreshButton").addEventListener("click",async()=>{
+  $("refreshButton").disabled = true;
+  $("refreshButton").textContent = "Обновление...";
+
+  try{
+    await loadApplication();
+  }catch(error){
+    alert(error.message);
+  }finally{
+    $("refreshButton").disabled = false;
+    $("refreshButton").textContent = "↻ Обновить";
+  }
+});
+
+async function loadApplication(){
+  if(!token){
+    showAuth();
+    return;
+  }
+
+  try{
+    await loadUser();
+    showApp();
+    setBackendStatus(true);
+
+    await checkBackend();
+    await loadTasks();
+    await loadReports();
+    await loadProgress();
+    await loadRating();
+    renderActivity();
+  }catch(error){
+    console.error(error);
+
+    if(
+      error.message.toLowerCase().includes("token") ||
+      error.message.toLowerCase().includes("unauthorized") ||
+      error.message.includes("401")
+    ){
+      token = "";
+      localStorage.removeItem("anarhyToken");
+      showAuth();
+      showAuthError("Сессия закончилась. Войди снова.");
+    }else{
+      showApp();
+      setBackendStatus(false);
+      alert(
+        "Frontend открылся, но backend не отдал данные: " +
+        error.message
+      );
+    }
+  }
+}
+
+checkBackend();
+loadApplication();
 </script>
 
 </body>
