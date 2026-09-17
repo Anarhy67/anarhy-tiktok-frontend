@@ -3,400 +3,1438 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ANARHY OS — Live</title>
+<title>ANARHY OS — Live Dashboard</title>
+
 <style>
-:root{--bg:#070707;--panel:#111;--line:#292929;--text:#f5f5f5;--muted:#8d8d8d;--red:#ff3030;--green:#4ade80;--yellow:#facc15}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle at 80% 0,#410b12,transparent 35%),var(--bg);color:var(--text);font:14px Arial,sans-serif}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
-.app{display:flex;min-height:100vh}
-.side{width:245px;flex-shrink:0;background:#090909;border-right:1px solid var(--line);padding:28px 18px;position:sticky;top:0;height:100vh}
-.brand{font-size:25px;font-weight:1000;letter-spacing:.18em}
-.brand span,.hero-title span,.auth-logo span{color:var(--red)}
-.sub{color:#666;font-size:10px;letter-spacing:.25em;margin-top:5px}
-.nav{display:grid;gap:7px;margin-top:48px}
-.nav button{border:1px solid transparent;background:none;color:#999;text-align:left;padding:13px;border-radius:12px}
-.nav button.active,.nav button:hover{background:#1b1011;color:#fff;border-color:#4a2025}
-.nav b{color:#555;font-size:10px;letter-spacing:.18em;margin:18px 12px 4px}
-.userbox{position:absolute;bottom:20px;left:18px;right:18px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#111;display:flex;gap:10px;align-items:center}
-.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ff3030,#590a12);font-weight:900}
-.main{flex:1;min-width:0;padding:30px;max-width:1500px;margin:auto}
-.top{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:28px}
-.crumb{color:#777}
-.actions{display:flex;gap:9px;flex-wrap:wrap}
-.btn{border:1px solid var(--line);background:#171717;color:#fff;border-radius:10px;padding:11px 15px}
-.btn.primary{background:var(--red);border-color:var(--red);font-weight:800}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.page{display:none}.page.active{display:block}
-h1{font-size:clamp(32px,4vw,54px);letter-spacing:-.06em;margin:0 0 10px}
-h2{font-size:22px;margin:0 0 8px}
-p{color:var(--muted);line-height:1.55}
-.eyebrow{font-size:11px;color:#ff6d6d;letter-spacing:.2em;font-weight:800;text-transform:uppercase}
-.hero,.card{border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,#171717,#0d0d0d);padding:22px}
-.hero{border-color:#572027;background:radial-gradient(circle at 90% 0,#5a111a,transparent 45%),linear-gradient(135deg,#211012,#101010);margin-bottom:16px}
-.hero-title{font-size:clamp(35px,5vw,68px);font-weight:1000;letter-spacing:-.07em}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.metric{font-size:31px;font-weight:900;margin:13px 0 5px}
-.muted{color:var(--muted)}
-.delta{color:var(--green);font-size:12px}
-.layout{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-top:16px}
-.list{display:grid;gap:10px;margin-top:16px}
-.item{border:1px solid #292929;background:#111;border-radius:13px;padding:15px}
-.row{display:flex;justify-content:space-between;gap:12px;align-items:center}
-.tag{font-size:10px;font-weight:800;padding:5px 8px;border-radius:6px;background:#2b1215;color:#ff8d8d}
-.tag.green{background:#102b1c;color:#6ee7a0}
-.tag.yellow{background:#30270d;color:#facc15}
-table{width:100%;border-collapse:collapse}
-th,td{text-align:left;padding:13px 8px;border-bottom:1px solid #292929;color:#bbb}
-th{font-size:10px;color:#666;text-transform:uppercase}
-.field{display:grid;gap:7px;margin-top:14px}
-.field input,.field textarea,.field select{width:100%;background:#0b0b0b;color:#fff;border:1px solid #333;border-radius:9px;padding:12px}
-.field textarea{min-height:100px;resize:vertical}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.formgrid .full{grid-column:1/-1}
-.auth{min-height:100vh;display:grid;place-items:center;padding:20px}
-.auth-card{width:min(460px,100%);padding:30px;border:1px solid #4c1b22;border-radius:22px;background:linear-gradient(145deg,#211012,#101010)}
-.auth-logo{font-size:36px;font-weight:1000;letter-spacing:.15em}
-.error{color:#ff7777;margin-top:12px}.success{color:var(--green);margin-top:12px}
-.modal{position:fixed;inset:0;background:#000b;display:grid;place-items:center;padding:20px;z-index:10}
-.modal-card{width:min(520px,100%);background:#151515;border:1px solid #4c1b22;border-radius:18px;padding:24px}
-.toast{position:fixed;right:20px;bottom:20px;background:#171717;border:1px solid #444;border-radius:10px;padding:13px;z-index:20}
-.profile-hero{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center}
-.big-avatar{width:100px;height:100px;border-radius:25px;display:grid;place-items:center;background:linear-gradient(135deg,#ff3030,#570b12);font-size:42px;font-weight:1000}
-@media(max-width:900px){.side{width:75px;padding:20px 10px}.brand{font-size:15px;text-align:center}.sub,.nav b,.nav span,.userbox .usertext{display:none}.nav button{text-align:center}.userbox{left:10px;right:10px;justify-content:center}.main{padding:20px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
-@media(max-width:560px){.top{align-items:flex-start;flex-direction:column}.grid,.formgrid{grid-template-columns:1fr}.formgrid .full{grid-column:auto}.profile-hero{grid-template-columns:auto 1fr}.profile-hero .side-stat{grid-column:1/-1}.main{padding:14px}.hero,.card{padding:16px}}
+:root{
+  --bg:#070707;
+  --panel:#101010;
+  --panel2:#151515;
+  --line:#292929;
+  --text:#f5f5f5;
+  --muted:#8d8d8d;
+  --red:#ff3030;
+  --red-dark:#390b10;
+  --green:#4ade80;
+  --yellow:#facc15;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 85% 0%,rgba(120,8,20,.42),transparent 35%),
+    radial-gradient(circle at 10% 100%,rgba(80,5,12,.2),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+button,
+input,
+textarea,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.app{
+  display:flex;
+  min-height:100vh;
+}
+
+.sidebar{
+  width:245px;
+  flex-shrink:0;
+  min-height:100vh;
+  position:sticky;
+  top:0;
+  height:100vh;
+  padding:28px 18px;
+  background:#090909;
+  border-right:1px solid var(--line);
+}
+
+.brand{
+  font-size:25px;
+  font-weight:1000;
+  letter-spacing:.18em;
+}
+
+.brand span,
+.hero-title span,
+.auth-logo span{
+  color:var(--red);
+}
+
+.sub{
+  margin-top:5px;
+  color:#666;
+  font-size:10px;
+  letter-spacing:.24em;
+}
+
+.nav{
+  display:grid;
+  gap:7px;
+  margin-top:45px;
+}
+
+.nav-title{
+  margin:18px 12px 4px;
+  color:#555;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.18em;
+}
+
+.nav button{
+  border:1px solid transparent;
+  border-radius:12px;
+  padding:13px;
+  background:transparent;
+  color:#999;
+  text-align:left;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:#1b1011;
+  border-color:#4a2025;
+  color:#fff;
+}
+
+.user-box{
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#111;
+}
+
+.avatar{
+  width:38px;
+  height:38px;
+  flex-shrink:0;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff3030,#590a12);
+  font-weight:900;
+}
+
+.main{
+  width:100%;
+  max-width:1500px;
+  min-width:0;
+  margin:0 auto;
+  padding:30px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:28px;
+}
+
+.crumb{
+  color:#777;
+}
+
+.actions{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:11px 15px;
+  background:#171717;
+  color:#fff;
+}
+
+.btn:hover{
+  border-color:#555;
+}
+
+.btn.primary{
+  border-color:var(--red);
+  background:var(--red);
+  color:#fff;
+  font-weight:800;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.eyebrow{
+  color:#ff6d6d;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+
+h1{
+  margin:0 0 10px;
+  font-size:clamp(32px,4vw,54px);
+  letter-spacing:-.06em;
+}
+
+h2{
+  margin:0 0 8px;
+  font-size:22px;
+}
+
+p{
+  color:var(--muted);
+  line-height:1.55;
+}
+
+.hero,
+.card{
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:linear-gradient(145deg,#171717,#0d0d0d);
+}
+
+.hero{
+  margin-bottom:16px;
+  border-color:#572027;
+  background:
+    radial-gradient(circle at 90% 0%,#5a111a,transparent 45%),
+    linear-gradient(135deg,#211012,#101010);
+}
+
+.hero-title{
+  font-size:clamp(35px,5vw,68px);
+  font-weight:1000;
+  letter-spacing:-.07em;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+}
+
+.metric{
+  margin:13px 0 5px;
+  font-size:31px;
+  font-weight:900;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.delta{
+  color:var(--green);
+  font-size:12px;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  gap:16px;
+  margin-top:16px;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+
+.item{
+  padding:15px;
+  border:1px solid #292929;
+  border-radius:13px;
+  background:#111;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.tag{
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:6px;
+  background:#2b1215;
+  color:#ff8d8d;
+  font-size:10px;
+  font-weight:800;
+}
+
+.tag.green{
+  background:#102b1c;
+  color:#6ee7a0;
+}
+
+.tag.yellow{
+  background:#30270d;
+  color:#facc15;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,
+td{
+  padding:13px 8px;
+  border-bottom:1px solid #292929;
+  text-align:left;
+  color:#bbb;
+}
+
+th{
+  color:#666;
+  font-size:10px;
+  text-transform:uppercase;
+}
+
+.field{
+  display:grid;
+  gap:7px;
+  margin-top:14px;
+}
+
+.field label{
+  color:#ddd;
+  font-size:13px;
+  font-weight:700;
+}
+
+.field input,
+.field textarea,
+.field select{
+  width:100%;
+  padding:12px;
+  border:1px solid #333;
+  border-radius:9px;
+  outline:none;
+  background:#0b0b0b;
+  color:#fff;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+  border-color:var(--red);
+}
+
+.field textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.form-grid .full{
+  grid-column:1/-1;
+}
+
+.profile-hero{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:20px;
+  align-items:center;
+}
+
+.big-avatar{
+  width:100px;
+  height:100px;
+  display:grid;
+  place-items:center;
+  border-radius:25px;
+  background:linear-gradient(135deg,#ff3030,#570b12);
+  font-size:42px;
+  font-weight:1000;
+}
+
+.auth{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:20px;
+}
+
+.auth-card{
+  width:min(460px,100%);
+  padding:30px;
+  border:1px solid #4c1b22;
+  border-radius:22px;
+  background:linear-gradient(145deg,#211012,#101010);
+}
+
+.auth-logo{
+  font-size:36px;
+  font-weight:1000;
+  letter-spacing:.15em;
+}
+
+.auth-card .btn{
+  width:100%;
+  margin-top:12px;
+}
+
+.message{
+  min-height:20px;
+  margin-top:12px;
+  color:#ff7777;
+}
+
+.message.success{
+  color:var(--green);
+}
+
+.modal{
+  position:fixed;
+  z-index:100;
+  inset:0;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  background:rgba(0,0,0,.78);
+}
+
+.modal-card{
+  width:min(520px,100%);
+  max-height:90vh;
+  overflow:auto;
+  padding:24px;
+  border:1px solid #4c1b22;
+  border-radius:18px;
+  background:#151515;
+}
+
+.toast{
+  position:fixed;
+  z-index:200;
+  right:20px;
+  bottom:20px;
+  padding:13px 16px;
+  border:1px solid #444;
+  border-radius:10px;
+  background:#171717;
+  color:#fff;
+}
+
+.chart{
+  height:150px;
+  display:flex;
+  align-items:end;
+  gap:8px;
+  margin-top:20px;
+}
+
+.chart i{
+  display:block;
+  flex:1;
+  min-width:8px;
+  border-radius:5px 5px 0 0;
+  background:linear-gradient(#ff3030,#4d0b11);
+}
+
+@media(max-width:900px){
+  .sidebar{
+    width:75px;
+    padding:20px 10px;
+  }
+
+  .brand{
+    font-size:15px;
+    text-align:center;
+  }
+
+  .sub,
+  .nav-title,
+  .nav span,
+  .user-text{
+    display:none;
+  }
+
+  .nav button{
+    text-align:center;
+  }
+
+  .user-box{
+    left:10px;
+    right:10px;
+    justify-content:center;
+  }
+
+  .main{
+    padding:20px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:560px){
+  .topbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .grid,
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-grid .full{
+    grid-column:auto;
+  }
+
+  .profile-hero{
+    grid-template-columns:auto 1fr;
+  }
+
+  .profile-stat{
+    grid-column:1/-1;
+  }
+
+  .main{
+    padding:14px;
+  }
+
+  .hero,
+  .card{
+    padding:16px;
+  }
+}
 </style>
 </head>
+
 <body>
 
 <div id="authView" class="auth">
-<div class="auth-card">
-<div class="auth-logo">ANAR<span>H</span>Y</div>
-<p>ANARHY Creator Operating System</p>
-<div class="field"><label>Email или nickname</label><input id="loginValue" autocomplete="username"></div>
-<div class="field"><label>Пароль</label><input id="loginPassword" type="password" autocomplete="current-password"></div>
-<button class="btn primary" id="loginBtn" style="margin-top:16px;width:100%">Войти в систему →</button>
-<button class="btn" id="showRegister" style="margin-top:10px;width:100%">Создать аккаунт</button>
-<div id="authMessage"></div>
-</div>
+  <div class="auth-card">
+    <div class="auth-logo">ANAR<span>H</span>Y</div>
+    <p>ANARHY Creator Operating System</p>
+
+    <div class="field">
+      <label for="loginValue">Email или nickname</label>
+      <input id="loginValue" autocomplete="username">
+    </div>
+
+    <div class="field">
+      <label for="loginPassword">Пароль</label>
+      <input id="loginPassword" type="password" autocomplete="current-password">
+    </div>
+
+    <button class="btn primary" id="loginBtn">Войти в систему →</button>
+    <button class="btn" id="showRegister">Создать аккаунт</button>
+
+    <div id="authMessage" class="message"></div>
+  </div>
 </div>
 
 <div id="appView" class="app hidden">
-<aside class="side">
-<div class="brand">ANAR<span>H</span>Y</div>
-<div class="sub">CREATOR OS / LIVE</div>
-<nav class="nav">
-<b>WORKSPACE</b>
-<button class="active" data-page="home">◈ <span>Главная</span></button>
-<button data-page="tasks">▣ <span>TikTok-задания</span></button>
-<button data-page="reports">↗ <span>Мои отчёты</span></button>
-<button data-page="progress">◒ <span>Прогресс</span></button>
-<button data-page="rating">♛ <span>Рейтинг</span></button>
-<b>SYSTEM</b>
-<button data-page="profile">⚙ <span>Профиль</span></button>
-</nav>
-<div class="userbox">
-<div class="avatar" id="sideAvatar">D</div>
-<div class="usertext"><strong id="sideName">User</strong><div class="muted" id="sideRole">User</div></div>
-</div>
-</aside>
 
-<main class="main">
-<header class="top">
-<div class="crumb">ANARHY OS / <span id="crumb">Главная</span></div>
-<div class="actions">
-<span class="tag green" id="backendStatus">BACKEND: проверка</span>
-<button class="btn" id="logoutBtn">Выйти</button>
-<button class="btn primary" id="newReportBtn">+ Создать отчёт</button>
-</div>
-</header>
+  <aside class="sidebar">
+    <div class="brand">ANAR<span>H</span>Y</div>
+    <div class="sub">CREATOR OS / LIVE</div>
 
-<section class="page active" id="home">
-<div class="hero">
-<div class="eyebrow">ANARHY CREATOR OS · LIVE DATA</div>
-<div class="hero-title">Не просто нарезки.<br><span>Медиа-империя.</span></div>
-<p>Реальные задания, отчёты, XP, уровень и рейтинг из backend.</p>
-<div class="actions">
-<button class="btn primary" data-page="tasks">Открыть задания →</button>
-<button class="btn" data-page="profile">Настроить профиль</button>
-</div>
-</div>
-<div class="grid">
-<div class="card"><div class="muted">Заданий сегодня</div><div class="metric" id="mTasks">—</div><div class="delta">● Дедлайн 22:00</div></div>
-<div class="card"><div class="muted">Отчётов сегодня</div><div class="metric" id="mReports">—</div><div class="delta">Из backend</div></div>
-<div class="card"><div class="muted">Твой XP</div><div class="metric" id="mXp">—</div><div class="delta">Реальные начисления</div></div>
-<div class="card"><div class="muted">Уровень</div><div class="metric" id="mLevel">—</div><div class="muted" id="mPenalties">Страйки: —</div></div>
-</div>
-<div class="layout">
-<div class="card"><h2>Активность</h2><p>Текущая активность аккаунта.</p><div id="activityChart" style="height:150px;display:flex;align-items:end;gap:8px;margin-top:20px"></div></div>
-<div class="card"><h2>Последние отчёты</h2><div id="todayList" class="list"></div></div>
-</div>
-</section>
+    <nav class="nav">
+      <div class="nav-title">WORKSPACE</div>
 
-<section class="page" id="tasks">
-<div class="eyebrow">CREATOR WORKSPACE</div><h1>TikTok-задания</h1>
-<p>Отправляй отчёт через ссылку на опубликованный ролик.</p>
-<div id="tasksList" class="list"></div>
-</section>
+      <button class="active" data-page="home">◈ <span>Главная</span></button>
+      <button data-page="tasks">▣ <span>TikTok-задания</span></button>
+      <button data-page="reports">↗ <span>Мои отчёты</span></button>
+      <button data-page="progress">◒ <span>Прогресс</span></button>
+      <button data-page="rating">♛ <span>Рейтинг</span></button>
 
-<section class="page" id="reports">
-<div class="eyebrow">SUBMISSIONS</div><h1>Мои отчёты</h1>
-<div class="card"><table><thead><tr><th>Задание</th><th>Дата</th><th>Статус</th><th>XP</th></tr></thead><tbody id="reportsBody"></tbody></table></div>
-</section>
+      <div class="nav-title">SYSTEM</div>
 
-<section class="page" id="progress">
-<div class="eyebrow">LEVEL SYSTEM</div><h1>Прогресс</h1>
-<div class="grid">
-<div class="card"><div class="muted">Всего отчётов</div><div class="metric" id="pTotal">—</div></div>
-<div class="card"><div class="muted">Принято</div><div class="metric" id="pApproved">—</div></div>
-<div class="card"><div class="muted">Сегодня</div><div class="metric" id="pToday">—</div></div>
-<div class="card"><div class="muted">Цель в день</div><div class="metric">3</div><div class="muted">Дедлайн 22:00</div></div>
-</div>
-</section>
+      <button data-page="profile">⚙ <span>Профиль</span></button>
+    </nav>
 
-<section class="page" id="rating">
-<div class="eyebrow">LEADERBOARD</div><h1>Рейтинг участников</h1>
-<div class="card"><table><thead><tr><th>#</th><th>Участник</th><th>Уровень</th><th>XP</th></tr></thead><tbody id="ratingBody"></tbody></table></div>
-</section>
+    <div class="user-box">
+      <div class="avatar" id="sideAvatar">A</div>
+      <div class="user-text">
+        <strong id="sideName">User</strong>
+        <div class="muted" id="sideRole">User</div>
+      </div>
+    </div>
+  </aside>
 
-<section class="page" id="profile">
-<div class="eyebrow">ACCOUNT / IDENTITY</div><h1>Профиль</h1>
-<div class="card profile-hero">
-<div class="big-avatar" id="profileAvatar">D</div>
-<div><div class="metric" id="profileTitle">—</div><div id="profileHandle">@—</div><p id="profileAbout">—</p></div>
-<div class="card side-stat"><div class="muted">XP</div><div class="metric" id="profileXp">—</div></div>
-</div>
-<div class="card" style="margin-top:16px">
-<h2>Личные данные</h2>
-<div class="formgrid">
-<div class="field"><label>Имя</label><input id="pName"></div>
-<div class="field"><label>Nickname</label><input id="pNick"></div>
-<div class="field"><label>Email</label><input id="pEmail" type="email"></div>
-<div class="field"><label>Аватар URL</label><input id="pAvatar" type="url"></div>
-<div class="field full"><label>О себе</label><textarea id="pAbout"></textarea></div>
-</div>
-<div class="actions" style="margin-top:18px"><button class="btn primary" id="saveProfile">Сохранить профиль →</button><span id="profileMessage"></span></div>
-</div>
-</section>
-</main>
+  <main class="main">
+
+    <header class="topbar">
+      <div class="crumb">
+        ANARHY OS / <span id="crumb">Главная</span>
+      </div>
+
+      <div class="actions">
+        <span class="tag green" id="backendStatus">BACKEND: проверка</span>
+        <button class="btn" id="logoutBtn">Выйти</button>
+        <button class="btn primary" id="newReportBtn">+ Создать отчёт</button>
+      </div>
+    </header>
+
+    <section class="page active" id="home">
+      <div class="hero">
+        <div class="eyebrow">ANARHY CREATOR OS · LIVE DATA</div>
+        <div class="hero-title">
+          Не просто нарезки.<br>
+          <span>Медиа-империя.</span>
+        </div>
+        <p>
+          Реальные задания, отчёты, XP, уровень и рейтинг из backend.
+        </p>
+
+        <div class="actions">
+          <button class="btn primary" data-page="tasks">
+            Открыть задания →
+          </button>
+          <button class="btn" data-page="profile">
+            Настроить профиль
+          </button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="muted">Заданий сегодня</div>
+          <div class="metric" id="mTasks">—</div>
+          <div class="delta">● Дедлайн 22:00</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Отчётов сегодня</div>
+          <div class="metric" id="mReports">—</div>
+          <div class="delta">Из backend</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Твой XP</div>
+          <div class="metric" id="mXp">—</div>
+          <div class="delta">Реальные начисления</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Уровень</div>
+          <div class="metric" id="mLevel">—</div>
+          <div class="muted" id="mPenalties">Страйки: —</div>
+        </div>
+      </div>
+
+      <div class="layout">
+        <div class="card">
+          <h2>Активность</h2>
+          <p>Текущая активность аккаунта.</p>
+          <div id="activityChart" class="chart"></div>
+        </div>
+
+        <div class="card">
+          <h2>Последние отчёты</h2>
+          <div id="todayList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="tasks">
+      <div class="eyebrow">CREATOR WORKSPACE</div>
+      <h1>TikTok-задания</h1>
+      <p>Отправляй отчёт через ссылку на опубликованный ролик.</p>
+      <div id="tasksList" class="list"></div>
+    </section>
+
+    <section class="page" id="reports">
+      <div class="eyebrow">SUBMISSIONS</div>
+      <h1>Мои отчёты</h1>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Задание</th>
+              <th>Дата</th>
+              <th>Статус</th>
+              <th>XP</th>
+            </tr>
+          </thead>
+          <tbody id="reportsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="page" id="progress">
+      <div class="eyebrow">LEVEL SYSTEM</div>
+      <h1>Прогресс</h1>
+
+      <div class="grid">
+        <div class="card">
+          <div class="muted">Всего отчётов</div>
+          <div class="metric" id="pTotal">—</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Принято</div>
+          <div class="metric" id="pApproved">—</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Сегодня</div>
+          <div class="metric" id="pToday">—</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Цель в день</div>
+          <div class="metric">3</div>
+          <div class="muted">Дедлайн 22:00</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="rating">
+      <div class="eyebrow">LEADERBOARD</div>
+      <h1>Рейтинг участников</h1>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Участник</th>
+              <th>Уровень</th>
+              <th>XP</th>
+            </tr>
+          </thead>
+          <tbody id="ratingBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="page" id="profile">
+      <div class="eyebrow">ACCOUNT / IDENTITY</div>
+      <h1>Профиль</h1>
+
+      <div class="card profile-hero">
+        <div class="big-avatar" id="profileAvatar">A</div>
+
+        <div>
+          <div class="metric" id="profileTitle">—</div>
+          <div id="profileHandle">@—</div>
+          <p id="profileAbout">О себе пока не заполнено.</p>
+        </div>
+
+        <div class="card profile-stat">
+          <div class="muted">XP</div>
+          <div class="metric" id="profileXp">—</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>Личные данные</h2>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="pName">Имя</label>
+            <input id="pName">
+          </div>
+
+          <div class="field">
+            <label for="pNick">Nickname</label>
+            <input id="pNick">
+          </div>
+
+          <div class="field">
+            <label for="pEmail">Email</label>
+            <input id="pEmail" type="email">
+          </div>
+
+          <div class="field">
+            <label for="pAvatar">Аватар URL</label>
+            <input id="pAvatar" type="url">
+          </div>
+
+          <div class="field full">
+            <label for="pAbout">О себе</label>
+            <textarea id="pAbout"></textarea>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:18px">
+          <button class="btn primary" id="saveProfile">
+            Сохранить профиль →
+          </button>
+          <span id="profileMessage" class="message"></span>
+        </div>
+      </div>
+    </section>
+
+  </main>
 </div>
 
 <div id="reportModal" class="modal hidden">
-<div class="modal-card">
-<div class="row"><h2>Создать отчёт</h2><button class="btn" id="closeModal">×</button></div>
-<div class="field"><label>Задание</label><select id="reportTask"></select></div>
-<div class="field"><label>Ссылка на TikTok</label><input id="reportUrl" placeholder="https://www.tiktok.com/@..."></div>
-<div class="field"><label>Комментарий</label><textarea id="reportText"></textarea></div>
-<button class="btn primary" id="sendReport" style="margin-top:15px;width:100%">Отправить отчёт →</button>
-<div id="reportMessage"></div>
+  <div class="modal-card">
+    <div class="row">
+      <h2>Создать отчёт</h2>
+      <button class="btn" id="closeReport">×</button>
+    </div>
+
+    <div class="field">
+      <label for="reportTask">Задание</label>
+      <select id="reportTask"></select>
+    </div>
+
+    <div class="field">
+      <label for="reportUrl">Ссылка на TikTok</label>
+      <input id="reportUrl" placeholder="https://www.tiktok.com/@...">
+    </div>
+
+    <div class="field">
+      <label for="reportText">Комментарий</label>
+      <textarea id="reportText"></textarea>
+    </div>
+
+    <button class="btn primary" id="sendReport" style="width:100%;margin-top:15px">
+      Отправить отчёт →
+    </button>
+
+    <div id="reportMessage" class="message"></div>
+  </div>
 </div>
+
+<div id="registerModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="row">
+      <h2>Создать аккаунт</h2>
+      <button class="btn" id="closeRegister">×</button>
+    </div>
+
+    <div class="field">
+      <label for="registerName">Имя</label>
+      <input id="registerName" placeholder="Твоё имя">
+    </div>
+
+    <div class="field">
+      <label for="registerNickname">Nickname</label>
+      <input id="registerNickname" placeholder="anarhy_user">
+    </div>
+
+    <div class="field">
+      <label for="registerEmail">Email</label>
+      <input id="registerEmail" type="email" placeholder="you@email.com">
+    </div>
+
+    <div class="field">
+      <label for="registerPassword">Пароль</label>
+      <input id="registerPassword" type="password" placeholder="Минимум 6 символов">
+    </div>
+
+    <div class="field">
+      <label for="registerConfirm">Повтори пароль</label>
+      <input id="registerConfirm" type="password" placeholder="Повтори пароль">
+    </div>
+
+    <button class="btn primary" id="registerBtn" style="width:100%;margin-top:16px">
+      Создать аккаунт →
+    </button>
+
+    <div id="registerMessage" class="message"></div>
+  </div>
 </div>
 
 <div id="toast" class="toast hidden"></div>
 
 <script>
-const API='https://anarhy-backend-final.onrender.com';
+const API_BASE='https://anarhy-backend-final.onrender.com';
+
 let token=localStorage.getItem('anarhyToken');
-const state={user:null,tasks:[],reports:[],progress:{},rating:[]};
+
+const state={
+  user:null,
+  tasks:[],
+  reports:[],
+  progress:{},
+  rating:[]
+};
+
 const $=id=>document.getElementById(id);
-const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 
-function showMessage(text,ok=false){
-$('authMessage').className=ok?'success':'error';
-$('authMessage').textContent=text;
+function escapeHtml(value){
+  return String(value??'').replace(/[&<>'"]/g,char=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    "'":'&#39;',
+    '"':'&quot;'
+  }[char]));
 }
+
+function showAuthMessage(text,success=false){
+  $('authMessage').textContent=text||'';
+  $('authMessage').className=success?'message success':'message';
+}
+
 function toast(text){
-$('toast').textContent=text;
-$('toast').classList.remove('hidden');
-setTimeout(()=>$('toast').classList.add('hidden'),2600);
+  $('toast').textContent=text;
+  $('toast').classList.remove('hidden');
+
+  setTimeout(()=>{
+    $('toast').classList.add('hidden');
+  },2600);
 }
+
 async function api(path,options={}){
-const headers={'Content-Type':'application/json',...(options.headers||{})};
-if(token)headers.Authorization='Bearer '+token;
-const response=await fetch(API+path,{...options,headers});
-let data={};
-try{data=await response.json()}catch{}
-if(!response.ok)throw new Error(data.error||data.message||'Ошибка запроса');
-return data;
+  const headers={
+    'Content-Type':'application/json',
+    ...(options.headers||{})
+  };
+
+  if(token){
+    headers.Authorization='Bearer '+token;
+  }
+
+  const response=await fetch(API_BASE+path,{
+    ...options,
+    headers
+  });
+
+  let data={};
+
+  try{
+    data=await response.json();
+  }catch{
+    data={};
+  }
+
+  if(!response.ok){
+    throw new Error(
+      data.error||
+      data.message||
+      'Ошибка запроса: '+response.status
+    );
+  }
+
+  return data;
 }
-function unwrap(data,key){
-if(data?.[key]!==undefined)return data[key];
-if(data?.data?.[key]!==undefined)return data.data[key];
-if(data?.data!==undefined)return data.data;
-return data;
+
+function extract(data,...keys){
+  for(const key of keys){
+    if(data&&data[key]!==undefined)return data[key];
+    if(data?.data&&data.data[key]!==undefined)return data.data[key];
+  }
+
+  if(data?.data!==undefined)return data.data;
+
+  return data;
 }
+
+function getUser(data){
+  return data?.user||
+         data?.data?.user||
+         data?.profile||
+         data?.data?.profile||
+         data?.data||
+         data||
+         {};
+}
+
+function getArray(data,...keys){
+  const result=extract(data,...keys);
+  return Array.isArray(result)?result:[];
+}
+
 function go(page){
-document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===page));
-document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));
-$('crumb').textContent={home:'Главная',tasks:'TikTok-задания',reports:'Мои отчёты',progress:'Прогресс',rating:'Рейтинг',profile:'Профиль'}[page]||page;
-window.scrollTo(0,0);
+  document.querySelectorAll('.page').forEach(element=>{
+    element.classList.toggle('active',element.id===page);
+  });
+
+  document.querySelectorAll('[data-page]').forEach(element=>{
+    element.classList.toggle('active',element.dataset.page===page);
+  });
+
+  const names={
+    home:'Главная',
+    tasks:'TikTok-задания',
+    reports:'Мои отчёты',
+    progress:'Прогресс',
+    rating:'Рейтинг',
+    profile:'Профиль'
+  };
+
+  $('crumb').textContent=names[page]||page;
+  window.scrollTo(0,0);
 }
-document.addEventListener('click',e=>{
-const button=e.target.closest('[data-page]');
-if(button)go(button.dataset.page);
-const reportButton=e.target.closest('[data-report-task]');
-if(reportButton)openReport(reportButton.dataset.reportTask);
+
+document.addEventListener('click',event=>{
+  const pageButton=event.target.closest('[data-page]');
+
+  if(pageButton){
+    go(pageButton.dataset.page);
+  }
+
+  const reportButton=event.target.closest('[data-report-task]');
+
+  if(reportButton){
+    openReport(reportButton.dataset.reportTask);
+  }
 });
+
 async function login(){
-try{
-const value=$('loginValue').value.trim();
-const password=$('loginPassword').value;
-if(!value||!password)return showMessage('Заполни логин и пароль');
-const data=await api('/api/login',{method:'POST',body:JSON.stringify({email:value,nickname:value,password})});
-token=data.token||data.data?.token;
-if(!token)throw new Error('Backend не вернул токен');
-localStorage.setItem('anarhyToken',token);
-await boot();
-}catch(error){showMessage(error.message)}
+  try{
+    const value=$('loginValue').value.trim();
+    const password=$('loginPassword').value;
+
+    if(!value||!password){
+      showAuthMessage('Заполни логин и пароль');
+      return;
+    }
+
+    const data=await api('/api/login',{
+      method:'POST',
+      body:JSON.stringify({
+        email:value,
+        nickname:value,
+        password
+      })
+    });
+
+    token=data.token||data.data?.token;
+
+    if(!token){
+      throw new Error('Backend не вернул токен');
+    }
+
+    localStorage.setItem('anarhyToken',token);
+    await boot();
+  }catch(error){
+    showAuthMessage(error.message);
+  }
 }
+
+function openRegister(){
+  $('registerMessage').textContent='';
+  $('registerName').value='';
+  $('registerNickname').value='';
+  $('registerEmail').value='';
+  $('registerPassword').value='';
+  $('registerConfirm').value='';
+  $('registerModal').classList.remove('hidden');
+}
+
+function closeRegister(){
+  $('registerModal').classList.add('hidden');
+}
+
 async function register(){
-const name=prompt('Имя');
-if(!name)return;
-const nickname=prompt('Nickname');
-if(!nickname)return;
-const email=prompt('Email');
-if(!email)return;
-const password=prompt('Пароль минимум 6 символов');
-if(!password)return;
-try{
-const data=await api('/api/register',{method:'POST',body:JSON.stringify({name,nickname,email,password})});
-token=data.token||data.data?.token;
-if(!token)throw new Error('Backend не вернул токен');
-localStorage.setItem('anarhyToken',token);
-await boot();
-}catch(error){showMessage(error.message)}
+  const name=$('registerName').value.trim();
+  const nickname=$('registerNickname').value.trim();
+  const email=$('registerEmail').value.trim();
+  const password=$('registerPassword').value;
+  const confirm=$('registerConfirm').value;
+
+  $('registerMessage').textContent='';
+
+  if(!name||!nickname||!email||!password||!confirm){
+    $('registerMessage').textContent='Заполни все поля';
+    return;
+  }
+
+  if(password.length<6){
+    $('registerMessage').textContent='Пароль должен быть минимум 6 символов';
+    return;
+  }
+
+  if(password!==confirm){
+    $('registerMessage').textContent='Пароли не совпадают';
+    return;
+  }
+
+  try{
+    const data=await api('/api/register',{
+      method:'POST',
+      body:JSON.stringify({
+        name,
+        nickname,
+        email,
+        password
+      })
+    });
+
+    token=data.token||data.data?.token;
+
+    if(!token){
+      throw new Error('Backend не вернул токен');
+    }
+
+    localStorage.setItem('anarhyToken',token);
+    closeRegister();
+    await boot();
+  }catch(error){
+    $('registerMessage').textContent=error.message;
+  }
 }
+
 async function boot(){
-try{
-const data=await api('/api/me');
-state.user=data.user||data.data?.user||data.data||data;
-$('authView').classList.add('hidden');
-$('appView').classList.remove('hidden');
-$('backendStatus').textContent='BACKEND: онлайн';
-await refresh();
-}catch(error){
-localStorage.removeItem('anarhyToken');
-token=null;
-$('authView').classList.remove('hidden');
-$('appView').classList.add('hidden');
-showMessage(error.message);
+  try{
+    const me=await api('/api/me');
+
+    state.user=getUser(me);
+
+    $('authView').classList.add('hidden');
+    $('appView').classList.remove('hidden');
+    $('backendStatus').textContent='BACKEND: онлайн';
+
+    await refresh();
+  }catch(error){
+    localStorage.removeItem('anarhyToken');
+    token=null;
+
+    $('authView').classList.remove('hidden');
+    $('appView').classList.add('hidden');
+
+    showAuthMessage(error.message);
+  }
 }
-}
+
 async function refresh(){
-try{
-const [tasks,reports,progress,rating,me]=await Promise.all([
-api('/api/tasks'),api('/api/reports'),api('/api/progress'),api('/api/rating'),api('/api/me')
-]);
-state.tasks=tasks.tasks||tasks.data?.tasks||tasks.data||[];
-state.reports=reports.reports||reports.data?.reports||reports.data||[];
-state.progress=progress.progress||progress.data?.progress||progress.data||{};
-state.rating=rating.rating||rating.data?.rating||rating.data||[];
-state.user=me.user||me.data?.user||me.data||me;
-render();
-}catch(error){toast(error.message)}
+  try{
+    const results=await Promise.all([
+      api('/api/tasks'),
+      api('/api/reports'),
+      api('/api/progress'),
+      api('/api/rating'),
+      api('/api/me')
+    ]);
+
+    state.tasks=getArray(results[0],'tasks');
+    state.reports=getArray(results[1],'reports');
+    state.progress=extract(results[2],'progress')||{};
+    state.rating=getArray(results[3],'rating');
+    state.user=getUser(results[4]);
+
+    render();
+  }catch(error){
+    toast(error.message);
+  }
 }
+
 function render(){
-const u=state.user||{},p=state.progress||{};
-$('mTasks').textContent=state.tasks.length;
-$('mReports').textContent=p.todayReports??p.today_reports??0;
-$('mXp').textContent=u.xp??0;
-$('mLevel').textContent=u.level??1;
-$('mPenalties').textContent='Страйки: '+(u.penalties??0);
-$('pTotal').textContent=p.totalReports??p.total_reports??0;
-$('pApproved').textContent=p.approvedReports??p.approved_reports??0;
-$('pToday').textContent=p.todayReports??p.today_reports??0;
-$('sideName').textContent=u.name||u.nickname||'User';
-$('sideRole').textContent=u.role||'User';
-$('sideAvatar').textContent=(u.name||u.nickname||'U')[0].toUpperCase();
-$('profileTitle').textContent=u.name||u.nickname||'User';
-$('profileHandle').textContent='@'+(u.nickname||'user');
-$('profileAbout').textContent=u.about||'О себе пока не заполнено';
-$('profileXp').textContent=u.xp??0;
-$('profileAvatar').textContent=(u.name||u.nickname||'U')[0].toUpperCase();
-$('pName').value=u.name||'';
-$('pNick').value=u.nickname||'';
-$('pEmail').value=u.email||'';
-$('pAvatar').value=u.avatar||'';
-$('pAbout').value=u.about||'';
+  const user=state.user||{};
+  const progress=state.progress||{};
 
-$('tasksList').innerHTML=state.tasks.map(task=>`
-<div class="card">
-<div class="row"><div><span class="tag">TASK #${esc(task.id)}</span><h2>${esc(task.title||'Задание')}</h2></div><strong>+${esc(task.xp_reward??0)} XP</strong></div>
-<p>${esc(task.description||'')}</p>
-<div class="muted">Видео: ${esc(task.videos_required??3)} · Дедлайн: ${esc(task.deadline||'22:00')}</div>
-<button class="btn primary" style="margin-top:15px" data-report-task="${esc(task.id)}">Отправить отчёт →</button>
-</div>`).join('')||'<div class="card">Активных заданий пока нет.</div>';
+  const todayReports=
+    progress.todayReports??
+    progress.today_reports??
+    progress.today??
+    0;
 
-$('todayList').innerHTML=state.reports.slice(0,5).map(report=>`
-<div class="item"><div class="row"><strong>${esc(report.task_title||'Отчёт #'+report.id)}</strong><span class="tag">${esc(report.status||'pending')}</span></div><p>${esc(report.video_url||'Без ссылки')}</p></div>`).join('')||'<div class="item">Отчётов пока нет.</div>';
+  $('mTasks').textContent=state.tasks.length;
+  $('mReports').textContent=todayReports;
+  $('mXp').textContent=user.xp??0;
+  $('mLevel').textContent=user.level??1;
+  $('mPenalties').textContent='Страйки: '+(user.penalties??0);
 
-$('reportsBody').innerHTML=state.reports.map(report=>`
-<tr><td>${esc(report.task_title||'—')}</td><td>${esc(report.report_date||'—')}</td><td><span class="tag">${esc(report.status||'pending')}</span></td><td>${report.xp_reward??'—'}</td></tr>`).join('')||'<tr><td colspan="4">Отчётов пока нет.</td></tr>';
+  $('pTotal').textContent=
+    progress.totalReports??
+    progress.total_reports??
+    state.reports.length;
 
-$('ratingBody').innerHTML=state.rating.map((person,index)=>`
-<tr><td>${index+1}</td><td>${esc(person.name||person.nickname||'User')} <span class="muted">@${esc(person.nickname||'')}</span></td><td>${esc(person.level??1)}</td><td>${esc(person.xp??0)}</td></tr>`).join('')||'<tr><td colspan="4">Рейтинг пуст.</td></tr>';
+  $('pApproved').textContent=
+    progress.approvedReports??
+    progress.approved_reports??
+    0;
 
-$('activityChart').innerHTML=Array.from({length:7},(_,i)=>`<i style="display:block;flex:1;height:${20+i*10}%;background:linear-gradient(#ff3030,#4d0b11);border-radius:5px 5px 0 0"></i>`).join('');
-fillTaskSelect();
+  $('pToday').textContent=todayReports;
+
+  const displayName=user.name||user.nickname||'User';
+  const nickname=user.nickname||'user';
+
+  $('sideName').textContent=displayName;
+  $('sideRole').textContent=user.role||'User';
+  $('sideAvatar').textContent=displayName.charAt(0).toUpperCase();
+
+  $('profileTitle').textContent=displayName;
+  $('profileHandle').textContent='@'+nickname;
+  $('profileAbout').textContent=user.about||'О себе пока не заполнено.';
+  $('profileXp').textContent=user.xp??0;
+  $('profileAvatar').textContent=displayName.charAt(0).toUpperCase();
+
+  $('pName').value=user.name||'';
+  $('pNick').value=user.nickname||'';
+  $('pEmail').value=user.email||'';
+  $('pAvatar').value=user.avatar||'';
+  $('pAbout').value=user.about||'';
+
+  renderTasks();
+  renderReports();
+  renderRating();
+  renderActivity();
 }
-function fillTaskSelect(selected){
-$('reportTask').innerHTML=state.tasks.map(task=>`<option value="${esc(task.id)}" ${String(task.id)===String(selected)?'selected':''}>${esc(task.title||'Задание')}</option>`).join('');
+
+function renderTasks(){
+  $('tasksList').innerHTML=state.tasks.map(task=>{
+    const id=task.id??task._id??'';
+    const title=task.title||task.name||'Задание';
+
+    return `
+      <div class="card">
+        <div class="row">
+          <div>
+            <span class="tag">TASK #${escapeHtml(id)}</span>
+            <h2>${escapeHtml(title)}</h2>
+          </div>
+          <strong>+${escapeHtml(task.xp_reward??task.xp??0)} XP</strong>
+        </div>
+
+        <p>${escapeHtml(task.description||'')}</p>
+
+        <div class="muted">
+          Видео: ${escapeHtml(task.videos_required??3)}
+          · Дедлайн: ${escapeHtml(task.deadline||'22:00')}
+        </div>
+
+        <button
+          class="btn primary"
+          style="margin-top:15px"
+          data-report-task="${escapeHtml(id)}">
+          Отправить отчёт →
+        </button>
+      </div>
+    `;
+  }).join('')||'<div class="card">Активных заданий пока нет.</div>';
+
+  fillTaskSelect();
 }
-function openReport(taskId){
-if(!state.tasks.length)return toast('Нет доступных заданий');
-fillTaskSelect(taskId);
-$('reportUrl').value='';
-$('reportText').value='';
-$('reportMessage').textContent='';
-$('reportModal').classList.remove('hidden');
+
+function renderReports(){
+  $('todayList').innerHTML=state.reports.slice(0,5).map(report=>`
+    <div class="item">
+      <div class="row">
+        <strong>${escapeHtml(report.task_title||report.taskName||'Отчёт #'+(report.id||''))}</strong>
+        <span class="tag">${escapeHtml(report.status||'pending')}</span>
+      </div>
+      <p>${escapeHtml(report.video_url||report.videoUrl||'Без ссылки')}</p>
+    </div>
+  `).join('')||'<div class="item">Отчётов пока нет.</div>';
+
+  $('reportsBody').innerHTML=state.reports.map(report=>`
+    <tr>
+      <td>${escapeHtml(report.task_title||report.taskName||'—')}</td>
+      <td>${escapeHtml(report.report_date||report.created_at||'—')}</td>
+      <td><span class="tag">${escapeHtml(report.status||'pending')}</span></td>
+      <td>${escapeHtml(report.xp_reward??report.xp??'—')}</td>
+    </tr>
+  `).join('')||'<tr><td colspan="4">Отчётов пока нет.</td></tr>';
 }
-$('loginBtn').onclick=login;
-$('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
-$('showRegister').onclick=register;
-$('logoutBtn').onclick=()=>{
-localStorage.removeItem('anarhyToken');
-token=null;
-location.reload();
-};
-$('newReportBtn').onclick=()=>openReport();
-$('closeModal').onclick=()=>$('reportModal').classList.add('hidden');
-$('sendReport').onclick=async()=>{
-try{
-const taskId=$('reportTask').value;
-const videoUrl=$('reportUrl').value.trim();
-const text=$('reportText').value.trim();
-if(!taskId)return $('reportMessage').textContent='Выбери задание';
-if(!/^https?:\/\/(www\.)?tiktok\.com\//i.test(videoUrl))return $('reportMessage').textContent='Укажи корректную ссылку TikTok';
-await api('/api/reports',{method:'POST',body:JSON.stringify({taskId,videoUrl,text})});
-$('reportModal').classList.add('hidden');
-toast('Отчёт отправлен на проверку');
-await refresh();
-go('reports');
-}catch(error){$('reportMessage').textContent=error.message}
-};
-$('saveProfile').onclick=async()=>{
-try{
-const body={
-name:$('pName').value.trim(),
-nickname:$('pNick').value.trim(),
-email:$('pEmail').value.trim(),
-avatar:$('pAvatar').value.trim(),
-about:$('pAbout').value.trim()
-};
-let data;
-try{
-data=await api('/api/profile',{method:'PUT',body:JSON.stringify(body)});
-}catch{
-data=await api('/api/profile',{method:'POST',body:JSON.stringify(body)});
+
+function renderRating(){
+  $('ratingBody').innerHTML=state.rating.map((person,index)=>`
+    <tr>
+      <td>${index+1}</td>
+      <td>
+        ${escapeHtml(person.name||person.nickname||'User')}
+        <span class="muted">@${escapeHtml(person.nickname||'')}</span>
+      </td>
+      <td>${escapeHtml(person.level??1)}</td>
+      <td>${escapeHtml(person.xp??0)}</td>
+    </tr>
+  `).join('')||'<tr><td colspan="4">Рейтинг пуст.</td></tr>';
 }
-state.user=data.user||data.data?.user||data.data||body;
-toast('Профиль сохранён');
-render();
-}catch(error){$('profileMessage').textContent=error.message}
-};
-if(token)boot();
+
+function renderActivity(){
+  $('activityChart').innerHTML='';
+
+  const values=[35,55,42,78,60,88,68];
+
+  values.forEach(value=>{
+    const bar=document.createElement('i');
+    bar.style.height=value+'%';
+    $('activityChart').appendChild(bar);
+  });
+}
+
+function fillTaskSelect(selected=''){
+  $('reportTask').innerHTML=state.tasks.map(task=>{
+    const id=task.id??task._id??'';
+    const title=task.title||task.name||'Задание';
+
+    return `
+      <option value="${escapeHtml(id)}"
+        ${String(id)===String(selected)?'selected':''}>
+        ${escapeHtml(title)}
+      </option>
+    `;
+  }).join('');
+}
+
+function openReport(taskId=''){
+  if(!state.tasks.length){
+    toast('Нет доступных заданий');
+    return;
+  }
+
+  fillTaskSelect(taskId);
+  $('reportUrl').value='';
+  $('reportText').value='';
+  $('reportMessage').textContent='';
+  $('reportModal').classList.remove('hidden');
+}
+
+function closeReport(){
+  $('reportModal').classList.add('hidden');
+}
+
+async function sendReport(){
+  const taskId=$('reportTask').value;
+  const videoUrl=$('reportUrl').value.trim();
+  const text=$('reportText').value.trim();
+
+  $('reportMessage').textContent='';
+
+  if(!taskId){
+    $('reportMessage').textContent='Выбери задание';
+    return;
+  }
+
+  if(!/^https?:\/\/(www\.)?tiktok\.com\//i.test(videoUrl)){
+    $('reportMessage').textContent='Укажи корректную ссылку TikTok';
+    return;
+  }
+
+  try{
+    await api('/api/reports',{
+      method:'POST',
+      body:JSON.stringify({
+        taskId,
+        videoUrl,
+        text
+      })
+    });
+
+    closeReport();
+    toast('Отчёт отправлен на проверку');
+    await refresh();
+    go('reports');
+  }catch(error){
+    $('reportMessage').textContent=error.message;
+  }
+}
+
+async function saveProfile(){
+  const body={
+    name:$('pName').value.trim(),
+    nickname:$('pNick').value.trim(),
+    email:$('pEmail').value.trim(),
+    avatar:$('pAvatar').value.trim(),
+    about:$('pAbout').value.trim()
+  };
+
+  $('profileMessage').textContent='';
+
+  try{
+    let data;
+
+    try{
+      data=await api('/api/profile',{
+        method:'PUT',
+        body:JSON.stringify(body)
+      });
+    }catch{
+      data=await api('/api/profile',{
+        method:'POST',
+        body:JSON.stringify(body)
+      });
+    }
+
+    state.user=getUser(data);
+    render();
+
+    $('profileMessage').textContent='Профиль сохранён';
+    $('profileMessage').className='message success';
+    toast('Профиль сохранён');
+  }catch(error){
+    $('profileMessage').textContent=error.message;
+    $('profileMessage').className='message';
+  }
+}
+
+$('loginBtn').addEventListener('click',login);
+
+$('loginPassword').addEventListener('keydown',event=>{
+  if(event.key==='Enter'){
+    login();
+  }
+});
+
+$('showRegister').addEventListener('click',openRegister);
+$('closeRegister').addEventListener('click',closeRegister);
+$('registerBtn').addEventListener('click',register);
+
+$('newReportBtn').addEventListener('click',()=>openReport());
+$('closeReport').addEventListener('click',closeReport);
+$('sendReport').addEventListener('click',sendReport);
+
+$('saveProfile').addEventListener('click',saveProfile);
+
+$('logoutBtn').addEventListener('click',()=>{
+  localStorage.removeItem('anarhyToken');
+  token=null;
+  location.reload();
+});
+
+if(token){
+  boot();
+}
 </script>
+
 </body>
 </html>
