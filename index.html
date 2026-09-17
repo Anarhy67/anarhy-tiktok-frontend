@@ -624,7 +624,6 @@ body.is-admin .admin-only{display:block}
     <span class="muted" id="profileMessage"></span>
   </div>
 </section>
-
 <section class="page" id="admin">
   <div class="eyebrow">ADMIN CONTROL CENTER</div>
   <h1>Админка</h1>
@@ -748,6 +747,10 @@ const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({
   '"':'&quot;'
 }[c]));
 
+function isAdmin(){
+  return String(state.user?.role||'').trim().toLowerCase()==='admin';
+}
+
 function toast(text){
   $('toast').textContent=text;
   $('toast').classList.remove('hidden');
@@ -773,7 +776,7 @@ async function api(path,opts={}){
 }
 
 function go(id){
-  if(id==='admin' && state.user?.role!=='admin'){
+  if(id==='admin'&&!isAdmin()){
     toast('Доступ только для администратора');
     return;
   }
@@ -797,6 +800,7 @@ function go(id){
   })[id]||id;
 
   if(id==='admin') loadAdmin();
+
   window.scrollTo(0,0);
 }
 
@@ -826,6 +830,7 @@ async function login(){
 
     token=d.token;
     localStorage.setItem('anarhyToken',token);
+
     await boot();
 
   }catch(e){
@@ -892,12 +897,19 @@ $('showRegister').onclick=()=>{
     try{
       const d=await api('/api/register',{
         method:'POST',
-        body:JSON.stringify({name,nickname,email,password})
+        body:JSON.stringify({
+          name,
+          nickname,
+          email,
+          password
+        })
       });
 
       token=d.token;
       localStorage.setItem('anarhyToken',token);
+
       box.remove();
+
       await boot();
 
     }catch(e){
@@ -915,7 +927,7 @@ async function boot(){
     $('authView').classList.add('hidden');
     $('appView').classList.remove('hidden');
 
-    if(state.user.role==='admin'){
+    if(isAdmin()){
       document.body.classList.add('is-admin');
     }else{
       document.body.classList.remove('is-admin');
@@ -931,6 +943,7 @@ async function boot(){
   }catch(e){
     localStorage.removeItem('anarhyToken');
     token=null;
+
     $('authView').classList.remove('hidden');
     $('appView').classList.add('hidden');
     $('authMessage').textContent=e.message;
@@ -953,6 +966,12 @@ async function refresh(){
     state.rating=ra.rating||[];
     state.user=me.user;
 
+    if(isAdmin()){
+      document.body.classList.add('is-admin');
+    }else{
+      document.body.classList.remove('is-admin');
+    }
+
     render();
 
   }catch(e){
@@ -962,7 +981,11 @@ async function refresh(){
 
 function render(){
   const u=state.user;
-  const p=state.progress;
+  const p=state.progress||{
+    todayReports:0,
+    totalReports:0,
+    approvedReports:0
+  };
 
   $('mTasks').textContent=state.tasks.length;
   $('mReports').textContent=p.todayReports;
@@ -997,6 +1020,7 @@ function render(){
       </div>
 
       <p>${esc(t.description)}</p>
+
       <div class="muted">
         Видео: ${t.videos_required} · Дедлайн: ${esc(t.deadline)}
       </div>
@@ -1052,9 +1076,11 @@ function fillTaskSelect(selected){
 
 function openReport(taskId){
   fillTaskSelect(taskId);
+
   $('reportUrl').value='';
   $('reportText').value='';
   $('reportMessage').textContent='';
+
   $('reportModal').classList.remove('hidden');
 }
 
@@ -1064,7 +1090,7 @@ document.addEventListener('click',e=>{
 });
 
 async function loadAdmin(){
-  if(state.user?.role!=='admin') return;
+  if(!isAdmin()) return;
 
   try{
     const [overview,users,reports]=await Promise.all([
@@ -1111,10 +1137,13 @@ async function loadAdmin(){
           ${
             r.status==='pending'
             ?`
-              <button class="btn primary" onclick="reviewReport(${r.id},'approved')">
+              <button class="btn primary"
+                onclick="reviewReport(${r.id},'approved')">
                 Принять
               </button>
-              <button class="btn" onclick="reviewReport(${r.id},'rejected')">
+
+              <button class="btn"
+                onclick="reviewReport(${r.id},'rejected')">
                 Отклонить
               </button>
             `
@@ -1137,6 +1166,7 @@ async function reviewReport(id,status){
     });
 
     toast(status==='approved'?'Отчёт принят':'Отчёт отклонён');
+
     await loadAdmin();
     await refresh();
 
@@ -1169,6 +1199,11 @@ $('sendReport').onclick=async()=>{
     const videoUrl=$('reportUrl').value.trim();
     const text=$('reportText').value.trim();
 
+    if(!taskId){
+      $('reportMessage').textContent='Выбери задание';
+      return;
+    }
+
     if(!videoUrl){
       $('reportMessage').textContent='Добавь ссылку на ролик';
       return;
@@ -1176,11 +1211,23 @@ $('sendReport').onclick=async()=>{
 
     await api('/api/reports',{
       method:'POST',
-      body:JSON.stringify({taskId,videoUrl,text})
+
+      /*
+        ИСПРАВЛЕНО:
+        backend принимает snake_case:
+        task_id, video_url, text
+      */
+      body:JSON.stringify({
+        task_id:Number(taskId),
+        video_url:videoUrl,
+        text
+      })
     });
 
     $('reportModal').classList.add('hidden');
+
     toast('Отчёт отправлен на проверку');
+
     await refresh();
     go('reports');
 
@@ -1203,7 +1250,9 @@ $('saveProfile').onclick=async()=>{
     });
 
     state.user=d.user;
+
     toast('Профиль сохранён');
+
     render();
 
   }catch(e){
