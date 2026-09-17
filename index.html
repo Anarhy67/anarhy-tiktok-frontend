@@ -1,1210 +1,973 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ANARHY OS</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ANARHY OS</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 15% 10%, rgba(180, 0, 35, .18), transparent 35%),
-        radial-gradient(circle at 90% 80%, rgba(120, 0, 25, .14), transparent 35%),
-        #080808;
-      color: #fff;
-      font-family: Inter, Arial, sans-serif;
-    }
-
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .app {
-      width: 100%;
-      min-height: 100vh;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 18px 6%;
-      background: rgba(8, 8, 8, .9);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      backdrop-filter: blur(18px);
-    }
-
-    .logo {
-      color: #ff174f;
-      font-size: 23px;
-      font-weight: 900;
-      letter-spacing: 2px;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    nav button {
-      border: 0;
-      border-radius: 10px;
-      padding: 10px 13px;
-      color: #aaa;
-      background: transparent;
-      transition: .2s;
-    }
-
-    nav button:hover,
-    nav button.active {
-      color: #fff;
-      background: rgba(255, 23, 79, .16);
-    }
-
-    .admin-only {
-      display: none !important;
-    }
-
-    body.is-admin .admin-only {
-      display: inline-flex !important;
-    }
-
-    main {
-      width: min(1150px, 92%);
-      margin: 0 auto;
-      padding: 45px 0 80px;
-    }
-
-    .page {
-      display: none;
-      animation: appear .25s ease;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    @keyframes appear {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .hero {
-      padding: 35px 0;
-    }
-
-    .eyebrow {
-      color: #ff174f;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    h1 {
-      font-size: clamp(38px, 7vw, 76px);
-      line-height: 1;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      font-size: 30px;
-      margin-bottom: 22px;
-    }
-
-    h3 {
-      margin-bottom: 10px;
-    }
-
-    p {
-      color: #aaa;
-      line-height: 1.6;
-    }
-
-    .accent {
-      color: #ff174f;
-    }
-
-    .muted {
-      color: #888;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .grid.two {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .card {
-      padding: 23px;
-      border: 1px solid rgba(255,255,255,.09);
-      border-radius: 18px;
-      background: linear-gradient(
-        145deg,
-        rgba(255,255,255,.065),
-        rgba(255,255,255,.018)
-      );
-      box-shadow: 0 15px 50px rgba(0,0,0,.18);
-    }
-
-    .stat-number {
-      font-size: 35px;
-      font-weight: 900;
-      margin-top: 8px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 11px;
-      padding: 11px 17px;
-      color: #fff;
-      background: #171717;
-      transition: .2s;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      border-color: #ff174f;
-    }
-
-    .btn.primary {
-      color: #fff;
-      background: #d9003e;
-      border-color: #ff174f;
-    }
-
-    .btn.danger {
-      background: #5e1024;
-      border-color: #ff174f;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 22px;
-    }
-
-    .form {
-      width: min(460px, 100%);
-      margin: 35px auto;
-    }
-
-    .field {
-      margin-bottom: 14px;
-    }
-
-    label {
-      display: block;
-      color: #bbb;
-      font-size: 13px;
-      margin-bottom: 7px;
-    }
-
-    input,
-    textarea {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 11px;
-      outline: none;
-      padding: 13px 14px;
-      color: #fff;
-      background: #111;
-    }
-
-    input:focus,
-    textarea:focus {
-      border-color: #ff174f;
-    }
-
-    textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
-
-    .form-message {
-      min-height: 22px;
-      color: #ff6688;
-      margin: 12px 0;
-      font-size: 14px;
-    }
-
-    .task {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .task-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .tag {
-      display: inline-flex;
-      width: fit-content;
-      padding: 5px 9px;
-      border-radius: 8px;
-      color: #ff8ca8;
-      background: rgba(255,23,79,.12);
-      font-size: 12px;
-    }
-
-    .report-row,
-    .user-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 15px 0;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-
-    .report-row:last-child,
-    .user-row:last-child {
-      border-bottom: 0;
-    }
-
-    .row-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-
-    .small-btn {
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 8px;
-      padding: 8px 10px;
-      color: #fff;
-      background: #171717;
-    }
-
-    .small-btn.approve {
-      background: #123c29;
-      border-color: #2caa70;
-    }
-
-    .small-btn.reject {
-      background: #481524;
-      border-color: #ff174f;
-    }
-
-    .profile-avatar {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ff174f;
-      background: #171717;
-    }
-
-    .empty {
-      padding: 25px;
-      color: #888;
-      text-align: center;
-    }
-
-    .status {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 7px;
-      font-size: 12px;
-      background: #222;
-      color: #aaa;
-    }
-
-    .status.approved {
-      color: #6dffb0;
-      background: rgba(35,170,100,.12);
-    }
-
-    .status.rejected {
-      color: #ff7b9b;
-      background: rgba(255,23,79,.12);
-    }
-
-    @media (max-width: 800px) {
-      header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      nav {
-        width: 100%;
-      }
-
-      nav button {
-        padding: 9px 10px;
-      }
-
-      .grid,
-      .grid.two {
-        grid-template-columns: 1fr;
-      }
-
-      .report-row,
-      .user-row {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-    }
-  </style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;
+  color:#fff;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(180,0,35,.18),transparent 35%),
+    radial-gradient(circle at 90% 80%,rgba(120,0,25,.14),transparent 35%),
+    #080808;
+  font-family:Inter,Arial,sans-serif
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.app{min-height:100vh}
+header{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;padding:18px 6%;
+  background:rgba(8,8,8,.94);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(18px)
+}
+.logo{color:#ff174f;font-size:23px;font-weight:900;letter-spacing:2px}
+nav{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+nav button{
+  border:0;border-radius:10px;padding:10px 13px;
+  color:#aaa;background:transparent;transition:.2s
+}
+nav button:hover,nav button.active{
+  color:#fff;background:rgba(255,23,79,.16)
+}
+.admin-only{display:none!important}
+body.is-admin #adminNav{display:inline-flex!important}
+main{width:min(1150px,92%);margin:auto;padding:45px 0 80px}
+.page{display:none;animation:appear .25s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{padding:35px 0}
+.eyebrow{
+  color:#ff174f;font-size:12px;font-weight:800;
+  letter-spacing:3px;text-transform:uppercase;margin-bottom:14px
+}
+h1{font-size:clamp(38px,7vw,76px);line-height:1;margin-bottom:20px}
+h2{font-size:30px;margin-bottom:22px}
+h3{margin-bottom:10px}
+p{color:#aaa;line-height:1.6}
+.accent{color:#ff174f}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{
+  padding:23px;border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018));
+  box-shadow:0 15px 50px rgba(0,0,0,.18)
+}
+.stat-number{font-size:35px;font-weight:900;margin-top:8px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;border:1px solid rgba(255,255,255,.12);
+  border-radius:11px;padding:11px 17px;color:#fff;
+  background:#171717;transition:.2s
+}
+.btn:hover{transform:translateY(-1px);border-color:#ff174f}
+.btn.primary{background:#d9003e;border-color:#ff174f}
+.btn.danger{background:#5e1024;border-color:#ff174f}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.form{width:min(460px,100%);margin:35px auto}
+.field{margin-bottom:14px}
+label{display:block;color:#bbb;font-size:13px;margin-bottom:7px}
+input,textarea{
+  width:100%;border:1px solid rgba(255,255,255,.12);
+  border-radius:11px;outline:none;padding:13px 14px;
+  color:#fff;background:#111
+}
+input:focus,textarea:focus{border-color:#ff174f}
+textarea{min-height:110px;resize:vertical}
+.form-message{min-height:22px;color:#ff6688;margin:12px 0;font-size:14px}
+.task{display:flex;flex-direction:column;gap:12px}
+.task-top{display:flex;justify-content:space-between;gap:10px}
+.tag{
+  display:inline-flex;width:fit-content;padding:5px 9px;
+  border-radius:8px;color:#ff8ca8;
+  background:rgba(255,23,79,.12);font-size:12px
+}
+.report-row,.user-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:15px;padding:15px 0;
+  border-bottom:1px solid rgba(255,255,255,.08)
+}
+.report-row:last-child,.user-row:last-child{border-bottom:0}
+.row-actions{display:flex;flex-wrap:wrap;gap:7px}
+.small-btn{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:8px 10px;color:#fff;background:#171717
+}
+.small-btn.approve{background:#123c29;border-color:#2caa70}
+.small-btn.reject{background:#481524;border-color:#ff174f}
+.profile-avatar{
+  width:90px;height:90px;border-radius:50%;
+  object-fit:cover;border:2px solid #ff174f;background:#171717
+}
+.empty{padding:25px;color:#888;text-align:center}
+.status{
+  display:inline-block;padding:5px 9px;border-radius:7px;
+  font-size:12px;background:#222;color:#aaa
+}
+.status.approved{color:#6dffb0;background:rgba(35,170,100,.12)}
+.status.rejected{color:#ff7b9b;background:rgba(255,23,79,.12)}
+.reminder-box{
+  margin-top:18px;padding:18px;border-radius:14px;
+  border:1px solid rgba(255,23,79,.25);
+  background:rgba(255,23,79,.08)
+}
+@media(max-width:800px){
+  header{align-items:flex-start;flex-direction:column}
+  nav{width:100%}
+  nav button{padding:9px 10px}
+  .grid{grid-template-columns:1fr}
+  .report-row,.user-row{align-items:flex-start;flex-direction:column}
+}
+</style>
 </head>
 
 <body>
 <div class="app">
 
-  <header>
-    <div class="logo">ANARHY OS</div>
+<header>
+  <div class="logo">ANARHY OS</div>
 
-    <nav id="navigation">
-      <button data-page="home">Главная</button>
-      <button data-page="tasks">Задания</button>
-      <button data-page="reports">Отчёты</button>
-      <button data-page="progress">Прогресс</button>
-      <button data-page="rating">Рейтинг</button>
-      <button data-page="profile">Профиль</button>
+  <nav>
+    <button data-page="home">Главная</button>
+    <button data-page="tasks">Задания</button>
+    <button data-page="reports">Отчёты</button>
+    <button data-page="progress">Прогресс</button>
+    <button data-page="rating">Рейтинг</button>
+    <button data-page="profile">Профиль</button>
 
-      <!-- ВАЖНО: скрыто для всех, кроме admin -->
-      <button
-        id="adminNav"
-        class="admin-only"
-        data-page="admin"
-        type="button">
-        Админка
+    <button
+      id="adminNav"
+      class="admin-only"
+      data-page="admin"
+      type="button">
+      Админка
+    </button>
+
+    <button
+      id="logoutBtn"
+      class="hidden"
+      type="button">
+      Выйти
+    </button>
+  </nav>
+</header>
+
+<main>
+
+<section id="authPage" class="page active">
+  <div class="hero">
+    <div class="eyebrow">ANARHY SYSTEM</div>
+    <h1>Стань частью<br><span class="accent">системы.</span></h1>
+    <p>Выполняй задания, отправляй отчёты, получай XP и развивайся вместе с ANARHY.</p>
+  </div>
+
+  <div class="card form">
+    <h2 id="authTitle">Вход</h2>
+
+    <form id="authForm">
+      <div class="field">
+        <label for="authLogin">Email или никнейм</label>
+        <input id="authLogin" required autocomplete="username">
+      </div>
+
+      <div class="field">
+        <label for="authPassword">Пароль</label>
+        <input id="authPassword" type="password" required autocomplete="current-password">
+      </div>
+
+      <div id="authMessage" class="form-message"></div>
+
+      <button class="btn primary" type="submit">Войти</button>
+      <button class="btn" id="switchAuth" type="button">Создать аккаунт</button>
+    </form>
+  </div>
+</section>
+
+<section id="home" class="page">
+  <div class="hero">
+    <div class="eyebrow">WELCOME BACK</div>
+    <h1>Привет, <span id="homeName" class="accent">участник</span>.</h1>
+    <p>Твоя система. Твои действия. Твой результат.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <p>Уровень</p>
+      <div id="homeLevel" class="stat-number">1</div>
+    </div>
+
+    <div class="card">
+      <p>XP</p>
+      <div id="homeXp" class="stat-number">0</div>
+    </div>
+
+    <div class="card">
+      <p>Штрафы</p>
+      <div id="homePenalties" class="stat-number">0</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" data-page="tasks">Открыть задания</button>
+    <button class="btn" data-page="profile">Мой профиль</button>
+  </div>
+
+  <div class="reminder-box">
+    <h3>Напоминание</h3>
+    <p id="reminderText">Проверь свои задания и отчёты.</p>
+
+    <div class="actions">
+      <button id="checkReminderBtn" class="btn primary" type="button">
+        Проверить напоминание
       </button>
+    </div>
+  </div>
+</section>
 
-      <button id="logoutBtn" class="hidden" type="button">
-        Выйти
-      </button>
-    </nav>
-  </header>
+<section id="tasks" class="page">
+  <h2>Задания</h2>
+  <div id="tasksList" class="grid"></div>
+</section>
 
-  <main>
+<section id="reports" class="page">
+  <h2>Мои отчёты</h2>
 
-    <section id="authPage" class="page active">
-      <div class="hero">
-        <div class="eyebrow">ANARHY SYSTEM</div>
-        <h1>Стань частью<br><span class="accent">системы.</span></h1>
-        <p>
-          Выполняй задания, отправляй отчёты, получай XP
-          и развивайся вместе с ANARHY.
-        </p>
+  <div class="card">
+    <form id="reportForm">
+      <div class="field">
+        <label for="reportTask">ID задания</label>
+        <input id="reportTask" type="number" required>
       </div>
 
-      <div class="card form">
-        <h2 id="authTitle">Вход</h2>
-
-        <form id="authForm">
-          <div class="field">
-            <label for="authLogin">Email или никнейм</label>
-            <input id="authLogin" required autocomplete="username">
-          </div>
-
-          <div class="field">
-            <label for="authPassword">Пароль</label>
-            <input
-              id="authPassword"
-              type="password"
-              required
-              autocomplete="current-password">
-          </div>
-
-          <div id="authMessage" class="form-message"></div>
-
-          <button class="btn primary" type="submit">
-            Войти
-          </button>
-
-          <button
-            class="btn"
-            id="switchAuth"
-            type="button">
-            Создать аккаунт
-          </button>
-        </form>
-      </div>
-    </section>
-
-    <section id="home" class="page">
-      <div class="hero">
-        <div class="eyebrow">WELCOME BACK</div>
-        <h1>Привет, <span id="homeName" class="accent">участник</span>.</h1>
-        <p>Твоя система. Твои действия. Твой результат.</p>
+      <div class="field">
+        <label for="reportUrl">Ссылка на ролик</label>
+        <input id="reportUrl" type="url" required>
       </div>
 
-      <div class="grid">
-        <div class="card">
-          <p>Уровень</p>
-          <div id="homeLevel" class="stat-number">1</div>
-        </div>
-
-        <div class="card">
-          <p>XP</p>
-          <div id="homeXp" class="stat-number">0</div>
-        </div>
-
-        <div class="card">
-          <p>Штрафы</p>
-          <div id="homePenalties" class="stat-number">0</div>
-        </div>
+      <div class="field">
+        <label for="reportText">Комментарий</label>
+        <textarea id="reportText"></textarea>
       </div>
 
-      <div class="actions">
-        <button class="btn primary" data-page="tasks">
-          Открыть задания
-        </button>
-        <button class="btn" data-page="profile">
-          Мой профиль
-        </button>
-      </div>
-    </section>
+      <div id="reportMessage" class="form-message"></div>
 
-    <section id="tasks" class="page">
-      <h2>Задания</h2>
-      <div id="tasksList" class="grid"></div>
-    </section>
+      <button class="btn primary" type="submit">Отправить отчёт</button>
+    </form>
+  </div>
 
-    <section id="reports" class="page">
-      <h2>Мои отчёты</h2>
+  <div class="card">
+    <div id="myReports"></div>
+  </div>
+</section>
 
-      <div class="card">
-        <form id="reportForm">
-          <div class="field">
-            <label for="reportTask">ID задания</label>
-            <input id="reportTask" type="number" required>
-          </div>
+<section id="progress" class="page">
+  <h2>Прогресс</h2>
+  <div id="progressContent" class="grid"></div>
+</section>
 
-          <div class="field">
-            <label for="reportUrl">Ссылка на ролик</label>
-            <input id="reportUrl" type="url" required>
-          </div>
+<section id="rating" class="page">
+  <h2>Рейтинг</h2>
+  <div class="card">
+    <div id="ratingContent"></div>
+  </div>
+</section>
 
-          <div class="field">
-            <label for="reportText">Комментарий</label>
-            <textarea id="reportText"></textarea>
-          </div>
+<section id="profile" class="page">
+  <h2>Профиль</h2>
 
-          <div id="reportMessage" class="form-message"></div>
+  <div class="card">
+    <img id="profileAvatar" class="profile-avatar" alt="Аватар">
+    <h3 id="profileName">—</h3>
+    <p id="profileNickname">—</p>
+    <p id="profileEmail">—</p>
+  </div>
 
-          <button class="btn primary" type="submit">
-            Отправить отчёт
-          </button>
-        </form>
+  <div class="card" style="margin-top:16px">
+    <form id="profileForm">
+      <div class="field">
+        <label for="profileNameInput">Имя</label>
+        <input id="profileNameInput">
       </div>
 
-      <div class="card">
-        <div id="myReports"></div>
-      </div>
-    </section>
-
-    <section id="progress" class="page">
-      <h2>Прогресс</h2>
-      <div id="progressContent" class="grid"></div>
-    </section>
-
-    <section id="rating" class="page">
-      <h2>Рейтинг</h2>
-      <div class="card">
-        <div id="ratingContent"></div>
-      </div>
-    </section>
-
-    <section id="profile" class="page">
-      <h2>Профиль</h2>
-
-      <div class="card">
-        <img
-          id="profileAvatar"
-          class="profile-avatar"
-          alt="Аватар">
-
-        <h3 id="profileName">—</h3>
-        <p id="profileNickname">—</p>
-        <p id="profileEmail">—</p>
+      <div class="field">
+        <label for="profileNicknameInput">Никнейм</label>
+        <input id="profileNicknameInput">
       </div>
 
-      <div class="card" style="margin-top:16px;">
-        <form id="profileForm">
-          <div class="field">
-            <label for="profileNameInput">Имя</label>
-            <input id="profileNameInput">
-          </div>
-
-          <div class="field">
-            <label for="profileNicknameInput">Никнейм</label>
-            <input id="profileNicknameInput">
-          </div>
-
-          <div class="field">
-            <label for="profileAvatarInput">URL аватара</label>
-            <input id="profileAvatarInput" type="url">
-          </div>
-
-          <div class="field">
-            <label for="profileAboutInput">О себе</label>
-            <textarea id="profileAboutInput"></textarea>
-          </div>
-
-          <div id="profileMessage" class="form-message"></div>
-
-          <button class="btn primary" type="submit">
-            Сохранить профиль
-          </button>
-        </form>
-      </div>
-    </section>
-
-    <!-- Админская страница -->
-    <section id="admin" class="page admin-only">
-      <h2>Админка</h2>
-
-      <div class="grid">
-        <div class="card">
-          <p>Пользователи</p>
-          <div id="adminUsersCount" class="stat-number">0</div>
-        </div>
-
-        <div class="card">
-          <p>Отчёты</p>
-          <div id="adminReportsCount" class="stat-number">0</div>
-        </div>
-
-        <div class="card">
-          <p>Ожидают проверки</p>
-          <div id="adminPendingCount" class="stat-number">0</div>
-        </div>
+      <div class="field">
+        <label for="profileAvatarInput">URL аватара</label>
+        <input id="profileAvatarInput" type="url">
       </div>
 
-      <div class="card" style="margin-top:16px;">
-        <h3>Пользователи</h3>
-        <div id="adminUsers"></div>
+      <div class="field">
+        <label for="profileAboutInput">О себе</label>
+        <textarea id="profileAboutInput"></textarea>
       </div>
 
-      <div class="card" style="margin-top:16px;">
-        <h3>Отчёты на проверку</h3>
-        <div id="adminReports"></div>
-      </div>
-    </section>
+      <div id="profileMessage" class="form-message"></div>
 
-  </main>
+      <button class="btn primary" type="submit">Сохранить профиль</button>
+    </form>
+  </div>
+</section>
+
+<section id="admin" class="page admin-only">
+  <h2>Админка</h2>
+
+  <div class="grid">
+    <div class="card">
+      <p>Пользователи</p>
+      <div id="adminUsersCount" class="stat-number">0</div>
+    </div>
+
+    <div class="card">
+      <p>Отчёты</p>
+      <div id="adminReportsCount" class="stat-number">0</div>
+    </div>
+
+    <div class="card">
+      <p>Ожидают проверки</p>
+      <div id="adminPendingCount" class="stat-number">0</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>Пользователи</h3>
+    <div id="adminUsers"></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>Отчёты на проверку</h3>
+    <div id="adminReports"></div>
+  </div>
+</section>
+
+</main>
 </div>
 
 <script>
-  const API = "https://anarhy-backend-final.onrender.com";
+const API = "https://anarhy-backend-final.onrender.com";
 
-  const state = {
-    token: localStorage.getItem("anarhy_token") || "",
-    user: null,
-    registerMode: false
+const state = {
+  token: localStorage.getItem("anarhy_token") || "",
+  user: null,
+  registerMode: false
+};
+
+const $ = selector => document.querySelector(selector);
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function setMessage(selector, text) {
+  const element = $(selector);
+  if (element) element.textContent = text || "";
+}
+
+function isAdmin() {
+  return !!state.user &&
+    String(state.user.role || "").toLowerCase() === "admin";
+}
+
+function updateAdminVisibility() {
+  const adminNav = $("#adminNav");
+  const adminPage = $("#admin");
+
+  if (isAdmin()) {
+    document.body.classList.add("is-admin");
+
+    if (adminNav) {
+      adminNav.style.display = "inline-flex";
+    }
+  } else {
+    document.body.classList.remove("is-admin");
+
+    if (adminNav) {
+      adminNav.style.display = "none";
+    }
+
+    if (adminPage) {
+      adminPage.classList.remove("active");
+      adminPage.style.display = "none";
+    }
+  }
+}
+
+async function api(path, options = {}) {
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {})
   };
 
-  const $ = (selector) => document.querySelector(selector);
-
-  function escapeHtml(value) {
-    return String(value ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+  if (state.token) {
+    headers.Authorization = "Bearer " + state.token;
   }
 
-  async function api(path, options = {}) {
-    const headers = {
-      "Content-Type": "application/json",
-      ...(options.headers || {})
-    };
+  const response = await fetch(API + path, {
+    ...options,
+    headers
+  });
 
-    if (state.token) {
-      headers.Authorization = "Bearer " + state.token;
-    }
+  const data = await response.json().catch(() => ({}));
 
-    const response = await fetch(API + path, {
-      ...options,
-      headers
-    });
-
-    const data = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-      throw new Error(data.error || data.message || "Ошибка запроса");
-    }
-
-    return data;
+  if (!response.ok) {
+    throw new Error(data.error || data.message || "Ошибка запроса");
   }
 
-  function setMessage(id, text) {
-    const element = $(id);
-    if (element) element.textContent = text || "";
+  return data;
+}
+
+function showPage(pageName) {
+  if (!state.user) {
+    $("#authPage").classList.add("active");
+    return;
   }
 
-  function isAdmin() {
-    return !!state.user &&
-      String(state.user.role).toLowerCase() === "admin";
+  if (pageName === "admin" && !isAdmin()) {
+    pageName = "home";
   }
 
-  function updateAdminVisibility() {
-    const adminNav = $("#adminNav");
-    const adminPage = $("#admin");
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.remove("active");
+  });
 
-    if (isAdmin()) {
-      document.body.classList.add("is-admin");
+  const page = $("#" + pageName);
 
-      if (adminNav) {
-        adminNav.style.display = "inline-flex";
-      }
-    } else {
-      document.body.classList.remove("is-admin");
+  if (!page) return;
 
-      if (adminNav) {
-        adminNav.style.display = "none";
-      }
-
-      if (adminPage) {
-        adminPage.classList.remove("active");
-      }
-
-      if (location.hash === "#admin") {
-        history.replaceState(null, "", "#home");
-      }
-    }
-  }
-
-  function showPage(pageName) {
-    if (!state.user) {
-      $("#authPage").classList.add("active");
-      return;
-    }
-
-    if (pageName === "admin" && !isAdmin()) {
-      pageName = "home";
-    }
-
-    document.querySelectorAll(".page").forEach(page => {
-      page.classList.remove("active");
-    });
-
-    const page = $("#" + pageName);
-
-    if (page) {
-      page.classList.add("active");
-    }
-
-    document.querySelectorAll("nav button[data-page]").forEach(button => {
-      button.classList.toggle(
-        "active",
-        button.dataset.page === pageName
-      );
-    });
-
-    if (pageName === "home") loadHome();
-    if (pageName === "tasks") loadTasks();
-    if (pageName === "reports") loadReports();
-    if (pageName === "progress") loadProgress();
-    if (pageName === "rating") loadRating();
-    if (pageName === "profile") loadProfile();
-    if (pageName === "admin" && isAdmin()) loadAdmin();
-  }
-
-  function openApp() {
-    $("#authPage").classList.remove("active");
-    $("#logoutBtn").classList.remove("hidden");
-
-    updateAdminVisibility();
+  if (pageName === "admin" && !isAdmin()) {
     showPage("home");
+    return;
   }
 
-  function openAuth() {
-    state.user = null;
-    state.token = "";
+  page.classList.add("active");
 
-    localStorage.removeItem("anarhy_token");
+  document.querySelectorAll("nav button[data-page]").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.page === pageName
+    );
+  });
 
-    document.body.classList.remove("is-admin");
-    $("#authPage").classList.add("active");
-    $("#logoutBtn").classList.add("hidden");
+  if (pageName === "home") loadHome();
+  if (pageName === "tasks") loadTasks();
+  if (pageName === "reports") loadReports();
+  if (pageName === "progress") loadProgress();
+  if (pageName === "rating") loadRating();
+  if (pageName === "profile") loadProfile();
+  if (pageName === "admin" && isAdmin()) loadAdmin();
+}
 
-    document.querySelectorAll(".page").forEach(page => {
-      page.classList.remove("active");
-    });
+function openApp() {
+  $("#authPage").classList.remove("active");
+  $("#logoutBtn").classList.remove("hidden");
+  updateAdminVisibility();
+  showPage("home");
+}
 
-    $("#authPage").classList.add("active");
+function openAuth() {
+  state.user = null;
+  state.token = "";
+
+  localStorage.removeItem("anarhy_token");
+  document.body.classList.remove("is-admin");
+
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.remove("active");
+  });
+
+  $("#authPage").classList.add("active");
+  $("#logoutBtn").classList.add("hidden");
+}
+
+async function loadMe() {
+  if (!state.token) {
+    openAuth();
+    return;
   }
 
-  async function loadMe() {
-    if (!state.token) {
-      openAuth();
+  try {
+    const data = await api("/api/me");
+    state.user = data.user || data;
+    updateAdminVisibility();
+    openApp();
+  } catch {
+    openAuth();
+  }
+}
+
+async function loadHome() {
+  if (!state.user) return;
+
+  $("#homeName").textContent =
+    state.user.name || state.user.nickname || "участник";
+
+  $("#homeLevel").textContent =
+    state.user.level ?? 1;
+
+  $("#homeXp").textContent =
+    state.user.xp ?? 0;
+
+  $("#homePenalties").textContent =
+    state.user.penalties ?? 0;
+}
+
+async function loadTasks() {
+  const container = $("#tasksList");
+  container.innerHTML = "<div class='empty'>Загрузка...</div>";
+
+  try {
+    const data = await api("/api/tasks");
+    const tasks = Array.isArray(data) ? data : data.tasks || [];
+
+    if (!tasks.length) {
+      container.innerHTML = "<div class='empty'>Заданий пока нет.</div>";
       return;
     }
 
-    try {
-      const data = await api("/api/me");
-      state.user = data.user || data;
-      openApp();
-    } catch {
-      openAuth();
+    container.innerHTML = tasks.map(task => `
+      <div class="card task">
+        <div class="task-top">
+          <span class="tag">Задание #${escapeHtml(task.id)}</span>
+          <span class="tag">${escapeHtml(task.xp_reward || 0)} XP</span>
+        </div>
+
+        <h3>${escapeHtml(task.title)}</h3>
+        <p>${escapeHtml(task.description || "")}</p>
+        <p>Роликов: ${escapeHtml(task.videos_required || 3)}</p>
+        <p>Дедлайн: ${escapeHtml(task.deadline || "22:00")}</p>
+
+        <button
+          class="btn primary"
+          type="button"
+          onclick="prepareReport(${Number(task.id)})">
+          Отправить отчёт
+        </button>
+      </div>
+    `).join("");
+  } catch (error) {
+    container.innerHTML =
+      `<div class="empty">${escapeHtml(error.message)}</div>`;
+  }
+}
+
+function prepareReport(taskId) {
+  $("#reportTask").value = taskId;
+  showPage("reports");
+}
+
+async function loadReports() {
+  const container = $("#myReports");
+  container.innerHTML = "<div class='empty'>Загрузка...</div>";
+
+  try {
+    const data = await api("/api/reports");
+    const reports = Array.isArray(data) ? data : data.reports || [];
+
+    if (!reports.length) {
+      container.innerHTML =
+        "<div class='empty'>Ты ещё не отправлял отчёты.</div>";
+      return;
     }
+
+    container.innerHTML = reports.map(report => `
+      <div class="report-row">
+        <div>
+          <b>Отчёт #${escapeHtml(report.id)}</b>
+          <p>Задание: ${escapeHtml(report.task_id)}</p>
+          <p>
+            <a
+              href="${escapeHtml(report.video_url)}"
+              target="_blank"
+              style="color:#ff6688">
+              Открыть ролик
+            </a>
+          </p>
+        </div>
+
+        <span class="status ${escapeHtml(report.status)}">
+          ${escapeHtml(report.status || "pending")}
+        </span>
+      </div>
+    `).join("");
+  } catch (error) {
+    container.innerHTML =
+      `<div class="empty">${escapeHtml(error.message)}</div>`;
+  }
+}
+
+async function loadProgress() {
+  const container = $("#progressContent");
+  container.innerHTML = "<div class='empty'>Загрузка...</div>";
+
+  try {
+    const data = await api("/api/progress");
+
+    container.innerHTML = `
+      <div class="card">
+        <p>XP</p>
+        <div class="stat-number">${escapeHtml(data.xp ?? state.user.xp ?? 0)}</div>
+      </div>
+
+      <div class="card">
+        <p>Уровень</p>
+        <div class="stat-number">${escapeHtml(data.level ?? state.user.level ?? 1)}</div>
+      </div>
+
+      <div class="card">
+        <p>Штрафы</p>
+        <div class="stat-number">${escapeHtml(data.penalties ?? state.user.penalties ?? 0)}</div>
+      </div>
+    `;
+  } catch (error) {
+    container.innerHTML =
+      `<div class="empty">${escapeHtml(error.message)}</div>`;
+  }
+}
+
+async function loadRating() {
+  const container = $("#ratingContent");
+  container.innerHTML = "<div class='empty'>Загрузка...</div>";
+
+  try {
+    const data = await api("/api/rating");
+    const rating = Array.isArray(data) ? data : data.rating || [];
+
+    if (!rating.length) {
+      container.innerHTML = "<div class='empty'>Рейтинг пока пуст.</div>";
+      return;
+    }
+
+    container.innerHTML = rating.map((person,index) => `
+      <div class="user-row">
+        <div>
+          <b>#${index + 1} ${escapeHtml(person.name || person.nickname)}</b>
+          <p>${escapeHtml(person.nickname || "")}</p>
+        </div>
+
+        <b class="accent">${escapeHtml(person.xp || 0)} XP</b>
+      </div>
+    `).join("");
+  } catch (error) {
+    container.innerHTML =
+      `<div class="empty">${escapeHtml(error.message)}</div>`;
+  }
+}
+
+async function loadProfile() {
+  try {
+    const data = await api("/api/profile");
+    const user = data.user || data;
+
+    $("#profileName").textContent = user.name || "Без имени";
+    $("#profileNickname").textContent = "@" + (user.nickname || "unknown");
+    $("#profileEmail").textContent = user.email || "";
+
+    $("#profileAvatar").src =
+      user.avatar || "https://via.placeholder.com/90";
+
+    $("#profileNameInput").value = user.name || "";
+    $("#profileNicknameInput").value = user.nickname || "";
+    $("#profileAvatarInput").value = user.avatar || "";
+    $("#profileAboutInput").value = user.about || "";
+  } catch (error) {
+    setMessage("#profileMessage", error.message);
+  }
+}
+
+async function loadAdmin() {
+  if (!isAdmin()) {
+    showPage("home");
+    return;
   }
 
-  async function loadHome() {
-    if (!state.user) return;
+  try {
+    const overview = await api("/api/admin/overview");
 
-    $("#homeName").textContent =
-      state.user.name || state.user.nickname || "участник";
+    $("#adminUsersCount").textContent =
+      overview.users ?? overview.totalUsers ?? 0;
 
-    $("#homeLevel").textContent =
-      state.user.level ?? 1;
+    $("#adminReportsCount").textContent =
+      overview.reports ?? overview.totalReports ?? 0;
 
-    $("#homeXp").textContent =
-      state.user.xp ?? 0;
-
-    $("#homePenalties").textContent =
-      state.user.penalties ?? 0;
+    $("#adminPendingCount").textContent =
+      overview.pending ?? overview.pendingReports ?? 0;
+  } catch {
+    $("#adminUsersCount").textContent = "—";
+    $("#adminReportsCount").textContent = "—";
+    $("#adminPendingCount").textContent = "—";
   }
 
-  async function loadTasks() {
-    const container = $("#tasksList");
-    container.innerHTML = "<div class='empty'>Загрузка...</div>";
+  try {
+    const data = await api("/api/admin/users");
+    const users = Array.isArray(data) ? data : data.users || [];
 
-    try {
-      const data = await api("/api/tasks");
-      const tasks = Array.isArray(data) ? data : data.tasks || [];
-
-      if (!tasks.length) {
-        container.innerHTML = "<div class='empty'>Заданий пока нет.</div>";
-        return;
-      }
-
-      container.innerHTML = tasks.map(task => `
-        <div class="card task">
-          <div class="task-top">
-            <span class="tag">Задание #${escapeHtml(task.id)}</span>
-            <span class="tag">${escapeHtml(task.xp_reward || 0)} XP</span>
+    $("#adminUsers").innerHTML = users.length
+      ? users.map(user => `
+        <div class="user-row">
+          <div>
+            <b>${escapeHtml(user.name || user.nickname)}</b>
+            <p>${escapeHtml(user.email || "")}</p>
+            <p>Роль: ${escapeHtml(user.role || "user")}</p>
           </div>
 
-          <h3>${escapeHtml(task.title)}</h3>
-          <p>${escapeHtml(task.description || "")}</p>
-          <p>Роликов: ${escapeHtml(task.videos_required || 3)}</p>
-          <p>Дедлайн: ${escapeHtml(task.deadline || "22:00")}</p>
-
-          <button
-            class="btn primary"
-            onclick="prepareReport(${Number(task.id)})">
-            Отправить отчёт
-          </button>
+          <span class="tag">${escapeHtml(user.xp || 0)} XP</span>
         </div>
-      `).join("");
-    } catch (error) {
-      container.innerHTML =
-        `<div class="empty">${escapeHtml(error.message)}</div>`;
-    }
+      `).join("")
+      : "<div class='empty'>Пользователей нет.</div>";
+  } catch (error) {
+    $("#adminUsers").innerHTML =
+      `<div class="empty">${escapeHtml(error.message)}</div>`;
   }
 
-  function prepareReport(taskId) {
-    $("#reportTask").value = taskId;
-    showPage("reports");
-  }
+  try {
+    const data = await api("/api/admin/reports");
+    const reports = Array.isArray(data) ? data : data.reports || [];
 
-  async function loadReports() {
-    const container = $("#myReports");
-    container.innerHTML = "<div class='empty'>Загрузка...</div>";
-
-    try {
-      const data = await api("/api/reports");
-      const reports = Array.isArray(data) ? data : data.reports || [];
-
-      if (!reports.length) {
-        container.innerHTML =
-          "<div class='empty'>Ты ещё не отправлял отчёты.</div>";
-        return;
-      }
-
-      container.innerHTML = reports.map(report => `
+    $("#adminReports").innerHTML = reports.length
+      ? reports.map(report => `
         <div class="report-row">
           <div>
             <b>Отчёт #${escapeHtml(report.id)}</b>
+            <p>Пользователь: ${escapeHtml(report.user_id)}</p>
             <p>Задание: ${escapeHtml(report.task_id)}</p>
-            <p>
-              <a
-                href="${escapeHtml(report.video_url)}"
-                target="_blank"
-                style="color:#ff6688;">
-                Открыть ролик
-              </a>
-            </p>
+
+            <a
+              href="${escapeHtml(report.video_url)}"
+              target="_blank"
+              style="color:#ff6688">
+              Открыть ролик
+            </a>
           </div>
 
-          <span class="status ${escapeHtml(report.status)}">
-            ${escapeHtml(report.status || "pending")}
-          </span>
-        </div>
-      `).join("");
-    } catch (error) {
-      container.innerHTML =
-        `<div class="empty">${escapeHtml(error.message)}</div>`;
-    }
-  }
+          <div class="row-actions">
+            <button
+              class="small-btn approve"
+              type="button"
+              onclick="reviewReport(${Number(report.id)},'approved')">
+              Одобрить
+            </button>
 
-  async function loadProgress() {
-    const container = $("#progressContent");
-    container.innerHTML = "<div class='empty'>Загрузка...</div>";
-
-    try {
-      const data = await api("/api/progress");
-
-      container.innerHTML = `
-        <div class="card">
-          <p>XP</p>
-          <div class="stat-number">${escapeHtml(data.xp ?? state.user.xp ?? 0)}</div>
-        </div>
-
-        <div class="card">
-          <p>Уровень</p>
-          <div class="stat-number">${escapeHtml(data.level ?? state.user.level ?? 1)}</div>
-        </div>
-
-        <div class="card">
-          <p>Штрафы</p>
-          <div class="stat-number">${escapeHtml(data.penalties ?? state.user.penalties ?? 0)}</div>
-        </div>
-      `;
-    } catch (error) {
-      container.innerHTML =
-        `<div class="empty">${escapeHtml(error.message)}</div>`;
-    }
-  }
-
-  async function loadRating() {
-    const container = $("#ratingContent");
-    container.innerHTML = "<div class='empty'>Загрузка...</div>";
-
-    try {
-      const data = await api("/api/rating");
-      const rating = Array.isArray(data) ? data : data.rating || [];
-
-      if (!rating.length) {
-        container.innerHTML =
-          "<div class='empty'>Рейтинг пока пуст.</div>";
-        return;
-      }
-
-      container.innerHTML = rating.map((person, index) => `
-        <div class="user-row">
-          <div>
-            <b>#${index + 1} ${escapeHtml(person.name || person.nickname)}</b>
-            <p>${escapeHtml(person.nickname || "")}</p>
+            <button
+              class="small-btn reject"
+              type="button"
+              onclick="reviewReport(${Number(report.id)},'rejected')">
+              Отклонить
+            </button>
           </div>
-          <b class="accent">${escapeHtml(person.xp || 0)} XP</b>
         </div>
-      `).join("");
-    } catch (error) {
-      container.innerHTML =
-        `<div class="empty">${escapeHtml(error.message)}</div>`;
-    }
+      `).join("")
+      : "<div class='empty'>Отчётов на проверку нет.</div>";
+  } catch (error) {
+    $("#adminReports").innerHTML =
+      `<div class="empty">${escapeHtml(error.message)}</div>`;
+  }
+}
+
+async function reviewReport(id,status) {
+  if (!isAdmin()) {
+    alert("Нет доступа");
+    return;
   }
 
-  async function loadProfile() {
-    try {
-      const data = await api("/api/profile");
-      const user = data.user || data;
+  try {
+    await api("/api/admin/reports/" + id,{
+      method:"PATCH",
+      body:JSON.stringify({status})
+    });
 
-      $("#profileName").textContent = user.name || "Без имени";
-      $("#profileNickname").textContent =
-        "@" + (user.nickname || "unknown");
-      $("#profileEmail").textContent = user.email || "";
-
-      $("#profileAvatar").src =
-        user.avatar || "https://via.placeholder.com/90";
-
-      $("#profileNameInput").value = user.name || "";
-      $("#profileNicknameInput").value = user.nickname || "";
-      $("#profileAvatarInput").value = user.avatar || "";
-      $("#profileAboutInput").value = user.about || "";
-    } catch (error) {
-      setMessage("#profileMessage", error.message);
-    }
+    await loadAdmin();
+  } catch (error) {
+    alert(error.message);
   }
+}
 
-  async function loadAdmin() {
-    if (!isAdmin()) {
-      showPage("home");
+$("#checkReminderBtn").addEventListener("click",async() => {
+  const text = $("#reminderText");
+
+  text.textContent = "Проверяем задания и отчёты...";
+
+  try {
+    const tasksData = await api("/api/tasks");
+    const reportsData = await api("/api/reports");
+
+    const tasks = Array.isArray(tasksData)
+      ? tasksData
+      : tasksData.tasks || [];
+
+    const reports = Array.isArray(reportsData)
+      ? reportsData
+      : reportsData.reports || [];
+
+    const pendingReports = reports.filter(
+      report => report.status === "pending"
+    );
+
+    if (!tasks.length) {
+      text.textContent = "Активных заданий сейчас нет.";
       return;
     }
 
-    try {
-      const overview = await api("/api/admin/overview");
-
-      $("#adminUsersCount").textContent =
-        overview.users ?? overview.totalUsers ?? 0;
-
-      $("#adminReportsCount").textContent =
-        overview.reports ?? overview.totalReports ?? 0;
-
-      $("#adminPendingCount").textContent =
-        overview.pending ?? overview.pendingReports ?? 0;
-    } catch {
-      $("#adminUsersCount").textContent = "—";
-      $("#adminReportsCount").textContent = "—";
-      $("#adminPendingCount").textContent = "—";
-    }
-
-    try {
-      const data = await api("/api/admin/users");
-      const users = Array.isArray(data) ? data : data.users || [];
-
-      $("#adminUsers").innerHTML = users.length
-        ? users.map(user => `
-          <div class="user-row">
-            <div>
-              <b>${escapeHtml(user.name || user.nickname)}</b>
-              <p>${escapeHtml(user.email || "")}</p>
-              <p>Роль: ${escapeHtml(user.role || "user")}</p>
-            </div>
-
-            <span class="tag">
-              ${escapeHtml(user.xp || 0)} XP
-            </span>
-          </div>
-        `).join("")
-        : "<div class='empty'>Пользователей нет.</div>";
-    } catch (error) {
-      $("#adminUsers").innerHTML =
-        `<div class="empty">${escapeHtml(error.message)}</div>`;
-    }
-
-    try {
-      const data = await api("/api/admin/reports");
-      const reports = Array.isArray(data) ? data : data.reports || [];
-
-      $("#adminReports").innerHTML = reports.length
-        ? reports.map(report => `
-          <div class="report-row">
-            <div>
-              <b>Отчёт #${escapeHtml(report.id)}</b>
-              <p>Пользователь: ${escapeHtml(report.user_id)}</p>
-              <p>Задание: ${escapeHtml(report.task_id)}</p>
-              <a
-                href="${escapeHtml(report.video_url)}"
-                target="_blank"
-                style="color:#ff6688;">
-                Открыть ролик
-              </a>
-            </div>
-
-            <div class="row-actions">
-              <button
-                class="small-btn approve"
-                onclick="reviewReport(${Number(report.id)}, 'approved')">
-                Одобрить
-              </button>
-
-              <button
-                class="small-btn reject"
-                onclick="reviewReport(${Number(report.id)}, 'rejected')">
-                Отклонить
-              </button>
-            </div>
-          </div>
-        `).join("")
-        : "<div class='empty'>Отчётов на проверку нет.</div>";
-    } catch (error) {
-      $("#adminReports").innerHTML =
-        `<div class="empty">${escapeHtml(error.message)}</div>`;
-    }
-  }
-
-  async function reviewReport(id, status) {
-    if (!isAdmin()) {
-      alert("Нет доступа");
+    if (pendingReports.length) {
+      text.textContent =
+        "У тебя есть " + pendingReports.length +
+        " отчёт(ов) на проверке. Проверь раздел «Отчёты».";
       return;
     }
 
-    try {
-      await api("/api/admin/reports/" + id, {
-        method: "PATCH",
-        body: JSON.stringify({ status })
-      });
-
-      await loadAdmin();
-    } catch (error) {
-      alert(error.message);
-    }
+    text.textContent =
+      "Активных заданий: " + tasks.length +
+      ". Не забудь отправить отчёт до дедлайна 22:00.";
+  } catch (error) {
+    text.textContent = "Не удалось проверить напоминание: " + error.message;
   }
+});
 
-  $("#authForm").addEventListener("submit", async event => {
-    event.preventDefault();
+$("#authForm").addEventListener("submit",async event => {
+  event.preventDefault();
 
-    const login = $("#authLogin").value.trim();
-    const password = $("#authPassword").value;
+  const login = $("#authLogin").value.trim();
+  const password = $("#authPassword").value;
 
-    setMessage("#authMessage", "Загрузка...");
+  setMessage("#authMessage","Загрузка...");
 
-    try {
-      let data;
+  try {
+    let data;
 
-      if (state.registerMode) {
-        data = await api("/api/register", {
-          method: "POST",
-          body: JSON.stringify({
-            name: login,
-            nickname: login,
-            email: login.includes("@")
-              ? login
-              : login + "@anarhy.ru",
-            password
-          })
-        });
-      } else {
-        data = await api("/api/login", {
-          method: "POST",
-          body: JSON.stringify({
-            email: login,
-            nickname: login,
-            password
-          })
-        });
-      }
-
-      state.token = data.token;
-      state.user = data.user || data;
-
-      localStorage.setItem("anarhy_token", state.token);
-
-      setMessage("#authMessage", "");
-      openApp();
-    } catch (error) {
-      setMessage("#authMessage", error.message);
-    }
-  });
-
-  $("#switchAuth").addEventListener("click", () => {
-    state.registerMode = !state.registerMode;
-
-    $("#authTitle").textContent =
-      state.registerMode ? "Регистрация" : "Вход";
-
-    $("#switchAuth").textContent =
-      state.registerMode ? "Уже есть аккаунт" : "Создать аккаунт";
-
-    $("#authPassword").value = "";
-    setMessage("#authMessage", "");
-  });
-
-  $("#reportForm").addEventListener("submit", async event => {
-    event.preventDefault();
-
-    try {
-      await api("/api/reports", {
-        method: "POST",
-        body: JSON.stringify({
-          task_id: Number($("#reportTask").value),
-          video_url: $("#reportUrl").value.trim(),
-          text: $("#reportText").value.trim()
+    if (state.registerMode) {
+      data = await api("/api/register",{
+        method:"POST",
+        body:JSON.stringify({
+          name:login,
+          nickname:login,
+          email:login.includes("@") ? login : login + "@anarhy.ru",
+          password
         })
       });
-
-      setMessage("#reportMessage", "Отчёт отправлен.");
-      $("#reportForm").reset();
-      await loadReports();
-    } catch (error) {
-      setMessage("#reportMessage", error.message);
-    }
-  });
-
-  $("#profileForm").addEventListener("submit", async event => {
-    event.preventDefault();
-
-    try {
-      const data = await api("/api/profile", {
-        method: "PUT",
-        body: JSON.stringify({
-          name: $("#profileNameInput").value.trim(),
-          nickname: $("#profileNicknameInput").value.trim(),
-          avatar: $("#profileAvatarInput").value.trim(),
-          about: $("#profileAboutInput").value.trim()
+    } else {
+      data = await api("/api/login",{
+        method:"POST",
+        body:JSON.stringify({
+          email:login,
+          nickname:login,
+          password
         })
       });
-
-      state.user = data.user || data;
-      setMessage("#profileMessage", "Профиль сохранён.");
-      updateAdminVisibility();
-      await loadProfile();
-      await loadHome();
-    } catch (error) {
-      setMessage("#profileMessage", error.message);
-    }
-  });
-
-  $("#logoutBtn").addEventListener("click", () => {
-    openAuth();
-  });
-
-  document.addEventListener("click", event => {
-    const button = event.target.closest("[data-page]");
-
-    if (!button) return;
-
-    const page = button.dataset.page;
-
-    if (page === "admin" && !isAdmin()) {
-      return;
     }
 
-    showPage(page);
-  });
+    state.token = data.token;
+    state.user = data.user || data;
 
-  window.addEventListener("hashchange", () => {
-    const page = location.hash.replace("#", "") || "home";
+    localStorage.setItem("anarhy_token",state.token);
 
-    if (page === "admin" && !isAdmin()) {
-      showPage("home");
-      return;
-    }
+    setMessage("#authMessage","");
+    updateAdminVisibility();
+    openApp();
+  } catch (error) {
+    setMessage("#authMessage",error.message);
+  }
+});
 
-    showPage(page);
-  });
+$("#switchAuth").addEventListener("click",() => {
+  state.registerMode = !state.registerMode;
 
-  loadMe();
+  $("#authTitle").textContent =
+    state.registerMode ? "Регистрация" : "Вход";
+
+  $("#switchAuth").textContent =
+    state.registerMode ? "Уже есть аккаунт" : "Создать аккаунт";
+
+  $("#authPassword").value = "";
+  setMessage("#authMessage","");
+});
+
+$("#reportForm").addEventListener("submit",async event => {
+  event.preventDefault();
+
+  try {
+    await api("/api/reports",{
+      method:"POST",
+      body:JSON.stringify({
+        task_id:Number($("#reportTask").value),
+        video_url:$("#reportUrl").value.trim(),
+        text:$("#reportText").value.trim()
+      })
+    });
+
+    setMessage("#reportMessage","Отчёт отправлен.");
+    $("#reportForm").reset();
+    await loadReports();
+  } catch (error) {
+    setMessage("#reportMessage",error.message);
+  }
+});
+
+$("#profileForm").addEventListener("submit",async event => {
+  event.preventDefault();
+
+  try {
+    const data = await api("/api/profile",{
+      method:"PUT",
+      body:JSON.stringify({
+        name:$("#profileNameInput").value.trim(),
+        nickname:$("#profileNicknameInput").value.trim(),
+        avatar:$("#profileAvatarInput").value.trim(),
+        about:$("#profileAboutInput").value.trim()
+      })
+    });
+
+    state.user = data.user || data;
+
+    setMessage("#profileMessage","Профиль сохранён.");
+    updateAdminVisibility();
+    await loadProfile();
+    await loadHome();
+  } catch (error) {
+    setMessage("#profileMessage",error.message);
+  }
+});
+
+$("#logoutBtn").addEventListener("click",openAuth);
+
+document.addEventListener("click",event => {
+  const button = event.target.closest("[data-page]");
+
+  if (!button) return;
+
+  const page = button.dataset.page;
+
+  if (page === "admin" && !isAdmin()) {
+    return;
+  }
+
+  showPage(page);
+});
+
+window.addEventListener("hashchange",() => {
+  const page = location.hash.replace("#","") || "home";
+
+  if (page === "admin" && !isAdmin()) {
+    showPage("home");
+    return;
+  }
+
+  showPage(page);
+});
+
+loadMe();
 </script>
 
 </body>
