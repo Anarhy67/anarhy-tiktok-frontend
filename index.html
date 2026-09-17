@@ -222,17 +222,6 @@ p{
   background:#30270d;
   color:#facc15
 }
-.bar{
-  height:8px;
-  background:#292929;
-  border-radius:20px;
-  overflow:hidden
-}
-.bar span{
-  display:block;
-  height:100%;
-  background:linear-gradient(90deg,#9d111b,#ff3030)
-}
 table{
   width:100%;
   border-collapse:collapse
@@ -292,14 +281,8 @@ th{
   letter-spacing:.15em
 }
 .auth-logo span{color:var(--red)}
-.error{
-  color:#ff7777;
-  margin-top:12px
-}
-.success{
-  color:var(--green);
-  margin-top:12px
-}
+.error{color:#ff7777;margin-top:12px}
+.success{color:var(--green);margin-top:12px}
 .modal{
   position:fixed;
   inset:0;
@@ -357,36 +340,20 @@ th{
   font-size:42px;
   font-weight:1000
 }
+.admin-only{display:none}
+body.is-admin .admin-only{display:block}
 @media(max-width:900px){
-  .side{
-    width:75px;
-    padding:20px 10px
-  }
-  .brand{
-    font-size:15px;
-    text-align:center
-  }
-  .sub,
-  .nav b,
-  .nav span,
-  .userbox .usertext{
-    display:none
-  }
+  .side{width:75px;padding:20px 10px}
+  .brand{font-size:15px;text-align:center}
+  .sub,.nav b,.nav span,.userbox .usertext{display:none}
   .nav button{text-align:center}
-  .userbox{
-    left:10px;
-    right:10px;
-    justify-content:center
-  }
+  .userbox{left:10px;right:10px;justify-content:center}
   .main{padding:20px}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .layout{grid-template-columns:1fr}
 }
 @media(max-width:560px){
-  .top{
-    align-items:flex-start;
-    flex-direction:column
-  }
+  .top{align-items:flex-start;flex-direction:column}
   .grid,.formgrid{grid-template-columns:1fr}
   .formgrid .full{grid-column:auto}
   .profile-hero{grid-template-columns:auto 1fr}
@@ -428,246 +395,302 @@ th{
 
 <div id="appView" class="app hidden">
 
-  <aside class="side">
-    <div class="brand">ANAR<span>H</span>Y</div>
-    <div class="sub">CREATOR OS / LIVE</div>
+<aside class="side">
+  <div class="brand">ANAR<span>H</span>Y</div>
+  <div class="sub">CREATOR OS / LIVE</div>
 
-    <nav class="nav">
-      <b>WORKSPACE</b>
+  <nav class="nav">
+    <b>WORKSPACE</b>
+    <button class="active" data-page="home">◈ <span>Главная</span></button>
+    <button data-page="tasks">▣ <span>TikTok-задания</span></button>
+    <button data-page="reports">↗ <span>Мои отчёты</span></button>
+    <button data-page="progress">◒ <span>Прогресс</span></button>
+    <button data-page="rating">♛ <span>Рейтинг</span></button>
 
-      <button class="active" data-page="home">◈ <span>Главная</span></button>
-      <button data-page="tasks">▣ <span>TikTok-задания</span></button>
-      <button data-page="reports">↗ <span>Мои отчёты</span></button>
-      <button data-page="progress">◒ <span>Прогресс</span></button>
-      <button data-page="rating">♛ <span>Рейтинг</span></button>
+    <b>SYSTEM</b>
+    <button data-page="profile">⚙ <span>Профиль</span></button>
 
-      <b>SYSTEM</b>
-      <button data-page="profile">⚙ <span>Профиль</span></button>
-    </nav>
+    <b class="admin-only">ADMIN</b>
+    <button class="admin-only" data-page="admin">▦ <span>Админка</span></button>
+  </nav>
 
-    <div class="userbox">
-      <div class="avatar" id="sideAvatar">D</div>
-      <div class="usertext">
-        <strong id="sideName">Denis</strong>
-        <div class="muted" id="sideRole">User</div>
+  <div class="userbox">
+    <div class="avatar" id="sideAvatar">D</div>
+    <div class="usertext">
+      <strong id="sideName">Denis</strong>
+      <div class="muted" id="sideRole">User</div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+
+<header class="top">
+  <div class="crumb">
+    ANARHY OS / <span id="crumb">Главная</span>
+  </div>
+
+  <div class="actions">
+    <span class="tag green" id="backendStatus">BACKEND: проверка</span>
+    <button class="btn" id="logoutBtn">Выйти</button>
+    <button class="btn primary" id="newReportBtn">+ Создать отчёт</button>
+  </div>
+</header>
+
+<section class="page active" id="home">
+  <div class="hero">
+    <div class="eyebrow">ANARHY CREATOR OS · LIVE DATA</div>
+    <div class="hero-title">Не просто нарезки.<br><span>Медиа-империя.</span></div>
+    <p>Реальные задания, отчёты, XP, уровень и рейтинг из backend.</p>
+
+    <div class="actions">
+      <button class="btn primary" data-page="tasks">Открыть задания →</button>
+      <button class="btn" data-page="profile">Настроить профиль</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="muted">Заданий сегодня</div>
+      <div class="metric" id="mTasks">—</div>
+      <div class="delta">● Дедлайн 22:00</div>
+    </div>
+
+    <div class="card">
+      <div class="muted">Отчётов сегодня</div>
+      <div class="metric" id="mReports">—</div>
+      <div class="delta">Из backend</div>
+    </div>
+
+    <div class="card">
+      <div class="muted">Твой XP</div>
+      <div class="metric" id="mXp">—</div>
+      <div class="delta">Реальные начисления</div>
+    </div>
+
+    <div class="card">
+      <div class="muted">Уровень</div>
+      <div class="metric" id="mLevel">—</div>
+      <div class="muted" id="mPenalties">Страйки: —</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="card">
+      <h2>Активность</h2>
+      <p>Сводка по текущему аккаунту.</p>
+      <div class="chart">
+        <i style="height:20%"></i>
+        <i style="height:30%"></i>
+        <i style="height:40%"></i>
+        <i style="height:50%"></i>
+        <i style="height:60%"></i>
+        <i style="height:70%"></i>
+        <i style="height:80%"></i>
       </div>
     </div>
-  </aside>
 
-  <main class="main">
+    <div class="card">
+      <h2>Сегодня</h2>
+      <div id="todayList" class="list"></div>
+    </div>
+  </div>
+</section>
 
-    <header class="top">
-      <div class="crumb">
-        ANARHY OS / <span id="crumb">Главная</span>
+<section class="page" id="tasks">
+  <div class="eyebrow">CREATOR WORKSPACE</div>
+  <h1>TikTok-задания</h1>
+  <p>Задания загружаются с backend.</p>
+  <div id="tasksList" class="list"></div>
+</section>
+
+<section class="page" id="reports">
+  <div class="eyebrow">SUBMISSIONS</div>
+  <h1>Мои отчёты</h1>
+  <p>История отправленных отчётов.</p>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Задание</th>
+          <th>Дата</th>
+          <th>Статус</th>
+          <th>XP</th>
+        </tr>
+      </thead>
+      <tbody id="reportsBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="page" id="progress">
+  <div class="eyebrow">LEVEL SYSTEM</div>
+  <h1>Прогресс</h1>
+
+  <div class="grid">
+    <div class="card">
+      <div class="muted">Всего отчётов</div>
+      <div class="metric" id="pTotal">—</div>
+    </div>
+    <div class="card">
+      <div class="muted">Принято</div>
+      <div class="metric" id="pApproved">—</div>
+    </div>
+    <div class="card">
+      <div class="muted">Сегодня</div>
+      <div class="metric" id="pToday">—</div>
+    </div>
+    <div class="card">
+      <div class="muted">Цель в день</div>
+      <div class="metric">3</div>
+      <div class="muted">Дедлайн 22:00</div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="rating">
+  <div class="eyebrow">LEADERBOARD</div>
+  <h1>Рейтинг участников</h1>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Участник</th>
+          <th>Уровень</th>
+          <th>XP</th>
+        </tr>
+      </thead>
+      <tbody id="ratingBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="page" id="profile">
+  <div class="eyebrow">ACCOUNT / IDENTITY</div>
+  <h1>Профиль</h1>
+
+  <div class="card profile-hero">
+    <div class="big-avatar" id="profileAvatar">D</div>
+
+    <div>
+      <div class="metric" id="profileTitle">—</div>
+      <div id="profileHandle">@—</div>
+      <p id="profileAbout">—</p>
+    </div>
+
+    <div class="card side-stat">
+      <div class="muted">XP</div>
+      <div class="metric" id="profileXp">—</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>Личные данные</h2>
+
+    <div class="formgrid">
+      <div class="field">
+        <label>Имя</label>
+        <input id="pName">
       </div>
 
-      <div class="actions">
-        <span class="tag green" id="backendStatus">BACKEND: проверка</span>
-        <button class="btn" id="logoutBtn">Выйти</button>
-        <button class="btn primary" id="newReportBtn">+ Создать отчёт</button>
-      </div>
-    </header>
-
-    <section class="page active" id="home">
-      <div class="hero">
-        <div class="eyebrow">ANARHY CREATOR OS · LIVE DATA</div>
-
-        <div class="hero-title">
-          Не просто нарезки.<br>
-          <span>Медиа-империя.</span>
-        </div>
-
-        <p>Реальные задания, отчёты, XP, уровень и рейтинг из backend.</p>
-
-        <div class="actions">
-          <button class="btn primary" data-page="tasks">Открыть задания →</button>
-          <button class="btn" data-page="profile">Настроить профиль</button>
-        </div>
+      <div class="field">
+        <label>Nickname</label>
+        <input id="pNick">
       </div>
 
-      <div class="grid">
-        <div class="card">
-          <div class="muted">Заданий сегодня</div>
-          <div class="metric" id="mTasks">—</div>
-          <div class="delta">● Дедлайн 22:00</div>
-        </div>
-
-        <div class="card">
-          <div class="muted">Отчётов сегодня</div>
-          <div class="metric" id="mReports">—</div>
-          <div class="delta">Из backend</div>
-        </div>
-
-        <div class="card">
-          <div class="muted">Твой XP</div>
-          <div class="metric" id="mXp">—</div>
-          <div class="delta">Реальные начисления</div>
-        </div>
-
-        <div class="card">
-          <div class="muted">Уровень</div>
-          <div class="metric" id="mLevel">—</div>
-          <div class="muted" id="mPenalties">Страйки: —</div>
-        </div>
+      <div class="field">
+        <label>Email</label>
+        <input id="pEmail" type="email">
       </div>
 
-      <div class="layout">
-        <div class="card">
-          <h2>Активность</h2>
-          <p>Сводка по текущему аккаунту.</p>
-
-          <div class="chart" id="activityChart">
-            <i style="height:20%"></i>
-            <i style="height:30%"></i>
-            <i style="height:40%"></i>
-            <i style="height:50%"></i>
-            <i style="height:60%"></i>
-            <i style="height:70%"></i>
-            <i style="height:80%"></i>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Сегодня</h2>
-          <div id="todayList" class="list"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="tasks">
-      <div class="eyebrow">CREATOR WORKSPACE</div>
-      <h1>TikTok-задания</h1>
-      <p>Задания загружаются с backend. Нажми «Отправить отчёт», чтобы сохранить ссылку на ролик.</p>
-      <div id="tasksList" class="list"></div>
-    </section>
-
-    <section class="page" id="reports">
-      <div class="eyebrow">SUBMISSIONS</div>
-      <h1>Мои отчёты</h1>
-      <p>История реальных отправленных отчётов.</p>
-
-      <div class="card">
-        <table>
-          <thead>
-            <tr>
-              <th>Задание</th>
-              <th>Дата</th>
-              <th>Статус</th>
-              <th>XP</th>
-            </tr>
-          </thead>
-          <tbody id="reportsBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="page" id="progress">
-      <div class="eyebrow">LEVEL SYSTEM</div>
-      <h1>Прогресс</h1>
-
-      <div class="grid">
-        <div class="card">
-          <div class="muted">Всего отчётов</div>
-          <div class="metric" id="pTotal">—</div>
-        </div>
-
-        <div class="card">
-          <div class="muted">Принято</div>
-          <div class="metric" id="pApproved">—</div>
-        </div>
-
-        <div class="card">
-          <div class="muted">Сегодня</div>
-          <div class="metric" id="pToday">—</div>
-        </div>
-
-        <div class="card">
-          <div class="muted">Цель в день</div>
-          <div class="metric" id="pTarget">3</div>
-          <div class="muted">Дедлайн 22:00</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="rating">
-      <div class="eyebrow">LEADERBOARD</div>
-      <h1>Рейтинг участников</h1>
-
-      <div class="card">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Участник</th>
-              <th>Уровень</th>
-              <th>XP</th>
-            </tr>
-          </thead>
-          <tbody id="ratingBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="page" id="profile">
-      <div class="eyebrow">ACCOUNT / IDENTITY</div>
-      <h1>Профиль</h1>
-
-      <div class="card profile-hero">
-        <div class="big-avatar" id="profileAvatar">D</div>
-
-        <div>
-          <div class="metric" id="profileTitle">—</div>
-          <div class="profile-handle" id="profileHandle">@—</div>
-          <p id="profileAbout">—</p>
-        </div>
-
-        <div class="card side-stat">
-          <div class="muted">XP</div>
-          <div class="metric" id="profileXp">—</div>
-        </div>
+      <div class="field">
+        <label>Аватар URL</label>
+        <input id="pAvatar" type="url">
       </div>
 
-      <div class="card" style="margin-top:16px">
-        <h2>Личные данные</h2>
-
-        <div class="formgrid">
-          <div class="field">
-            <label>Имя</label>
-            <input id="pName">
-          </div>
-
-          <div class="field">
-            <label>Nickname</label>
-            <input id="pNick">
-          </div>
-
-          <div class="field">
-            <label>Email</label>
-            <input id="pEmail" type="email">
-          </div>
-
-          <div class="field">
-            <label>Аватар URL</label>
-            <input id="pAvatar" type="url">
-          </div>
-
-          <div class="field full">
-            <label>О себе</label>
-            <textarea id="pAbout"></textarea>
-          </div>
-        </div>
-
-        <div class="actions" style="margin-top:18px">
-          <button class="btn primary" id="saveProfile">
-            Сохранить профиль →
-          </button>
-
-          <span class="muted" id="profileMessage"></span>
-        </div>
+      <div class="field full">
+        <label>О себе</label>
+        <textarea id="pAbout"></textarea>
       </div>
-    </section>
+    </div>
 
-  </main>
+    <button class="btn primary" id="saveProfile" style="margin-top:18px">
+      Сохранить профиль →
+    </button>
+
+    <span class="muted" id="profileMessage"></span>
+  </div>
+</section>
+
+<section class="page" id="admin">
+  <div class="eyebrow">ADMIN CONTROL CENTER</div>
+  <h1>Админка</h1>
+  <p>Управление участниками и проверка отчётов.</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="muted">Всего пользователей</div>
+      <div class="metric" id="aUsers">—</div>
+    </div>
+
+    <div class="card">
+      <div class="muted">Всего отчётов</div>
+      <div class="metric" id="aReports">—</div>
+    </div>
+
+    <div class="card">
+      <div class="muted">Ожидают проверки</div>
+      <div class="metric" id="aPending">—</div>
+    </div>
+
+    <div class="card">
+      <div class="muted">Активных</div>
+      <div class="metric" id="aActive">—</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>Отчёты участников</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Участник</th>
+          <th>Задание</th>
+          <th>Ссылка</th>
+          <th>Статус</th>
+          <th>Действие</th>
+        </tr>
+      </thead>
+      <tbody id="adminReportsBody"></tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>Участники</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Имя</th>
+          <th>Nickname</th>
+          <th>XP</th>
+          <th>Уровень</th>
+          <th>Штрафы</th>
+          <th>Статус</th>
+        </tr>
+      </thead>
+      <tbody id="adminUsersBody"></tbody>
+    </table>
+  </div>
+</section>
+
+</main>
 </div>
 
 <div id="reportModal" class="modal hidden">
@@ -689,7 +712,7 @@ th{
 
     <div class="field">
       <label>Комментарий</label>
-      <textarea id="reportText" placeholder="Дополнительная информация"></textarea>
+      <textarea id="reportText"></textarea>
     </div>
 
     <button class="btn primary" id="sendReport" style="margin-top:15px;width:100%">
@@ -725,18 +748,10 @@ const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({
   '"':'&quot;'
 }[c]));
 
-function msg(text,ok=false){
-  $('authMessage').className=ok?'success':'error';
-  $('authMessage').textContent=text;
-}
-
 function toast(text){
   $('toast').textContent=text;
   $('toast').classList.remove('hidden');
-
-  setTimeout(()=>{
-    $('toast').classList.add('hidden');
-  },2600);
+  setTimeout(()=>$('toast').classList.add('hidden'),2600);
 }
 
 async function api(path,opts={}){
@@ -745,29 +760,24 @@ async function api(path,opts={}){
     ...(opts.headers||{})
   };
 
-  if(token){
-    headers.Authorization='Bearer '+token;
-  }
+  if(token) headers.Authorization='Bearer '+token;
 
-  const r=await fetch(API+path,{
-    ...opts,
-    headers
-  });
+  const r=await fetch(API+path,{...opts,headers});
 
   let d={};
+  try{d=await r.json()}catch{}
 
-  try{
-    d=await r.json();
-  }catch{}
-
-  if(!r.ok){
-    throw new Error(d.error||'Ошибка запроса');
-  }
+  if(!r.ok) throw new Error(d.error||'Ошибка запроса');
 
   return d;
 }
 
 function go(id){
+  if(id==='admin' && state.user?.role!=='admin'){
+    toast('Доступ только для администратора');
+    return;
+  }
+
   document.querySelectorAll('.page').forEach(p=>{
     p.classList.toggle('active',p.id===id);
   });
@@ -782,18 +792,17 @@ function go(id){
     reports:'Мои отчёты',
     progress:'Прогресс',
     rating:'Рейтинг',
-    profile:'Профиль'
+    profile:'Профиль',
+    admin:'Админка'
   })[id]||id;
 
+  if(id==='admin') loadAdmin();
   window.scrollTo(0,0);
 }
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-page]');
-
-  if(b){
-    go(b.dataset.page);
-  }
+  if(b) go(b.dataset.page);
 });
 
 async function login(){
@@ -802,7 +811,8 @@ async function login(){
     const password=$('loginPassword').value;
 
     if(!value||!password){
-      return msg('Заполни логин и пароль');
+      $('authMessage').textContent='Заполни логин и пароль';
+      return;
     }
 
     const d=await api('/api/login',{
@@ -816,17 +826,14 @@ async function login(){
 
     token=d.token;
     localStorage.setItem('anarhyToken',token);
-
     await boot();
 
   }catch(e){
-    msg(e.message);
+    $('authMessage').textContent=e.message;
   }
 }
 
-/* НОРМАЛЬНАЯ РЕГИСТРАЦИЯ БЕЗ prompt() */
 $('showRegister').onclick=()=>{
-
   const box=document.createElement('div');
 
   box.className='modal';
@@ -840,22 +847,22 @@ $('showRegister').onclick=()=>{
 
       <div class="field">
         <label>Имя</label>
-        <input id="regName" placeholder="Твоё имя">
+        <input id="regName">
       </div>
 
       <div class="field">
         <label>Nickname</label>
-        <input id="regNick" placeholder="Твой nickname">
+        <input id="regNick">
       </div>
 
       <div class="field">
         <label>Email</label>
-        <input id="regEmail" type="email" placeholder="you@example.com">
+        <input id="regEmail" type="email">
       </div>
 
       <div class="field">
         <label>Пароль минимум 6 символов</label>
-        <input id="regPass" type="password" minlength="6">
+        <input id="regPass" type="password">
       </div>
 
       <button class="btn primary" id="regSubmit" style="width:100%;margin-top:15px">
@@ -868,12 +875,9 @@ $('showRegister').onclick=()=>{
 
   document.body.appendChild(box);
 
-  box.querySelector('#regClose').onclick=()=>{
-    box.remove();
-  };
+  box.querySelector('#regClose').onclick=()=>box.remove();
 
   box.querySelector('#regSubmit').onclick=async()=>{
-
     const name=box.querySelector('#regName').value.trim();
     const nickname=box.querySelector('#regNick').value.trim();
     const email=box.querySelector('#regEmail').value.trim();
@@ -886,22 +890,14 @@ $('showRegister').onclick=()=>{
     }
 
     try{
-
       const d=await api('/api/register',{
         method:'POST',
-        body:JSON.stringify({
-          name,
-          nickname,
-          email,
-          password
-        })
+        body:JSON.stringify({name,nickname,email,password})
       });
 
       token=d.token;
       localStorage.setItem('anarhyToken',token);
-
       box.remove();
-
       await boot();
 
     }catch(e){
@@ -911,15 +907,19 @@ $('showRegister').onclick=()=>{
 };
 
 async function boot(){
-
   try{
-
     const d=await api('/api/me');
 
     state.user=d.user;
 
     $('authView').classList.add('hidden');
     $('appView').classList.remove('hidden');
+
+    if(state.user.role==='admin'){
+      document.body.classList.add('is-admin');
+    }else{
+      document.body.classList.remove('is-admin');
+    }
 
     $('backendStatus').textContent='BACKEND: онлайн';
     $('sideName').textContent=state.user.name;
@@ -929,21 +929,16 @@ async function boot(){
     await refresh();
 
   }catch(e){
-
     localStorage.removeItem('anarhyToken');
     token=null;
-
     $('authView').classList.remove('hidden');
     $('appView').classList.add('hidden');
-
-    msg(e.message);
+    $('authMessage').textContent=e.message;
   }
 }
 
 async function refresh(){
-
   try{
-
     const [t,r,p,ra,me]=await Promise.all([
       api('/api/tasks'),
       api('/api/reports'),
@@ -966,7 +961,6 @@ async function refresh(){
 }
 
 function render(){
-
   const u=state.user;
   const p=state.progress;
 
@@ -999,18 +993,15 @@ function render(){
           <span class="tag">TASK #${t.id}</span>
           <h2>${esc(t.title)}</h2>
         </div>
-
         <strong>+${t.xp_reward} XP</strong>
       </div>
 
       <p>${esc(t.description)}</p>
-
       <div class="muted">
         Видео: ${t.videos_required} · Дедлайн: ${esc(t.deadline)}
       </div>
 
-      <button
-        class="btn primary"
+      <button class="btn primary"
         style="margin-top:15px"
         data-report-task="${t.id}">
         Отправить отчёт →
@@ -1022,48 +1013,25 @@ function render(){
     <div class="item">
       <div class="row">
         <strong>${esc(r.task_title||'Отчёт #'+r.id)}</strong>
-        <span class="tag ${
-          r.status==='approved'
-            ?'green'
-            :r.status==='rejected'
-              ?'yellow'
-              :''
-        }">${esc(r.status)}</span>
+        <span class="tag">${esc(r.status)}</span>
       </div>
-
       <p>${esc(r.video_url||'Без ссылки')}</p>
     </div>
   `).join('')||'<div class="item">Сегодня отчётов пока нет.</div>';
 
   $('reportsBody').innerHTML=state.reports.map(r=>`
     <tr>
-      <td><strong>${esc(r.task_title||'—')}</strong></td>
-      <td>${esc(r.report_date)}</td>
-      <td>
-        <span class="tag ${
-          r.status==='approved'
-            ?'green'
-            :r.status==='rejected'
-              ?'yellow'
-              :''
-        }">${esc(r.status)}</span>
-      </td>
-      <td>
-        ${r.status==='approved'?'+':''}
-        ${r.status==='approved'?r.xp_reward:'—'}
-      </td>
+      <td>${esc(r.task_title||'—')}</td>
+      <td>${esc(r.report_date||'—')}</td>
+      <td><span class="tag">${esc(r.status)}</span></td>
+      <td>${r.status==='approved'?'+'+r.xp_reward:'—'}</td>
     </tr>
   `).join('')||'<tr><td colspan="4">Отчётов пока нет.</td></tr>';
 
   $('ratingBody').innerHTML=state.rating.map((r,i)=>`
     <tr>
       <td>${i+1}</td>
-      <td>
-        <strong>
-          ${esc(r.name)}
-          <span class="muted">@${esc(r.nickname)}</span>
-        </strong>
-      </td>
+      <td>${esc(r.name)} <span class="muted">@${esc(r.nickname)}</span></td>
       <td>${esc(r.level)}</td>
       <td>${r.xp}</td>
     </tr>
@@ -1073,7 +1041,6 @@ function render(){
 }
 
 function fillTaskSelect(selected){
-
   $('reportTask').innerHTML=state.tasks.map(t=>`
     <option value="${t.id}" ${
       String(t.id)===String(selected)?'selected':''
@@ -1084,31 +1051,104 @@ function fillTaskSelect(selected){
 }
 
 function openReport(taskId){
-
   fillTaskSelect(taskId);
-
   $('reportUrl').value='';
   $('reportText').value='';
   $('reportMessage').textContent='';
-
   $('reportModal').classList.remove('hidden');
 }
 
 document.addEventListener('click',e=>{
-
   const b=e.target.closest('[data-report-task]');
-
-  if(b){
-    openReport(b.dataset.reportTask);
-  }
+  if(b) openReport(b.dataset.reportTask);
 });
+
+async function loadAdmin(){
+  if(state.user?.role!=='admin') return;
+
+  try{
+    const [overview,users,reports]=await Promise.all([
+      api('/api/admin/overview'),
+      api('/api/admin/users'),
+      api('/api/admin/reports')
+    ]);
+
+    const o=overview.overview||overview;
+
+    $('aUsers').textContent=o.totalUsers??o.users??'—';
+    $('aReports').textContent=o.totalReports??o.reports??'—';
+    $('aPending').textContent=o.pendingReports??o.pending??'—';
+    $('aActive').textContent=o.activeUsers??'—';
+
+    const userRows=users.users||[];
+
+    $('adminUsersBody').innerHTML=userRows.map(u=>`
+      <tr>
+        <td>${u.id}</td>
+        <td>${esc(u.name)}</td>
+        <td>@${esc(u.nickname)}</td>
+        <td>${u.xp}</td>
+        <td>${esc(u.level)}</td>
+        <td>${u.penalties}</td>
+        <td>${esc(u.status||'active')}</td>
+      </tr>
+    `).join('')||'<tr><td colspan="7">Пользователей нет.</td></tr>';
+
+    const reportRows=reports.reports||[];
+
+    $('adminReportsBody').innerHTML=reportRows.map(r=>`
+      <tr>
+        <td>${r.id}</td>
+        <td>${esc(r.user_name||r.name||'—')}</td>
+        <td>${esc(r.task_title||'—')}</td>
+        <td>
+          <a href="${esc(r.video_url||'#')}" target="_blank" style="color:#ff6d6d">
+            Открыть
+          </a>
+        </td>
+        <td><span class="tag">${esc(r.status)}</span></td>
+        <td>
+          ${
+            r.status==='pending'
+            ?`
+              <button class="btn primary" onclick="reviewReport(${r.id},'approved')">
+                Принять
+              </button>
+              <button class="btn" onclick="reviewReport(${r.id},'rejected')">
+                Отклонить
+              </button>
+            `
+            :'Проверено'
+          }
+        </td>
+      </tr>
+    `).join('')||'<tr><td colspan="6">Отчётов нет.</td></tr>';
+
+  }catch(e){
+    toast(e.message);
+  }
+}
+
+async function reviewReport(id,status){
+  try{
+    await api('/api/admin/reports/'+id,{
+      method:'PATCH',
+      body:JSON.stringify({status})
+    });
+
+    toast(status==='approved'?'Отчёт принят':'Отчёт отклонён');
+    await loadAdmin();
+    await refresh();
+
+  }catch(e){
+    toast(e.message);
+  }
+}
 
 $('loginBtn').onclick=login;
 
 $('loginPassword').addEventListener('keydown',e=>{
-  if(e.key==='Enter'){
-    login();
-  }
+  if(e.key==='Enter') login();
 });
 
 $('logoutBtn').onclick=()=>{
@@ -1117,18 +1157,14 @@ $('logoutBtn').onclick=()=>{
   location.reload();
 };
 
-$('newReportBtn').onclick=()=>{
-  openReport();
-};
+$('newReportBtn').onclick=()=>openReport();
 
 $('closeModal').onclick=()=>{
   $('reportModal').classList.add('hidden');
 };
 
 $('sendReport').onclick=async()=>{
-
   try{
-
     const taskId=$('reportTask').value;
     const videoUrl=$('reportUrl').value.trim();
     const text=$('reportText').value.trim();
@@ -1140,31 +1176,21 @@ $('sendReport').onclick=async()=>{
 
     await api('/api/reports',{
       method:'POST',
-      body:JSON.stringify({
-        taskId,
-        videoUrl,
-        text
-      })
+      body:JSON.stringify({taskId,videoUrl,text})
     });
 
     $('reportModal').classList.add('hidden');
-
     toast('Отчёт отправлен на проверку');
-
     await refresh();
-
     go('reports');
 
   }catch(e){
-
     $('reportMessage').textContent=e.message;
   }
 };
 
 $('saveProfile').onclick=async()=>{
-
   try{
-
     const d=await api('/api/profile',{
       method:'PUT',
       body:JSON.stringify({
@@ -1177,20 +1203,15 @@ $('saveProfile').onclick=async()=>{
     });
 
     state.user=d.user;
-
     toast('Профиль сохранён');
-
     render();
 
   }catch(e){
-
     $('profileMessage').textContent=e.message;
   }
 };
 
-if(token){
-  boot();
-}
+if(token) boot();
 </script>
 
 </body>
