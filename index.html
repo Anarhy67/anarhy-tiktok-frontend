@@ -705,8 +705,11 @@ body.is-admin .admin-only{display:block}
     </div>
 
     <div class="field">
-      <label>Ссылка на TikTok</label>
-      <input id="reportUrl" placeholder="https://www.tiktok.com/@...">
+      <label>Ссылка на TikTok-ролик</label>
+      <input
+        id="reportUrl"
+        placeholder="https://vm.tiktok.com/..."
+      >
     </div>
 
     <div class="field">
@@ -714,7 +717,11 @@ body.is-admin .admin-only{display:block}
       <textarea id="reportText"></textarea>
     </div>
 
-    <button class="btn primary" id="sendReport" style="margin-top:15px;width:100%">
+    <button
+      class="btn primary"
+      id="sendReport"
+      style="margin-top:15px;width:100%"
+    >
       Отправить отчёт →
     </button>
 
@@ -748,13 +755,18 @@ const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({
 }[c]));
 
 function isAdmin(){
-  return String(state.user?.role||'').trim().toLowerCase()==='admin';
+  return String(state.user?.role||'')
+    .trim()
+    .toLowerCase()==='admin';
 }
 
 function toast(text){
   $('toast').textContent=text;
   $('toast').classList.remove('hidden');
-  setTimeout(()=>$('toast').classList.add('hidden'),2600);
+
+  setTimeout(()=>{
+    $('toast').classList.add('hidden');
+  },2600);
 }
 
 async function api(path,opts={}){
@@ -763,14 +775,24 @@ async function api(path,opts={}){
     ...(opts.headers||{})
   };
 
-  if(token) headers.Authorization='Bearer '+token;
+  if(token){
+    headers.Authorization='Bearer '+token;
+  }
 
-  const r=await fetch(API+path,{...opts,headers});
+  const r=await fetch(API+path,{
+    ...opts,
+    headers
+  });
 
   let d={};
-  try{d=await r.json()}catch{}
 
-  if(!r.ok) throw new Error(d.error||'Ошибка запроса');
+  try{
+    d=await r.json();
+  }catch{}
+
+  if(!r.ok){
+    throw new Error(d.error||'Ошибка запроса');
+  }
 
   return d;
 }
@@ -799,14 +821,19 @@ function go(id){
     admin:'Админка'
   })[id]||id;
 
-  if(id==='admin') loadAdmin();
+  if(id==='admin'){
+    loadAdmin();
+  }
 
   window.scrollTo(0,0);
 }
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-page]');
-  if(b) go(b.dataset.page);
+
+  if(b){
+    go(b.dataset.page);
+  }
 });
 
 async function login(){
@@ -870,7 +897,11 @@ $('showRegister').onclick=()=>{
         <input id="regPass" type="password">
       </div>
 
-      <button class="btn primary" id="regSubmit" style="width:100%;margin-top:15px">
+      <button
+        class="btn primary"
+        id="regSubmit"
+        style="width:100%;margin-top:15px"
+      >
         Зарегистрироваться →
       </button>
 
@@ -880,7 +911,9 @@ $('showRegister').onclick=()=>{
 
   document.body.appendChild(box);
 
-  box.querySelector('#regClose').onclick=()=>box.remove();
+  box.querySelector('#regClose').onclick=()=>{
+    box.remove();
+  };
 
   box.querySelector('#regSubmit').onclick=async()=>{
     const name=box.querySelector('#regName').value.trim();
@@ -934,9 +967,11 @@ async function boot(){
     }
 
     $('backendStatus').textContent='BACKEND: онлайн';
+
     $('sideName').textContent=state.user.name;
     $('sideRole').textContent=state.user.role;
-    $('sideAvatar').textContent=(state.user.name||'D')[0].toUpperCase();
+    $('sideAvatar').textContent=
+      (state.user.name||'D')[0].toUpperCase();
 
     await refresh();
 
@@ -981,6 +1016,7 @@ async function refresh(){
 
 function render(){
   const u=state.user;
+
   const p=state.progress||{
     todayReports:0,
     totalReports:0,
@@ -999,9 +1035,11 @@ function render(){
 
   $('profileTitle').textContent=u.name;
   $('profileHandle').textContent='@'+u.nickname;
-  $('profileAbout').textContent=u.about||'О себе пока не заполнено';
+  $('profileAbout').textContent=
+    u.about||'О себе пока не заполнено';
   $('profileXp').textContent=u.xp;
-  $('profileAvatar').textContent=(u.name||'D')[0].toUpperCase();
+  $('profileAvatar').textContent=
+    (u.name||'D')[0].toUpperCase();
 
   $('pName').value=u.name||'';
   $('pNick').value=u.nickname||'';
@@ -1016,22 +1054,30 @@ function render(){
           <span class="tag">TASK #${t.id}</span>
           <h2>${esc(t.title)}</h2>
         </div>
+
         <strong>+${t.xp_reward} XP</strong>
       </div>
 
       <p>${esc(t.description)}</p>
 
       <div class="muted">
-        Видео: ${t.videos_required} · Дедлайн: ${esc(t.deadline)}
+        Видео: ${t.videos_required}
+        · Дедлайн: ${esc(t.deadline)}
       </div>
 
-      <button class="btn primary"
+      <button
+        class="btn primary"
         style="margin-top:15px"
-        data-report-task="${t.id}">
+        data-report-task="${t.id}"
+      >
         Отправить отчёт →
       </button>
     </div>
-  `).join('')||'<div class="card">Активных заданий пока нет.</div>';
+  `).join('')||`
+    <div class="card">
+      Активных заданий пока нет.
+    </div>
+  `;
 
   $('todayList').innerHTML=state.reports.slice(0,3).map(r=>`
     <div class="item">
@@ -1039,39 +1085,75 @@ function render(){
         <strong>${esc(r.task_title||'Отчёт #'+r.id)}</strong>
         <span class="tag">${esc(r.status)}</span>
       </div>
+
       <p>${esc(r.video_url||'Без ссылки')}</p>
     </div>
-  `).join('')||'<div class="item">Сегодня отчётов пока нет.</div>';
+  `).join('')||`
+    <div class="item">
+      Сегодня отчётов пока нет.
+    </div>
+  `;
 
   $('reportsBody').innerHTML=state.reports.map(r=>`
     <tr>
       <td>${esc(r.task_title||'—')}</td>
       <td>${esc(r.report_date||'—')}</td>
-      <td><span class="tag">${esc(r.status)}</span></td>
-      <td>${r.status==='approved'?'+'+r.xp_reward:'—'}</td>
+      <td>
+        <span class="tag">${esc(r.status)}</span>
+      </td>
+      <td>
+        ${r.status==='approved'?'+'+r.xp_reward:'—'}
+      </td>
     </tr>
-  `).join('')||'<tr><td colspan="4">Отчётов пока нет.</td></tr>';
+  `).join('')||`
+    <tr>
+      <td colspan="4">Отчётов пока нет.</td>
+    </tr>
+  `;
 
   $('ratingBody').innerHTML=state.rating.map((r,i)=>`
     <tr>
       <td>${i+1}</td>
-      <td>${esc(r.name)} <span class="muted">@${esc(r.nickname)}</span></td>
+      <td>
+        ${esc(r.name)}
+        <span class="muted">@${esc(r.nickname)}</span>
+      </td>
       <td>${esc(r.level)}</td>
       <td>${r.xp}</td>
     </tr>
-  `).join('')||'<tr><td colspan="4">Рейтинг пуст.</td></tr>';
+  `).join('')||`
+    <tr>
+      <td colspan="4">Рейтинг пуст.</td>
+    </tr>
+  `;
 
   fillTaskSelect();
 }
 
 function fillTaskSelect(selected){
-  $('reportTask').innerHTML=state.tasks.map(t=>`
-    <option value="${t.id}" ${
-      String(t.id)===String(selected)?'selected':''
-    }>
+  const select=$('reportTask');
+
+  if(!state.tasks.length){
+    select.innerHTML=
+      '<option value="">Нет доступных заданий</option>';
+    select.disabled=true;
+    return;
+  }
+
+  select.disabled=false;
+
+  select.innerHTML=`
+    <option value="">Выбери задание</option>
+  `+
+  state.tasks.map(t=>`
+    <option value="${t.id}">
       ${esc(t.title)}
     </option>
   `).join('');
+
+  if(selected!==undefined&&selected!==null){
+    select.value=String(selected);
+  }
 }
 
 function openReport(taskId){
@@ -1086,7 +1168,10 @@ function openReport(taskId){
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-report-task]');
-  if(b) openReport(b.dataset.reportTask);
+
+  if(b){
+    openReport(b.dataset.reportTask);
+  }
 });
 
 async function loadAdmin(){
@@ -1101,10 +1186,17 @@ async function loadAdmin(){
 
     const o=overview.overview||overview;
 
-    $('aUsers').textContent=o.totalUsers??o.users??'—';
-    $('aReports').textContent=o.totalReports??o.reports??'—';
-    $('aPending').textContent=o.pendingReports??o.pending??'—';
-    $('aActive').textContent=o.activeUsers??'—';
+    $('aUsers').textContent=
+      o.totalUsers??o.users??'—';
+
+    $('aReports').textContent=
+      o.totalReports??o.reports??'—';
+
+    $('aPending').textContent=
+      o.pendingReports??o.pending??'—';
+
+    $('aActive').textContent=
+      o.activeUsers??'—';
 
     const userRows=users.users||[];
 
@@ -1118,7 +1210,11 @@ async function loadAdmin(){
         <td>${u.penalties}</td>
         <td>${esc(u.status||'active')}</td>
       </tr>
-    `).join('')||'<tr><td colspan="7">Пользователей нет.</td></tr>';
+    `).join('')||`
+      <tr>
+        <td colspan="7">Пользователей нет.</td>
+      </tr>
+    `;
 
     const reportRows=reports.reports||[];
 
@@ -1128,22 +1224,32 @@ async function loadAdmin(){
         <td>${esc(r.user_name||r.name||'—')}</td>
         <td>${esc(r.task_title||'—')}</td>
         <td>
-          <a href="${esc(r.video_url||'#')}" target="_blank" style="color:#ff6d6d">
+          <a
+            href="${esc(r.video_url||'#')}"
+            target="_blank"
+            style="color:#ff6d6d"
+          >
             Открыть
           </a>
         </td>
-        <td><span class="tag">${esc(r.status)}</span></td>
+        <td>
+          <span class="tag">${esc(r.status)}</span>
+        </td>
         <td>
           ${
             r.status==='pending'
             ?`
-              <button class="btn primary"
-                onclick="reviewReport(${r.id},'approved')">
+              <button
+                class="btn primary"
+                onclick="reviewReport(${r.id},'approved')"
+              >
                 Принять
               </button>
 
-              <button class="btn"
-                onclick="reviewReport(${r.id},'rejected')">
+              <button
+                class="btn"
+                onclick="reviewReport(${r.id},'rejected')"
+              >
                 Отклонить
               </button>
             `
@@ -1151,7 +1257,11 @@ async function loadAdmin(){
           }
         </td>
       </tr>
-    `).join('')||'<tr><td colspan="6">Отчётов нет.</td></tr>';
+    `).join('')||`
+      <tr>
+        <td colspan="6">Отчётов нет.</td>
+      </tr>
+    `;
 
   }catch(e){
     toast(e.message);
@@ -1165,7 +1275,11 @@ async function reviewReport(id,status){
       body:JSON.stringify({status})
     });
 
-    toast(status==='approved'?'Отчёт принят':'Отчёт отклонён');
+    toast(
+      status==='approved'
+        ?'Отчёт принят'
+        :'Отчёт отклонён'
+    );
 
     await loadAdmin();
     await refresh();
@@ -1178,7 +1292,9 @@ async function reviewReport(id,status){
 $('loginBtn').onclick=login;
 
 $('loginPassword').addEventListener('keydown',e=>{
-  if(e.key==='Enter') login();
+  if(e.key==='Enter'){
+    login();
+  }
 });
 
 $('logoutBtn').onclick=()=>{
@@ -1187,7 +1303,9 @@ $('logoutBtn').onclick=()=>{
   location.reload();
 };
 
-$('newReportBtn').onclick=()=>openReport();
+$('newReportBtn').onclick=()=>{
+  openReport();
+};
 
 $('closeModal').onclick=()=>{
   $('reportModal').classList.add('hidden');
@@ -1195,32 +1313,42 @@ $('closeModal').onclick=()=>{
 
 $('sendReport').onclick=async()=>{
   try{
-    const taskId=$('reportTask').value;
+    const taskId=$('reportTask').value.trim();
     const videoUrl=$('reportUrl').value.trim();
     const text=$('reportText').value.trim();
 
     if(!taskId){
-      $('reportMessage').textContent='Выбери задание';
+      $('reportMessage').textContent=
+        'Сначала выбери задание';
       return;
     }
 
     if(!videoUrl){
-      $('reportMessage').textContent='Добавь ссылку на ролик';
+      $('reportMessage').textContent=
+        'Добавь ссылку на ролик';
+      return;
+    }
+
+    const isTikTokLink=
+      /(?:tiktok\.com\/@[^/?]+\/video\/\d+|vm\.tiktok\.com\/|vt\.tiktok\.com\/|tiktok\.com\/t\/)/i
+        .test(videoUrl);
+
+    if(!isTikTokLink){
+      $('reportMessage').textContent=
+        'Вставь ссылку именно на TikTok-ролик, а не на профиль';
       return;
     }
 
     await api('/api/reports',{
       method:'POST',
-
-      /*
-        ИСПРАВЛЕНО:
-        backend принимает snake_case:
-        task_id, video_url, text
-      */
       body:JSON.stringify({
         task_id:Number(taskId),
         video_url:videoUrl,
-        text
+        text:text,
+
+        taskId:Number(taskId),
+        videoUrl:videoUrl,
+        comment:text
       })
     });
 
@@ -1260,7 +1388,9 @@ $('saveProfile').onclick=async()=>{
   }
 };
 
-if(token) boot();
+if(token){
+  boot();
+}
 </script>
 
 </body>
